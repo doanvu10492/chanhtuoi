@@ -1,0 +1,505 @@
+/* Flexnav Base Styles */
+.flexnav {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -ms-transition: none;
+  transition: none;
+  -webkit-transform-style: preserve-3d;
+  overflow: hidden;
+  margin: 0 auto;
+  width: 100%;
+   }
+  
+  .flexnav li.active > a {
+    color: #333;
+}
+ ul.flexnav ul li i {
+    position: absolute;
+    left: 10px;
+    display: block;
+    top: 12px;
+    color: #203C6F;
+    z-index: 9;
+    font-size: 15px;
+  
+  color: #0A3C98;
+    z-index: 9;
+    font-size: 15px;
+}
+.flexnav ul li a {
+    padding-left: 22px;
+}
+  .flexnav.opacity {
+    opacity: 0;
+    
+  }
+  .flexnav.flexnav-show {
+    max-height: 2000px;
+    opacity: 1;
+    -webkit-transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -ms-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out; 
+    display: block;
+    padding: 0 10px;
+  }
+  .flexnav.one-page {
+    position: fixed;
+    top: 50px;
+    right: 5%;
+    max-width: 200px; }
+  .flexnav li {
+    font-size: 100%;
+    position: relative;
+    overflow: hidden; }
+  .flexnav li a {
+    position: relative;
+    display: block;
+    z-index: 2;
+    font-size:18px;
+    overflow: hidden;
+    color: #222222;
+    
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+  
+.toggleMenu {
+       display: block;
+       padding: 15px 15px;
+       color: #fff;
+       float: right;
+       border-right: 1px solid rgba(213, 218, 222, 0.61);
+}
+
+
+
+.toggleMenu .icon-bar {
+    display: block;
+    width: 28px;
+    height: 4px;
+    border-radius: 1px;
+    margin-top: 4px;
+    background: #fff;
+    border-radius: 25%;
+}
+.toggleMenu .icon-bar:first-child {
+    margin-top: 3px;
+}
+.flexnav li ul {
+    width: 100%;
+    background: #fff;
+    box-shadow: 1px 1px 1px 1px rgba(202, 202, 202, 0.4);
+}
+    .flexnav li ul li {
+      font-size: 100%;
+      position: relative;
+      overflow: hidden; }
+  .flexnav li ul.flexnav-show li {
+    overflow: visible; }
+  .flexnav li ul li a {
+    display: block;
+    background: rgba(241, 241, 241, 0.17);
+    }
+
+  .flexnav ul li ul li ul li a {
+    background: #cbcbc9; }
+  .flexnav .touch-button {
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    background: #acaca1;
+    background: rgba(0, 0, 0, 0.075);
+    text-align: center; }
+    .flexnav .touch-button:hover {
+      cursor: pointer; }
+    .flexnav .touch-button .navicon {
+      position: relative;
+      top: 1.4em;
+      font-size: 12px;
+          color: #7a7a7a; }
+    .flexnav > .touch-button
+    {
+      display:none;
+    }
+
+.menu-button {
+  position: relative;
+  display: block;
+  padding: 1em;
+  background: #a6a6a2;
+  color: #222222;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2); }
+  .menu-button.one-page {
+    position: fixed;
+    top: 0;
+    right: 5%;
+    padding-right: 45px; }
+  .menu-button .touch-button {
+    background: transparent;
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    text-align: center; }
+    .menu-button .touch-button .navicon {
+      font-size: 16px;
+      position: relative;
+      top: 1em;
+      color: #666; }
+.flexnav .touch-button .navicon {
+    left: 0;
+}
+@media (min-width: 990px) {
+  body.one-page {
+    padding-top: 70px; }
+   .toggleMenu
+   {
+     display:none;
+   }
+   ul.flexnav ul li i
+   {
+     left: 10px;  
+   }
+   .flexnav{
+    padding: 0 10px;
+}
+
+.flexnav li ul {
+    display: none !important;
+}
+.flexnav li:hover > ul{
+   display: block !important;
+}
+   ul.flexnav ul li:hover i{ color: #fff; }
+.flexnav .touch-button
+{
+  display:none !important;
+}
+ .flexnav li:hover > ul {
+   display:block  !important;
+   overflow: visible !important;
+}
+
+nav.menu-main ul ul li a {
+    font-family: Opensans;
+    font-size: 15px;
+    font-weight: normal;
+    color: #fff;
+}
+  nav.menu-main li.item-with-ul:hover > ul
+   {
+     display: block !important;
+   }
+nav.menu-main li a {
+        font-size: 14px;
+        color: #333;
+        font-weight: 469;
+        -moz-transition: all ease-out 200ms;
+}
+nav.menu-main ul ul li a {
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+    text-transform: none;
+}
+
+ul.flexnav li i {
+    font-size: 20px;
+    display: none;
+}
+ul.flexnav > li > .touch-button {
+    display: none;
+}
+
+ul.flexnav > li > a {
+    padding: 10px 20px;
+    line-height: 26px;
+    position: relative;
+}
+ul.flexnav > li > a:after{
+    background: #F4BF1E;
+    color: #F4BF1E;
+    content: "";
+    height: 13px;
+    right: 0;
+    top: 8px;
+    opacity: 1;
+    position: absolute;
+    -ms-transition: width 0.2s ease 0s;
+    -webkit-transition: width 0.2s ease 0s;
+    -moz-transition: width 0.2s ease 0s;
+    -o-transition: width 0.2s ease 0s;
+    transition: width 0.2s ease 0s;
+    width: 0;
+    background: #fff;
+    width: 1px;
+}
+ul.flexnav > li:last-child > a:after {
+  display: none;
+}
+  .flexnav {
+    overflow: visible; 
+  z-index: 9;
+  }
+    .flexnav.opacity {
+      opacity: 1; }
+    .flexnav.one-page {
+      top: 0;
+      right: auto;
+      max-width: 1080px; }
+.flexnav > li {
+    position: relative;
+    list-style: none;
+    float: left;
+    display: block;
+    overflow: visible;
+    /* border-right: 1px solid rgba(255, 255, 255, 0.12); */
+}
+.flexnav li.active {
+    border-left: 0;
+    background: #ffff;
+    border-left: 0;
+}
+.flexnav li.active a {
+    color: #55b1a2;
+}
+    .flexnav li a {
+    
+      border-bottom: none;
+      padding: 0 14px;
+      color: #f2f2f2;
+      font-family: Opensans;
+      }
+    .flexnav li ul li a {
+    display: block;
+    background: #fff;
+    border-top: 1px solid rgba(51, 51, 51, 0.05);
+}
+
+
+.flexnav ul li:hover > a {
+    background: #fff;
+}
+   .flexnav li > ul {
+    position: absolute;
+    top: auto;
+    left: 0;
+    width: 240px;
+    -ms-transition: opacity 0s ease 0s, margin-top 0.3s ease 0s;
+    -moz-transition: opacity 0s ease 0s, margin-top 0.3s ease 0s;
+    -o-transition: opacity 0s ease 0s, margin-top 0.3s ease 0s;
+    transition: opacity 0s ease 0s, margin-top 0.3s ease 0s;
+    -webkit-transition: opacity 0s ease 0s, margin-top 0.3s ease 0s;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.04);
+}
+.flexnav li > ul li {
+    width: 100%;
+    color: #fff;
+    line-height: 38px;
+}
+    .flexnav li ul li > ul {
+      margin-left: 100%;
+      top: 0; }
+    .flexnav li ul li a {
+    border-bottom: none;
+    line-height: 1.4;
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #333;
+    text-transform: none;
+    text-shadow: none;
+}
+    .flexnav li ul.open {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      z-index: 99; }
+      .flexnav li ul.open li {
+        overflow: visible;
+        max-height: 100px; }
+      .flexnav li ul.open ul.open {
+        margin-left: 100%;
+        top: 0; }
+    .flexnav > li:first-child a {
+  
+}
+.flexnav > li:first-child > a {
+    border-left: 0;
+}
+.flexnav > li > .touch-button {
+    bottom: 5px;
+    top: inherit;
+    right: 22px;
+    background: none;
+}
+  ul.flexnav > li > .touch-button {
+    display: block !important;
+    position: absolute;
+    right: 0;
+    top: 12px;
+    width: 15px;
+    height: 15px;
+    color: #fff;
+    font-size: 15px
+}
+
+.flexnav ul li:hover > a {
+    color: #333;
+}
+.flexnav ul  li:hover > a i
+{
+    color: #fff;
+}
+nav.menu-main ul.flexnav > li:last-child:after{ display: none; }
+  
+
+  .menu-button {
+    display: none; } }
+}
+
+.oldie body.one-page {
+  padding-top: 70px; }
+.oldie .flexnav {
+  overflow: visible; }
+  .oldie .flexnav.one-page {
+    top: 0;
+    right: auto;
+    max-width: 1080px; }
+  .oldie .flexnav li {
+    position: relative;
+    list-style: none;
+    float: left;
+    display: block;
+    background-color: #a6a6a2;
+    width: 20%;
+    min-height: 50px;
+    overflow: visible; }
+  .oldie .flexnav li:hover > ul {
+    display: block;
+    width: 100%;
+    overflow: visible; }
+    .oldie .flexnav li:hover > ul li {
+      width: 100%;
+      float: none; }
+    
+  .oldie .flexnav li a {
+    border-left: 1px solid #acaca1;
+    border-bottom: none;
+    overflow: visible; }
+  .oldie .flexnav li > ul {
+    background: #acaca1;
+    position: absolute;
+    top: auto;
+    left: 0;
+    display: none;
+    z-index: 1;
+    overflow: visible; }
+  .oldie .flexnav li ul li ul {
+    top: 0; }
+  .oldie .flexnav li ul li a {
+    border-bottom: none; }
+  .oldie .flexnav li ul.open {
+    display: block;
+    width: 100%;
+    overflow: visible; }
+    .oldie .flexnav li ul.open li {
+      width: 100%; }
+    .oldie .flexnav li ul.open ul.open {
+      margin-left: 100%;
+      top: 0;
+      display: block;
+      width: 100%;
+      overflow: visible; }
+  .oldie .flexnav ul li:hover ul {
+    margin-left: 100%;
+    top: 0; }
+.oldie .menu-button {
+  display: none; }
+.oldie.ie7 .flexnav li {
+  width: 19.9%; }
+
+  
+
+@media (max-width: 989px)
+{
+  .flexnav.opacity {
+    opacity: 0;
+    display: none;
+  }
+  .flexnav-show.opacity {
+    opacity: 1;
+    display: block;
+  }
+     .menu-button {
+    background: none;
+    padding: 0;
+   
+    line-height: 42px;
+    padding: 0 10px;
+    color: #fff;
+  font-size:18px;
+}
+ul.flexnav > li:last-child > a{ padding-right: 0; }
+nav#nav-top {
+    margin-left: -10px;
+    margin-right: -10px;
+    height: 57px;
+}
+.toggleMenu .icon-bar{ color: #333;
+    background-color: #7f6768; }
+.flexnav .touch-button {
+    height: 42px;
+    line-height: 1px;
+    background: none;
+}
+.menu-button .touch-button {
+    display: none;
+}
+.flexnav li a {
+    text-transform: uppercase;
+    font-size: 15px;
+    background-color: #fff;
+    padding: 10px 10px;
+}
+
+.flexnav {
+    border-top: 2px solid rgba(202, 202, 202, 0.25);
+    border-bottom: 2px solid rgba(202, 202, 202, 0.25);
+    float: none !important;
+    width: 100% !important;
+}
+
+.touch-button i {
+    font-size: 18px;
+    margin-top: 10px;
+}
+.flexnav ul li a:hover {
+    background-color: #fff;
+}
+.help ul {
+    float: none;
+    
+    clear: both;
+    float: none;
+    width: 100%;
+    text-align: center;
+}
+.help span {
+    float: none;
+}
+.help { text-align: center; }
+
+
+.help span {
+    float: none !important;
+    margin: 0 auto;
+}
+}
