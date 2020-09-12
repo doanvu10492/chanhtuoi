@@ -9,7 +9,7 @@
 $config['per_page'] 		= 10;
 $config['uri_segment'] 		= 3;
 $config['num_links'] 		= 5;
-$config['full_tag_open'] 	= '<ul class="pagination pagination-sm no-margin pull-right">';
+$config['full_tag_open'] 	= '<ul class="pagination pagination-sm no-margin">';
 $config['full_tag_close'] 	= '</ul>';
 $config['cur_tag_open'] 	= '<li><a class="page active">';
 $config['cur_tag_close'] 	= '</a></li>';

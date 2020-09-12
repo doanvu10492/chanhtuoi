@@ -40,10 +40,9 @@
 <div id="box-list-product">
 
 
-<div class="list-products products-overview row clearfix">
+<div class="products-overview row clearfix">
     <div class="container">
-    <div class="list-product">
-        <div class="row block-filter">
+        <div class="block-filter">
             <div class="col-xs-12">
                 <div class="filter-products">
                     <ul class="list-inline">
@@ -57,54 +56,16 @@
                 </div>
             </div>
         </div>
-
+        <div class="list-products">
         <?php if(isset($category) && count($category) > 0 ) { ?> 
             <h1 style="display: none"><?php echo $category['name']; ?></h1>
         <?php } ?>
 
-        <?php 
-            if (count($list_products) > 0) {
-                foreach ( $list_products as $item ): 
-        ?>
-        <div class="col-md-3 col-sm-6 col-xs-12 col-product">
-            <div class="product-item">
-                <figure>
-                    <a href="<?= $item['link']; ?>"><img class="lazy" data-src="<?= $item['img_thumb']; ?>" atl="<?= $item['name']; ?>">
-                    <?php if ($item['percent_promo']) { ?>
-                            <i class="percent-promo">
-                                -<?= $item['percent_promo']; ?>%
-                            </i>
-                        <?php } ?>
-                    </a>
-                    <div class="block-info">
-                        <a href="#" 
-                            class="fa fa-shopping-cart add-to-cart" 
-                            data-id="<?= $item['id']; ?>" 
-                            data-active = "1"
-                            data-name = "<?= $item['name']; ?>"
-                            data-qty = "1"
-                            data-price = "<?= $item['price']; ?>">
-                        </a>
-                        <a class="fa fa-eye" href="<?= $item['link']; ?>"></a>
-                    </div>
-                </figure>
-                <div class="pd-info">
-                    <a href="<?= $item['link']; ?>" class="title">
-                        <?= $item['name']; ?>
-                    </a>
-                     <p>
-                        <span class="price"><?= number_format($item['price']); ?>đ</span>
-                        <?php if ($item['price_old']) : ?>
-                            <span class="price-old"><?= number_format($item['price_old']); ?>đ</span>
-                        <?php endif; ?> 
-                    </p>
-                </div>
-            </div>
-        </div>
-            
-        <?php 
-                endforeach; 
-            } else {
+        <?php if (count($list_products) > 0) { ?>
+
+        <?php $this->load->view('frontend/block/products', ['products' => $list_products]); ?>
+    
+        <?php } else {
                 echo '<div class="not-found"> Không tìm thấy bài viết nào ! </div>';
             }
         ?>

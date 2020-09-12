@@ -31,35 +31,15 @@ class Home extends Public_Controller
 	function index()
 	{
 		$this->generateFormKey();
-		$this->postsGuide();	
-		$this->productBest();
-		$this->productSales();
-		$this->productNew();
 		$this->getCateOfHotProducts();
-		$this->partner();
 		$this->getAds();
         $this->_metaSeo();
         $this->output->cache(5);
         $this->getAdsHome();
-        $this->pageHighlight();	
         $this->getHighlightPostCategories();
         $this->loadTheme('home');
        
 	} 
-
-	protected function pageHighlight()
-	{
-		$this->outputData['pageHighlight'] = $this->page_model->listPages('', array(4), '', '', TB_PAGES.'.ordering asc');
-	}
-
-	protected function partner()
-	{
-		$cateImgPartner = $this->page_model->view_category_album('', array(TB_CGR_ALBUM.'.type' => 'partner')); 
-
-		if ($cateImgPartner) {
-			$this->outputData['partner'] = $this->page_model->listAlbum([TB_ALBUM.'.id_cate' => $cateImgPartner['id']]);
-		}
-	}
 
 	protected function getAds()
 	{
@@ -68,31 +48,6 @@ class Home extends Public_Controller
 		if($cateImgPartner) {
 			$this->outputData['listAds'] = $this->page_model->listAlbum(array(TB_ALBUM.'.id_cate' => $cateImgPartner['id']), array(2));
 		}
-	}
-
-	protected function productBest()
-	{
-		$data = $this->products_model->list_products(array('isHighlight' => IS_HIGHLIGHT), array(8));
-
-		$this->outputData['productBest'] = $data; 
-	}
-	protected function productNew()
-	{
-		$data = $this->products_model->list_products(array('isNew' => IS_HIGHLIGHT), array(8));
-
-		$this->outputData['productNew'] = $data; 
-	}
-	protected function productSales()
-	{
-		$data = $this->products_model->list_products(array('isSale' => IS_HIGHLIGHT), array(8));
-
-		$this->outputData['productSales'] = $data; 
-	}
-
-	protected function postsGuide()
-	{
-		$data = $this->page_model->listPosts(array(TB_POSTS.'.isHighlight' => IS_HIGHLIGHT, TB_POSTS.'.type' => 'posts'), array(3));	
-		$this->outputData['postsGuide'] = $data;
 	}
 
 	public function _metaSeo()

@@ -3,7 +3,7 @@ class MY_Controller extends CI_Controller
 {
     protected $outputData = array();
 
-    function __construct() 
+    public function __construct() 
     {
         parent::__construct();
         parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
@@ -77,10 +77,9 @@ class MY_Controller extends CI_Controller
     }
 }
 
-// Admin controller to manage the website
 class Admin_Controller extends MY_Controller 
 {
-    function __construct() 
+    public function __construct() 
     {
         parent::__construct();
     }
@@ -143,29 +142,27 @@ class Admin_Controller extends MY_Controller
     }
 }
 
-// Public controller for end user interface
 class Public_Controller extends MY_Controller 
 {
-    //languages
+    /**
+    * Languages code
+    **/
     public $lang_code = '';
 
-    //load logo
+    /**
+    * Logo website
+    **/
     public $logo = '';
 
-    function __construct() 
+    public function __construct() 
     {
         parent::__construct();
-       
-        //using config core
         $this->config->db_config_fetch();
-
         $this->load->library('select_option');
-
-        //languages
-        $this->lang_code = ($this->session->userdata('site_lang') == "english") ? ('_en') : ('');
+        $this->lang_code = $this->session->userdata('site_lang') == "english" ? '_en' : '';
         $this->outputData['lang'] = $this->lang_code;
 
-        $this->load->model(array(
+        $this->load->model([
             'backend/settings_model', 
             'frontend/page_model', 
             'frontend/sidebar_model', 
@@ -174,39 +171,10 @@ class Public_Controller extends MY_Controller
             'frontend/products_model', 
             'frontend/album_model', 
             'backend/script_model'
-        ));
+        ]);
 
-         //logo
         $this->outputData['logo'] = $this->config->item('logo'.$this->lang_code);
-
-        //menu
         $this->outputData['menu_top'] = $this->sidebar_model->menu_top('', $this->lang_code);
-
-        //menu
-        $this->outputData['menu_footer'] = $this->sidebar_model->menu_footer('', $this->lang_code);
-
-        $this->outputData['slider'] = $this->sidebar_model->slider();
-
-        $this->outputData['productNewSidebar'] = $this->products_model->list_products(array('isNew' => 1), (8));
-
-        /*
-        ** HEADER WEBSITE
-        */
-        $this->outputData['posts_cate'] = $this->page_model->listPosts(array(TB_POSTS.'.id_cate' => 30), array(6));
-
-        $this->outputData['page_top'] = $this->page_model->listPages(array(TB_POSTS.'.isRight' => 1), array(6));
-
-        $this->outputData['page_footer'] = $this->page_model->listPages(array(TB_POSTS.'.isFooter' => 1));
-
-        $this->outputData['cateRoot'] = $this->category_products_model->list_category_products(array(TB_CGR_PRODUCTS.'.id_parent' => 0));
-
-        //print_r( $this->outputData['posts_cate']); exit();
-
-        $this->outputData['postsHighlight'] = $this->page_model->listPosts(array(TB_POSTS.'.isHighlight' => 1, TB_POSTS.'.type' => 'posts', TB_CGR_POSTS.'.module' => ''), array(6));
-        $this->output->cache(5);
-        $this->outputData['support_online'] = $this->sidebar_model->support_online($this->lang_code);
-
-        $this->outputData['pageFooter'] = $this->page_model->listPages('', [4]);
     }
    
     
@@ -240,7 +208,7 @@ class Public_Controller extends MY_Controller
         return isset($_GET['per_page']) ? $_GET['per_page'] : 0;
     }
 
-    function generateFormKey()
+    public function generateFormKey()
     {
         $key = bin2hex($this->encryption->create_key(16));
         $this->session->set_userdata('FORM_KEY', $key);

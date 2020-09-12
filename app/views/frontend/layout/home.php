@@ -23,7 +23,7 @@
                 <ul class="list-inline">
                     <li><a href="">Khuyến mãi hot</a></li>
                     <?php foreach ($cateOfHotProducts['cates'] as $cate) { ?>
-                         <li><a href="<?= $cate['link'] ?>"><?= $cate['name'] ?></a></li>
+                        <li><a href="<?= $cate['link'] ?>"><?= $cate['name'] ?></a></li>
                     <?php } ?>
                 </ul>
                 <a href="#" class="pull-right view-more">Xem thêm</a>
@@ -31,18 +31,7 @@
         </div>
         <div class="row">
             <div class="product-cate list-products">
-            <?php foreach ($cateOfHotProducts['products'] as $product) { ?>
-                <div class="col-md-2 col-xs-6">
-                    <div class="product-item">
-                        <figure>
-                            <a href="<?= $product['link'] ?>"><img data-src="<?= $product['img'] ?>" class="img-responsive lazy"></a>
-                        </figure>
-                        <div class="product-info">
-                            <a href="<?= $product['link'] ?>"><?= $product['name'] ?></a>
-                        </div>
-                    </div>       
-                </div>
-            <?php } ?>
+            <?php $this->load->view('frontend/block/products', ['products' => $cateOfHotProducts['products']]); ?>
             </div>
         </div>
     </div>
@@ -60,18 +49,7 @@
         </div>
         <div class="row">
             <div class="product-cate list-products">
-                <?php foreach ($cateOfHotProducts['products'] as $product) { ?>
-                    <div class="col-md-2 col-xs-6">
-                        <div class="product-item">
-                            <figure>
-                                <a href="<?= $product['link'] ?>"><img data-src="<?= $product['img'] ?>" class="img-responsive lazy"></a>
-                            </figure>
-                            <div class="product-info">
-                                <a href="<?= $product['link'] ?>"><?= $product['name'] ?></a>
-                            </div>
-                        </div>       
-                    </div>
-                <?php } ?>
+                <?php $this->load->view('frontend/block/products', ['products' => $cateOfHotProducts['products']]); ?>
             </div>
         </div>
     </div>
@@ -91,20 +69,7 @@
         </div>
         <div class="post-cate list-posts">
             <div class="row">
-                <?php foreach ($highlightPostCategories['posts'] as $post) { ?>
-                    <div class="col-md-3 col-xs-6">
-                        <div class="post-item">
-                            <figure>
-                                <a href="<?= $post['link'] ?>"><img data-src="<?= $post['img'] ?>" class="img-responsive lazy"></a>
-                            </figure>
-                            <div class="post-info">
-                                <p class="date">Ngày đăng: <?= $post['date'] ?></p>
-                                <a href="<?= $post['link'] ?>"><?= $post['name'] ?></a>
-                                <p><?= $post['brief'] ?></p>
-                            </div>
-                        </div>       
-                    </div>
-                <?php } ?>
+                <?php $this->load->view('frontend/block/posts', ['posts' => $highlightPostCategories['posts']]) ?>
             </div>
         </div>
     </div>

@@ -339,6 +339,35 @@ h4.modal-title {
 .list-products > .col-xs-6 {
     padding: 0 5px;
 }
+.list-products .product-item .product-info .price {
+    font-family: Opensansbold;
+    color: #f00;
+}
+.pagination-link {
+    display: block;
+    clear: both;
+    text-align: center;
+}
+.filter-products {
+    line-height: 40px;
+    background: rgba(0,0,0,.03);
+    margin-bottom: 10px;
+    padding: 10px 0;
+    margin: 0px -5px 10px;
+    padding-left: 15px;
+}
+
+.filter-products ul li a {
+    background: #fff;
+    display: inline-block;
+    padding: 0 15px;
+    line-height: 33px;
+    color: #000;
+}
+
+.filter-products li label {
+    font-weight: normal;
+}
 /** POSTS ***/
 .list-posts {
     background: #fff;
@@ -698,8 +727,7 @@ article.box-article-detail.box-article-blog td {
     clear: both;
     float: left;
     background: #f7f7f7;
-    border-top: 2px solid #cae6b4;
-    border-bottom: 2px solid #fb5630;
+    border-bottom: 2px solid rgb(196 194 193 / 12%);
 }
 .footer-link ul li a {
     display: block;
