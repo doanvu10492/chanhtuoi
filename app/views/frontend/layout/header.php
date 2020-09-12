@@ -53,45 +53,36 @@
 </head>
 <body>
 <header id="header">
-<div class="header-top ">
-<div class="block-menu">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12 col-sm-12">
-				<div class="header-logo">
-					<div class="logo">
-						<a href="./"><img src="<?= $this->config->item('logo') ?>" class="<?= $this->config->item('site_title') ?>"></a>
-					</div>
-
-					<div class="header-banner-menu">
-						<div class="right-banner">
-							<span class="email"><a href="mail:<?= $this->config->item('email') ?>"><?= $this->config->item('email') ?></a></span>
-							 <span class="line">/</span> 
-							<span class="phone"><a href="tel:<?= $this->config->item('hotline') ?>"><?= $this->config->item('hotline') ?></a></span>
-							<?php $this->load->view('frontend/block/social_network') ?>
-							
-
-							<?php
-				                if ( ! $this->session->userdata('CI_login')) {
-			                ?> 
-			                	
-			               		<span class="user-btn" style="margin-left: 5px; margin-right: 5px; "><a href="./login" style="font-size: 13px"><i class="fa fa-user" aria-hidden="true" style="margin-right: 5px;"></i> <b>Đăng nhập</b></a></span>
-			                <?php } else { ?>
-			                	<span class="user-btn" style="margin-right: 5px; margin-right: 5px; ">
-			                    <a href="./dang-xuat.html" style="font-size: 13px"> <i class="fa fa-sign-out"></i></span><b>Đăng xuất</b></a>
-			                <?php } ?>
-
-							
+	<div class="header-top">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<div class="header-logo">
+						<div class="logo">
+							<a href="./"><img src="<?= $this->config->item('logo') ?>" class="<?= $this->config->item('site_title') ?>"></a>
 						</div>
-						<div class="search" style="max-width: 300px">
-							<?php $this->load->view('frontend/block/search'); ?>
+						<div class="header-banner-search">
+							<div class="header-search">
+								<?php $this->load->view('frontend/block/search'); ?>
+							</div>
+							<div class="right-banner">
+								<span class="email"><a href="mail:<?= $this->config->item('email') ?>">Email: <?= $this->config->item('email') ?></a></span>
+								 <span class="line"> </span> 
+								<span class="phone"> Điện thoại: <a href="tel:<?= $this->config->item('hotline') ?>"><?= $this->config->item('hotline') ?></a></span>
+								<?php $this->load->view('frontend/block/social_network') ?>
+								
+								<?php if ( ! $this->session->userdata('CI_login')) { ?> 
+				               		<span class="user-btn" style="margin-left: 5px; margin-right: 5px; "><a href="./login" style="font-size: 13px"><i class="fa fa-user" aria-hidden="true" style="margin-right: 5px;"></i> <b>Đăng nhập</b></a></span>
+				                <?php } else { ?>
+				                	<span class="user-btn" style="margin-right: 5px; margin-right: 5px; ">
+				                    <a href="./dang-xuat.html" style="font-size: 13px"> <i class="fa fa-sign-out"></i></span><b>Đăng xuất</b></a>
+				                <?php } ?>
+							</div>
 						</div>
-						
 					</div>
 				</div>
 			</div>
 		</div>
-		
 	</div>
 	<div class="header-top-menu">
 		<div class="container">

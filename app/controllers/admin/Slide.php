@@ -1,5 +1,5 @@
 <?php
-class Slide extends MY_Controller 
+class Slide extends Admin_Controller 
 {
     // Global variable  
     public $outputData;	
@@ -103,44 +103,16 @@ class Slide extends MY_Controller
     }
 
 
-    function updateStatus()
+    public function updateStatus()
     {
         $id = $this->uri->segment(4);
-        // action is attribute such as : active, highlight...
-        $action = trim($_POST['action']);
-
-        // check product exist
-        if ($this->slide_model->check_exists(array('id' => $id))){
-            // click ok status
-            if ($_POST['active'] == 1) {
-                $this->slide_model->updateData(array('id' => $id), array($action => 0));
-                echo json_encode(array('result' => 'glyphicon-remove', 'num' => 0)); exit();
-            } else {
-                $this->slide_model->updateData(array('id' => $id), array($action => 1));
-                echo json_encode(array('result' => 'glyphicon-ok', 'num' => 1)); exit();
-            }
-        } else {
-            echo json_encode(array('error' => 'Bài viết này không tồn tại')); exit();
-        }
+        $this->updateStatusAdmin($this->slide_model, $id);
     }
-        
-    function del_list_choose()
+
+    public function del_list_choose()
     {
-        $list_id = explode(',', $_POST['list_id']);
-
-        if (count($list_id) == 1) {
-            $this->slide_model->deleteData($list_id);
-        } else {
-            foreach ($list_id as $id) {
-                if ($this->slide_model->check_exists(array('id' => $id))) {
-                    $this->slide_model->deleteData($id);
-                } else {
-                    echo json_encode(array('error' => 'Bạn là hacker ah !')); exit();
-                }
-            }
-        }
-
-        $this->session->set_flashdata('flash_message','Bạn vừa xóa thành công các slider ảnh đã chọn');   
-        echo json_encode(array('result' => admin_url('slide'))); exit(); 
+        $this->delListChooseAdmin($this->slide_model);
+           
+        echo json_encode(['result' => admin_url('slide')]); exit(); 
     }
 }

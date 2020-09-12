@@ -59,11 +59,11 @@ class Settings_model extends My_Model
 
 			if ($key == 'site_status') {
 				$data = [
-					'text_value' => $updateData[$key]
+					'int_value' => $updateData[$key]
 				];
 			} elseif (in_array($key, $textKeys)) {
 				$data = [
-					'int_value' => $updateData[$key]
+					'text_value' => $updateData[$key]
 				];
 			} else {
 				$data = [

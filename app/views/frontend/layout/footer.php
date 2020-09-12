@@ -21,13 +21,7 @@
               </div>
 
       <div class="footer-line-contact-email">
-        <p class="footer-line-contact-email-text">Đăng ký nhận bản tin:</p>
-        <div class="footer-line-contact-email-form">
-          <form action="" data-subscriber_emails="">
-            <input type="text" name="subscriber_emails" id="subscriber_emails" placeholder="Nhập email của bạn">
-            <button type="submit">Đăng ký</button>
-          </form>
-        </div>
+        <?php $this->load->view('frontend/block/send_email') ?>
       </div>
 
               <div class="footer-line-contact-short-link"><a href="#" rel="nofollow">
@@ -64,10 +58,6 @@
               <h3>Fanpage</h3>
             </div>
             <?php $this->load->view('frontend/block/fanpage') ?>
-            <div class="title-hd" style="margin-top: 15px;">
-              <h3>Google map</h3>
-            </div>
-            <?= $this->config->item('map'); ?>
           </div>
         </div>
       </div>

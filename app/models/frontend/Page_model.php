@@ -83,7 +83,7 @@ class Page_model extends My_Model
     /*
     ** ALBUM
     */
-    public function listAlbum($condition = array(), $limit, $keywords = NULL, $order_by = NULL)
+    public function listAlbum($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL)
     {
         if (is_array($limit)) {
             if(count($limit)==1)
@@ -113,10 +113,7 @@ class Page_model extends My_Model
         );
         
         $this->db->select("
-            {$this->table_album}.name,
-            {$this->table_album}.image,
-            {$this->table_album}.id,
-            {$this->table_album}.created_at,
+            {$this->table_album}.*,
             {$this->category_album}.name as name_cate, 
             {$this->category_album}.id_cate, 
             {$this->category_album}.alias as alias_cate, 
@@ -175,8 +172,9 @@ class Page_model extends My_Model
     */
     public function listPosts($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = array(), $alias_cate = '')
     { 
-        $lang = '';       
-        if(is_array($limit)) {
+        $lang = '';
+
+        if (is_array($limit)) {
 
             if(count($limit)==1)
                 $this->db->limit($limit[0]);
@@ -204,7 +202,8 @@ class Page_model extends My_Model
         {
             $this->db->where_in("{$this->table_posts}.id_cate", $where_in);
         }
-         $this->db->where("{$this->table_posts}.active", 1);
+        
+        $this->db->where("{$this->table_posts}.active", 1);
         $this->db->join("{$this->category_posts}","{$this->category_posts}.id_cate = {$this->table_posts}.id_cate", "left");
         $this->db->select("{$this->table_posts}.name{$lang} as name,
             {$this->table_posts}.alias{$lang} as alias,
@@ -347,7 +346,7 @@ class Page_model extends My_Model
     }
 
 
-    function list_category_posts($lang = null, $limit = array(), $keywords = NULL, $order_by = NULL, $condition = array(), $where_in = NULL)
+    function list_category_posts($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = NULL)
     {
         if(is_array($limit)) {
             if(count($limit)==1)
@@ -380,13 +379,13 @@ class Page_model extends My_Model
         $this->db->where('active', 1);
         
         $this->db->select("
-            {$this->category_posts}.brief{$lang} as brief,
-            {$this->category_posts}.name{$lang} as name,
-            {$this->category_posts}.alias{$lang} as alias,
-            {$this->category_posts}.description{$lang} as description,
-            {$this->category_posts}.meta_title{$lang} as meta_title,
-            {$this->category_posts}.meta_keywords{$lang} as meta_keywords,
-            {$this->category_posts}.meta_description{$lang} as meta_description,
+            {$this->category_posts}.brief,
+            {$this->category_posts}.name,
+            {$this->category_posts}.alias,
+            {$this->category_posts}.description,
+            {$this->category_posts}.meta_title,
+            {$this->category_posts}.meta_keywords,
+            {$this->category_posts}.meta_description,
             {$this->category_posts}.id_cate as id,
             {$this->category_posts}.created_at,
             {$this->category_posts}.module,
@@ -407,7 +406,7 @@ class Page_model extends My_Model
         }
 
         return $data;
-    }//End of getSiteSettings Function
+    }
 
 
     function view_category_posts($lang = null, $condition = array())

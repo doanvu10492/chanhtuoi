@@ -35,15 +35,14 @@ class Home extends Public_Controller
 		$this->productBest();
 		$this->productSales();
 		$this->productNew();
+		$this->getCateOfHotProducts();
 		$this->partner();
 		$this->getAds();
         $this->_metaSeo();
-        $this->getEightRoundInRegister();
-        $this->getTrainingTypes();
         $this->output->cache(5);
         $this->getAdsHome();
         $this->pageHighlight();	
-        $this->listFourCategories();
+        $this->getHighlightPostCategories();
         $this->loadTheme('home');
        
 	} 
@@ -67,7 +66,7 @@ class Home extends Public_Controller
 		$cateImgPartner = $this->page_model->view_category_album('', array(TB_CGR_ALBUM.'.type' => 'round-img')); 
 
 		if($cateImgPartner) {
-			$this->outputData['listAds'] = $this->page_model->list_album('', array(2), array(TB_ALBUM.'.id_cate' => $cateImgPartner['id']));
+			$this->outputData['listAds'] = $this->page_model->listAlbum(array(TB_ALBUM.'.id_cate' => $cateImgPartner['id']), array(2));
 		}
 	}
 
@@ -132,48 +131,8 @@ class Home extends Public_Controller
 		$cateAdsHome = $this->page_model->view_category_album(['type' => 'ads']); 
 
         if ($cateAdsHome) {
-            $this->outputData['adsHome'] = $this->page_model->listAlbum([TB_ALBUM.'.id_cate' => $threeCateBanner['id']], [2]);
+            $this->outputData['adsHome'] = $this->page_model->listAlbum([TB_ALBUM.'.id_cate' => $cateAdsHome['id']], [2]);
         }
-	}
-
-	protected function getEightRoundInRegister()
-	{
-		$category = $this->page_model->view_category_posts('', array(
-			TB_CGR_POSTS.'.module' => 4,
-			TB_CGR_POSTS.'.active' => 1,
-			TB_CGR_POSTS.'.isHome' => 1
-		));
-		
-		if ($category) {
-			$category['posts'] =  $this->page_model->listPosts(array(
-				TB_POSTS.'.isHighlight' => IS_HIGHLIGHT, 
-				TB_POSTS.'.type' => 'posts',
-				TB_POSTS.'.id_cate' => $category['id']
-			), array(8));
-		}
-
-		$this->outputData['eightRoundInRegister'] = $category;
-	}
-
-	protected function getTrainingTypes() {
-		$category = $this->page_model->view_category_posts('', array(
-			TB_CGR_POSTS.'.module' => 3,
-			TB_CGR_POSTS.'.active' => 1,
-			TB_CGR_POSTS.'.isHome' => 1
-
-		));
-		
-		if ($category) {
-			$category['posts'] =  $this->page_model->listPosts('', array(4), array(
-				TB_POSTS.'.isHighlight' => IS_HIGHLIGHT, 
-				TB_POSTS.'.type' => 'posts',
-				TB_POSTS.'.id_cate' => $category['id']
-			), 
-			'',
-			TB_POSTS.'.number asc');
-		}
-
-		$this->outputData['trainingTypes'] = $category;
 	}
 
 	protected function listFourCategories() {
@@ -196,6 +155,65 @@ class Home extends Public_Controller
 		$this->outputData['fourCategories'] = $data;
 	}
 
+	public function getCateOfHotProducts() 
+	{
+		$productCategories = $this->getHighlightProductCategories();
+		$arrCateIds = [];
+
+		foreach ($productCategories as $cate) {
+			$arrCateIds = $cate['id'];
+		}
+
+		$highlightProductCategories = $this->products_model->list_products(
+			['isHighlight' => 1], 
+			array(40), 
+			'', 
+			'',
+			$arrCateIds 
+		);
+
+		$this->outputData['cateOfHotProducts'] = [
+			'cates' => $productCategories,
+			'products' => $highlightProductCategories
+		]; 
+	}
+
+	protected function getHighlightProductCategories()
+	{
+		$cates = $this->category_products_model->list_category_products([
+			'isHighlight' => 1
+		], array(6));
+
+		return $cates;
+	}
+
+
+	public function getHighlightPostCategories() 
+	{
+		$postCategories = $this->page_model->list_category_posts(
+			['isHighlight' => 1 ], 
+			array(6)
+		);
+
+		$arrCateIds = [];
+
+		foreach ($postCategories as $cate) {
+			$arrCateIds = $cate['id'];
+		}
+
+		$highlightPostCategories = $this->page_model->listPosts(
+			[TB_POSTS . '.isHighlight' => 1], 
+			array(4), 
+			'', 
+			'',
+			$arrCateIds 
+		);
+
+		$this->outputData['highlightPostCategories'] = [
+			'cates' => $postCategories,
+			'posts' => $highlightPostCategories
+		]; 
+	}
 }
 
 //End Buyer Class

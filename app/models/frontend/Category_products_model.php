@@ -20,45 +20,41 @@ class Category_products_model extends My_Model
     // --------------------------------------------------------------------
 
 
-    public function list_category_products($lang, $limit = array(), $condition = array(), $keywords = NULL, $order_by = NULL, $where_in = '' )
+    public function list_category_products($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = '' )
     {
-        if(is_array($limit))      
-        {
+        if (is_array($limit)) {
             if(count($limit)==1)
                 $this->db->limit($limit[0]);
             else if(count($limit)==2)
                 $this->db->limit($limit[0],$limit[1]);
         }
 
-        if ($keywords != NULL)
-        {
-        	  $this->where('name', $keywords);
+        if ($keywords != NULL) {
+        	$this->db->where('name', $keywords);
         }
-        if ($order_by != NULL)
-        {
+
+        if ($order_by != NULL) {
             $this->db->order_by($order_by);
-        }else{
+        } else {
             $this->db->order_by('id_cate desc');
         }
 
-        if (is_array($condition) && count($condition) > 0)
-        {
+        if (is_array($condition) && count($condition) > 0) {
             $this->db->where($condition);
         }
-        if ($where_in != NULL)
-        {
-            $where_in = explode(',', $where_in);
 
+        if ($where_in != NULL) {
+            $where_in = explode(',', $where_in);
             $this->db->where_in("{$this->table}.id_cate", $where_in);
         }
         
-        $this->db->select("{$this->table}.name{$lang} as name,
-            {$this->table}.alias{$lang} as alias,
-            {$this->table}.brief{$lang} as brief,
-            
-            {$this->table}.meta_title{$lang} as meta_title,
-            {$this->table}.meta_keywords{$lang} as meta_keywords,
-            {$this->table}.meta_description{$lang} as meta_description,
+        $this->db->select("
+            {$this->table}.name,
+            {$this->table}.alias,
+            {$this->table}.brief,
+            {$this->table}.meta_title,
+            {$this->table}.meta_keywords,
+            {$this->table}.meta_description,
             {$this->table}.image,
             {$this->table}.id_cate as id,
             {$this->table}.created_at

@@ -198,7 +198,7 @@ class Public_Controller extends MY_Controller
 
         $this->outputData['page_footer'] = $this->page_model->listPages(array(TB_POSTS.'.isFooter' => 1));
 
-        $this->outputData['cateRoot'] = $this->category_products_model->list_category_products('', '',  array(TB_CGR_PRODUCTS.'.id_parent' => 0));
+        $this->outputData['cateRoot'] = $this->category_products_model->list_category_products(array(TB_CGR_PRODUCTS.'.id_parent' => 0));
 
         //print_r( $this->outputData['posts_cate']); exit();
 

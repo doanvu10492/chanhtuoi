@@ -58,6 +58,10 @@
 
             unset($arrWhere);
         }
+
+        if (is_array($where_in) && count($where_in) > 0) {
+            $this->db->where_in("{$this->table}.id_cate", $where_in);
+        }
        
         $this->db->where("{$this->table}.active", IS_ACTIVE)
             ->order_by("{$this->table}.updated_at desc")
