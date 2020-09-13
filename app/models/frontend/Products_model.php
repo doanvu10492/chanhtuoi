@@ -217,15 +217,12 @@
             return ;
         }
 
-        // $date = date('d/m/Y', strtotime($date));
-
-        // return ($date == strtotime(date('d/m/Y'))) ? ('Hôm nay') : ($date);
         return $date;
     }
 
     public function parse_link_product($product) 
     {
-        return base_url().$product['alias_cate'].'/'.$product['alias'].'-'.$product['id'].'.html';
+        return base_url() . $product['alias'].'-d'. $product['id'] . '.html';
     }
 
     function getListColor($whereIn)

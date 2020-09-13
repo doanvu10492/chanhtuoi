@@ -49,10 +49,7 @@ class Products extends Public_Controller
 
 		$this->load->library('select_option');
 
-		$this->secondSegment = array(
-			'name' => __translate('products'), 
-			'link' => './san-pham.html' 
-		);
+		$this->secondSegment = [];
 	}
 
 	public function index()
@@ -114,8 +111,7 @@ class Products extends Public_Controller
 		$alias = $urlSegmentOne;
 
         $category = $this->category_products_model->view_category(
-            $this->lang_code, 
-            array("{$this->tableCategory}.alias" => $urlSegmentOne) 
+            ["{$this->tableCategory}.alias" => $urlSegmentOne] 
         );
 		
 		if( ! $category ) { 
@@ -132,23 +128,21 @@ class Products extends Public_Controller
 
 		$listIdCate = $this->category_products_model->get_cate_child($category['id']);
 		$this->outputData['idRoot'] = $this->findParentRoot($category['id_parent']);
-		$queryString ='';
-		$uri = base_url().$urlSegmentOne;
+		$queryString = '';
+		$uri = base_url() . $urlSegmentOne;
 
 		// load pagination
-        $totalCategory = count( $this->products_model->list_products($this->lang_code, $condition, '', '', '', $listIdCate, $urlSegmentOne ) );
+        $totalCategory = count( $this->products_model->list_products($condition, '', '', '', $listIdCate, $urlSegmentOne ) );
         $total = count($totalCategory);
 
         $data = [
-        	'base_url' => $uri.$queryString,
+        	'base_url' => $uri . $queryString,
         	'total' => $total
         ];
 
         $this->getPagination($data);
 		
-		// load page        
         $this->outputData['list_products'] = $this->products_model->list_products(
-            $this->lang_code, 
             '', 
             $limit, 
             '', 
@@ -190,9 +184,10 @@ class Products extends Public_Controller
     */
 	public function view()
     {
-		$segment2 = $this->getSegmentId($this->uri->segment(2));
-        $arrSegment2 = explode('-', $segment2);
-        $id = end($arrSegment2);
+		$segmentOne = $this->getSegmentId($this->uri->segment(1));
+        $stringNumber = explode('-', $segmentOne);
+        $id = (int) str_replace('d', '', end($stringNumber));
+
         if ( ! $this->products_model->check_exists(['id'=>$id]) ) {
         	show_404();
         }
@@ -201,7 +196,6 @@ class Products extends Public_Controller
 		$string_cate = $this->category_products_model->get_cate_child($detail['id_cate']);
         $this->outputData['breadcrumb'] = __breadcrumb($this->listCateParent($string_cate), $this->secondSegment,  $detail['name']);
 
-        // output seo
         $metaSeo = [
         	'title' => $detail['meta_title'],
         	'keyword' => $detail['meta_keywords'],
@@ -217,10 +211,11 @@ class Products extends Public_Controller
         $this->outputData['tags_products'] = $this->tags_model->get_list_tags_products();
         
         // sample products
-        $this->outputData['other_products'] = $this->products_model->list_products(
-        	'', 
-        	   ["{$this->table}.id_cate" => $detail['id_cate'], 
-        		"{$this->table}.id !="  => $id], 
+        $this->outputData['other_products'] = $this->products_model->list_products( 
+        	[
+                "id_cate" => $detail['id_cate'], 
+        		"id !="  => $id
+            ], 
         	[6]
         );
         
@@ -335,7 +330,7 @@ class Products extends Public_Controller
             return;
         }
 
-		$listCategoryParent = $this->category_products_model->list_category_products($this->lang_code, '', '', '', '', $cateId );
+		$listCategoryParent = $this->category_products_model->list_category_products('', '', '', '', $cateId );
 
 		return $listCategoryParent;
     } 

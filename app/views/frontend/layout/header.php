@@ -86,7 +86,9 @@
 	</div>
 	<div class="header-top-menu">
 		<div class="container">
-			<?php $this->load->view('frontend/block/menu'); ?>
+			<div class="row">
+				<?php $this->load->view('frontend/block/menu'); ?>
+			</div>
 		</div>
 	</div>
 </div>

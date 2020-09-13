@@ -1,341 +1,370 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Posts extends Public_Controller 
 {
     public $outputData;
 	public $loggedInUser;
+	public $limit = array();
+    public $id;
+    public $table = TB_POSTS;
+    public $tableCategory = TB_CGR_POSTS;
+    public $currentPage = 'posts';
+    public $searchKeys = ['id_cate', 'keyword', 'isHighlight', 'isSale'];
+    /*
+    * String after link
+    */
+    public $queryString = null;
 
-	function __construct()
+    /*
+    * per_page
+    */
+    public $perPage;
+
+    /*
+    * id_cate
+    */
+    public $cateId;
+
+    /*
+    * numberPage
+    */
+    public $numberPage = 15;
+
+	public function __construct()
 	{
 		parent::__construct();
-		$this->config->db_config_fetch();
 
 	    // check status of page
-		if($this->config->item('site_status') == 0)
+		if($this->config->item('site_status') == 0) {
 			redirect('offline');
-
-        // load model	
-        $this->load->model('frontend/tags_model');
-	}
-
-	function index()
-	{
-		$lang = $this->lang_code;
-		// to use $_GET();
-		parse_str(substr(strrchr($_SERVER['REQUEST_URI'], "?"), 1), $_GET);
-        // variable for href
-        $queryString ='';
-        $keyword = '';
-        $condition = array();
-
-        // get $_GET of the varible
-		if (isset($_GET['keyword']) && ($_GET['keyword'] !=' ')){
-			$keyword = $_GET['keyword'];
-			$this->outputData['keyword'] =$keyword;
-			$queryString .='?keyword='.$keyword;
-		}
- 
-        // Pagination
-        if (isset($_GET['per_page']) && $_GET['per_page'] != NULL) {
-        	$config['per_page'] = $_GET['per_page'];
-        } else {
-        	$config['per_page'] = $this->uri->segment(4);
         }
 
-	    $start = $this->uri->segment(2);
-	    $limit = array();
-	    $limit[0] = 15;
-	    $limit[1] = $this->uri->segment(2);
+        // load model
+		$this->load->model([
+			'frontend/page_model', 
+			'menu_model', 
+			'frontend/tags_model'
+		]);
 
-	    // check type of posts
-  	    // pagination
-  	    $this->load->library('pagination');
-	    $config['per_page'] = $limit[0];
-	    $config['uri_segment'] = 2;
-		$config['total_rows']= count($this->page_model->list_posts($lang, '', '', (isset($keyword)) ? ($keyword) : ('') ));
-		$config['base_url'] = './tim-kiem/';
-		$config['per_page'] = $limit[0]; 
-		$this->pagination->initialize($config);
-		$this->outputData['pagination'] = $this->pagination->create_links(true, './tim-kiem/');
-        unset($config);
+		$this->load->library('select_option');
 
-        $this->outputData['list_posts'] = $this->page_model->list_posts($lang, $limit, '', (isset($keyword)) ? ($keyword) : ('') );
-
-
-        $this->outputData['number_item'] = ($limit[0] > count($this->page_model->list_posts($lang, '', '', (isset($keyword)) ? ($keyword) : ('') ))) ? (count($this->page_model->list_posts($lang, '', '', (isset($keyword)) ? ($keyword) : ('') ))) : ( $limit[0] ) ;
-
-        $breadcrumb = '<ul class="breadcrumb">';
-        $breadcrumb .= '<li><a href="/" title="Trang chủ">'.__translate('Home').'</a></li>';
-        $breadcrumb .= '<li><a href="javascript:void(0)">Tìm kiếm</a></li>';
-        $breadcrumb .= '<li>'.$keyword.'</li>';
-    	$breadcrumb .= '</ul>';
-
-    	$this->outputData['breadcrumb'] = $breadcrumb;
-       	
-       	$this->outputData['number_posts'] = count($this->page_model->list_posts($lang, '', '', (isset($_POST['keyword'])) ? ($_POST['keyword']) : ('') ));
-        $this->outputData['current_page'] = $this->uri->segment(1);
-        $this->outputData['keyword'] = (isset($keyword)) ? ($keyword) : ('');
-        
-        // output of seo
-        $this->outputData['page_title'] = 'Tìm kiếm';
-        $this->outputData['meta_keywords'] = 'Tìm kiếm';
-        $this->outputData['meta_description'] = 'Tìm kiếm';
-
-        $this->render_page('frontend/posts/list');
+		$this->secondSegment = [];
 	}
 
+	public function index()
+    {
+        $urlSegmentOne = $this->uri->segment(1);
+        $condition = [];
+        $getRequest = $this->input->get();
 
-	function category()
-	{
-		$lang = $this->lang_code;
-		//segment of alias
-	    $url = $this->uri->segment(1);
-	    //segment of pagination
-	    $start = $this->uri->segment(2);
+        if ($urlSegmentOne != 'tim-kiem') {
+            $condition['alias_cate'] = $urlSegmentOne;
+        } 
 
-	    // if( $start && (int)$start <=0 ) {
-	    // 	$cate_detail = $this->page_model->view_category_posts(
-     //      '', 
-     //      [TB_CGR_POSTS.'.alias' => $start]
-     //    );
-	    // } else {
-	    // 	$cate_detail = $this->page_model->view_category_posts(
-     //      $lang, 
-     //      array(TB_CGR_POSTS.'.alias' => $this->uri->segment(2))
-     //    );
-	    // }
+        foreach ($getRequest as $key => $value) {
+            if ($value && in_array($key, $this->searchKeys)) {
+                $condition[$key] = $value;
+            }
+        }
 
-      $cate_detail = $this->page_model->view_category_posts(
-          '', 
-          [TB_CGR_POSTS.'.alias' => $url]
+        $allProducts = $this->page_model->listPosts($condition);
+
+        $this->_total = count($allProducts);
+        $this->getLimit();
+        $this->outputData['pagination'] = $this->getPagination();
+
+        $this->outputData['total_posts'] = $this->_total;
+        $this->outputData['listPosts'] = $this->page_model->listPosts($condition, $this->limit);
+        $this->outputData['breadcrumb'] = __breadcrumb('', $this->secondSegment);
+        $this->outputData['option'] = $this->select_option->dropdown(
+            ['table' => "{$this->tableCategory}"], 
+            '', 
+            '',
+            isset($getRequest['id_cate']) ? $getRequest['id_cate'] : ''
+        );
+    	$this->outputData['categories'] = $this->page_model->list_category_posts();
+        $this->outputData['current_page'] = $this->currentPage;
+        $this->outputData['getRequest'] = $getRequest; 
+
+        $menu = $this->menu_model->getDetailData( ['alias' => 'home'] );
+        $metaSeo = [
+        	'title' => $menu['meta_title'],
+        	'keyword' => $menu['meta_keywords'],
+        	'description' => $menu['meta_keywords'],
+        ];
+        $this->metaSeo($metaSeo);
+
+        //load theme
+        $this->loadTheme('list');
+	}
+
+    /*
+    * load posts has sample category
+    */
+	public function category()
+    {
+		$urlSegmentOne = $this->uri->segment(1);
+        $condition = []; 
+
+		$alias = $urlSegmentOne;
+
+        $category = $this->page_model->view_category_posts(
+            ["{$this->tableCategory}.alias" => $urlSegmentOne] 
+        );
+		
+		if( ! $category ) { 
+            $metaSeo = array(
+                'title' => 'Không tìm thấy nội dung',
+                'keyword' => '',
+                'description' => '',
+            );
+
+            $this->outputData['current_page'] = 'notfound';
+            $this->render_page('frontend/errors/notfound');
+            return;
+        }
+
+		$listIdCate = $this->page_model->getCateChild($category['id'], TB_CGR_POSTS);
+		$this->outputData['idRoot'] = $this->findParentRoot($category['id_parent']);
+		$queryString = '';
+		$uri = base_url() . $urlSegmentOne;
+
+        $this->_total = count( $this->page_model->listPosts(
+            $condition, 
+            '', 
+            '', 
+            '', 
+            $listIdCate, 
+            $urlSegmentOne 
+        ));
+
+        $this->getLimit();
+        $this->outputData['pagination'] = $this->getPagination();
+
+        $data = [
+        	'base_url' => $uri . $queryString,
+        	'total' => $this->_total
+        ];
+
+        $this->getPagination($data);
+		
+        $this->outputData['listPosts'] = $this->page_model->listPosts(
+            $condition, 
+            $this->limit, 
+            '', 
+            '', 
+            $listIdCate, 
+            $urlSegmentOne 
+        );
+       
+		$secondSegment = [
+			'name' => __translate('posts'), 
+			'link' => './san-pham.html' 
+		];
+
+        $this->outputData['breadcrumb'] = __breadcrumb($this->listCateParent($listIdCate), $this->secondSegment);
+		$this->outputData['tags_posts'] = $this->tags_model->get_list_tags_posts();
+
+        $this->outputData['category'] = $category;
+        $this->outputData['id_parent'] =  $category['id_parent'] > 0 ? $category['id_parent'] : $category['id'];
+        
+        // output seo
+        $metaSeo = array(
+        	'title' => $category['meta_title'],
+        	'keyword' => $category['meta_keywords'],
+        	'description' => $category['meta_description'],
         );
 
-	    count($cate_detail) == 0 ? show_404() : '';
-	    $id_cate = $cate_detail['id'];
-
-	    //list id child
-	    $list_id_child = $this->__child_cate($cate_detail['id']);
-	    $list_id_child = explode(',', $list_id_child); 
-	    $posts = $this->page_model->list_posts($lang, '', '', '', '', $list_id_child);
-
-	    //pagination
-	    $limit = array();
-	    $limit[0] = 10;
-	    $limit[1] = ($this->uri->segment(3) !=null) ? ($this->uri->segment(3)) : ($this->uri->segment(2));
-  	    $this->load->library('pagination');
-	    $config['per_page'] = $limit[0];
-	    $config['uri_segment'] = 2;
-		$config['total_rows']= count($this->page_model->list_posts($lang, '', '', '', '',  $list_id_child ));
-		$config['base_url'] = './'.$url;
-		$config['per_page'] = $limit[0]; 
-		$this->pagination->initialize($config);
-		$this->outputData['pagination'] = $this->pagination->create_links(true, './tin-tuc/');
-        unset($config);
-
-        $this->outputData['list_posts'] = $this->page_model->list_posts($lang, $limit, '', '', '', $list_id_child, $url );
-        //breadcrumb text_helper
-		    $list_id_parent = $this->__parent_cate($cate_detail['id']);
-        $this->outputData['breadcrumb'] = __breadcrumb($this->listCateParent($list_id_parent));
-        $this->outputData['current_page'] = $this->uri->segment(1);
-        //OUTPUT OF SEO
-        $this->outputData['page_title'] = ($cate_detail['meta_title']) ? ($cate_detail['meta_title']) : ($cate_detail['name']);
-        $this->outputData['meta_keywords'] = $cate_detail['meta_keywords'];
-        $this->outputData['meta_description'] = $cate_detail['meta_description'];
-        $this->outputData['categories'] = $list_category = $this->page_model->list_category_posts($lang, '', '', '',array(TB_CGR_POSTS.'.isMenu' => 1));
-
-        if ($cate_detail['id_parent'] > 0) {
-        	$list_category = $this->page_model->list_category_posts($lang, '', '', '',array(TB_CGR_POSTS.'.id_parent' => $cate_detail['id_parent']));
-    	} else {
-    		$list_category = $this->page_model->list_category_posts($lang, '', '', '',array(TB_CGR_POSTS.'.id_parent' => $cate_detail['id']));
-    	}
-
-        if( $list_category ) {
-        	$data = array();
-
-        	foreach ($list_category as $row ) {
-        		$row['link'] = './'.$this->uri->segment(1).'/'.$row['alias'].'/';
-        		$data[] = $row;
-        	}
-
-			$this->outputData['other_posts'] = $data;
-			$this->outputData['name_cate'] = $cate_detail['name'];
-        }
-
-        $this->outputData['postHighlight'] = $this->page_model->list_posts($lang, (8), array(TB_POSTS.'.isHighlight' => 1, TB_POSTS.'.type' => 'posts'));	
-        $this->outputData['postNew'] = $this->page_model->list_posts($lang, (8), array( TB_POSTS.'.type' => 'posts'));	
-        // cate child and product
-        $list_child_category = $this->page_model->list_category_posts($lang, '', '', '',array(TB_CGR_POSTS.'.id_parent' => $cate_detail['id']));
-        $data = array();
-        if( $list_child_category ) {
-
-        	foreach ($list_child_category as $row ) {
-        		$row['link'] = './'.$this->uri->segment(1).'/'.$row['alias'].'/';
-        		$row['posts'] = $this->page_model->list_posts($lang, '', array(TB_POSTS.'.id_cate' => $row['id']) );
-        		$data[] = $row;
-        	}
-        }
-
-       	$cate_detail['child'] = $data;
-       	$this->outputData['cate_detail'] = $cate_detail;
-        //send contact
-       		if ($cate_detail['id_parent'] == 0 && $cate_detail['child']) {
-       			$cateProjects = $this->page_model->list_category_posts('', '', '', '', array(TB_CGR_POSTS.'.id_parent' => $cate_detail['id']));
-
-       			$arrCateProjects = [];
-       			foreach ($cateProjects as $cateItem) {
-       				$cateItem['projects'] = $this->page_model->list_posts('', 
-   						array(4), 
-   						array(TB_POSTS.'.id_cate' => $cateItem['id']
-       				));
-
-       				$arrCateProjects[] = $cateItem;
-       			}
-
-       			$this->outputData['cateProjects'] = $arrCateProjects;
-       		} 
-       		$this->render_page('frontend/posts/list');
+        $this->metaSeo($metaSeo);
+        $this->outputData['current_page'] = $this->currentPage;
+        $this->loadTheme('list');
 	}
 
+    /*
+    * View product detail
+    *
+    * @param int id 
+    */
+	public function view()
+    {
+		$segmentOne = $this->getSegmentId($this->uri->segment(1));
+        $stringNumber = explode('-', $segmentOne);
+        $id = (int) str_replace('p', '', end($stringNumber));
 
+        if ( ! $this->page_model->check_exists(['id'=>$id], TB_POSTS) ) {
+        	show_404();
+        }
 
-	function list_tags()
-	{
+		$detail = $this->page_model->view_posts(["{$this->table}.id" => $id]);
+		$string_cate = $this->page_model->getCateChild($detail['id_cate'], TB_CGR_POSTS);
+        $this->outputData['breadcrumb'] = __breadcrumb($this->listCateParent($string_cate), $this->secondSegment,  $detail['name']);
+
+        $metaSeo = [
+        	'title' => $detail['meta_title'],
+        	'keyword' => $detail['meta_keywords'],
+        	'description' => $detail['meta_keywords'],
+        ];
+
+        $this->metaSeo($metaSeo);
+		$this->outputData['current_page'] = $this->uri->segment(1);
+
+		// get big image slider
+        $this->outputData['detail'] = $detail;
+        $this->outputData['idRoot'] = $this->findParentRoot($detail['id_cate']);
+        $this->outputData['tags_posts'] = $this->tags_model->get_list_tags_posts();
+        
+        // sample posts
+        $this->outputData['other_posts'] = $this->page_model->listPosts( 
+        	[
+                TB_POSTS . '.id_cate' => $detail['id_cate'], 
+        		TB_POSTS . '.id !='  => $id
+            ], 
+        	[6]
+        );
+        
+        $this->loadTheme('detail');
+	}
+
+    /*
+    * Load all product in sample tag
+    */
+	protected function listTags()
+    {
 		$id_tags = explode('-', $this->uri->segment(2));
 		$id_tags = end($id_tags);
-	    //pagination
-	    $limit = array();
-	    $limit[0] = 15;
-	    $limit[1] = $this->uri->segment(3);
-  	    $this->load->library('pagination');
-	    $config['per_page'] = $limit[0];
-	    $config['uri_segment'] = 3;
-		$config['total_rows']= count($this->tags_model->list_posts_tags($id_tags));
-		$config['base_url'] = './'.$this->uri->segment(1).'/'.$this->uri->segment(2);
-		$config['per_page'] = $limit[0]; 
-		$this->pagination->initialize($config);
-		$this->outputData['pagination'] = $this->pagination->create_links(true, './tin-tuc/');
-        unset($config);
-        $this->outputData['list_posts'] = $this->tags_model->list_posts_tags($id_tags, $limit);
+
+        // Load pagination
+	    $queryString = './'.$this->uri->segment(1).'/'.$this->uri->segment(2);
+        $listTags = $this->tags_model->listPosts_tags($id_tags);
+        $total = count($listTags);
+
+        $data = array(
+        	'base_url' => $uri.$queryString,
+        	'total' => $total
+        );
+
+        $this->getPagination($data);
+	   
+	    // Out put list posts
+        $this->outputData['listPosts'] = $this->tags_model->listPosts_tags($id_tags, $limit);
+
         $this->outputData['current_page'] = 'posts';
         $tags = $this->tags_model->get_infor( array(TB_TAGS.'.id_tags' => $id_tags ));
         $this->outputData['tags_detail'] = $tags;
       	$this->outputData['tags_posts'] = $this->tags_model->get_list_tags_posts();
-        //OUTPUT OF SEO
-        $this->outputData['page_title'] = ( $tags->meta_title != null) ? ( $tags->meta_title) : ( $tags->name_tags) ;
-        $this->outputData['meta_keywords'] = ( $tags->meta_keywords != null) ? ( $tags->meta_keywords) : ( $tags->name_tags);
-        $this->outputData['meta_description'] =  ( $tags->meta_description != null) ? ( $tags->meta_description) : ( $tags->name_tags);
+
+        // output seo
+        $metaSeo = array(
+        	'title' => $tags->meta_title,
+        	'keyword' => $tags->meta_keywords,
+        	'description' => $tags->meta_description,
+        );
+        $this->metaSeo($metaSeo);
         
-        $this->render_page('frontend/posts/list');
+        // load theme
+        $this->loadTheme('list');
 	}
 
-	function view( $id = '' )
-	{
-		$lang = $this->lang_code;
+    /*
+    * Comfirm code from input 
+    *
+    * @return json string
+    */
+    protected function comfirmCode()
+     {
+     	if($_POST['code_sale']) {
+     		if($_POST['code_sale'] == $this->config->item('code_sale')) {
+     			echo json_encode(array('text_sale' => "Mã khuyến mãi (".$_POST['code_sale'].") đã được xác nhận được khuyến mãi ".$this->config->item('number_sale')."%", 'number_sale' => $this->config->item('number_sale') )); exit();
+     		}
+     		echo json_encode(["error" => "Mã khuyến mãi này không đúng !"]); exit();
+     	}
 
-		$segment2 = $this->uri->segment(2);
-        $arrSegment2 = explode('-', $segment2);
-        $id = end($arrSegment2);
-		
-		if( $id > 0) {
-			$condition = array(TB_POSTS.'.id'=>$id);
-		} else {
-			$condition = array(TB_POSTS.'.alias'=>$this->uri->segment(1));
-		}
-		
- 		//$condition = ($alias_segment_2[0] > 0) ? (TB_POSTS.'.id'=>$alias)
-        if(!$this->page_model->check_exists($condition, TB_POSTS)) {
+     	echo json_encode(["error" => "Vui lòng nhập Mã khuyến mãi !"]); exit();
+     }
+
+
+	protected function addToCart($id)
+    {
+    	$id = $this->uri->segment(2);
+
+    	if(!$this->page_model->check_exists(array('id'=>$id))) {
         	show_404();
         }
 
-		$detail = $this->page_model->view_posts($lang ,$condition);
-		//breadcrumd
-        $cate_detail = $this->page_model->view_category_posts($lang, array('alias' => $this->uri->segment(1)));
-        //breadcrumb text_helper
-		$list_id_parent = $this->__parent_cate($cate_detail['id']);
-        $this->outputData['breadcrumb'] = __breadcrumb($this->listCateParent($list_id_parent), '', $detail['name']);
-        //OUTPUT OF SEO
-        $this->outputData['page_title'] = ($detail['meta_title']) ? ($detail['meta_title']) : ($detail['name']);
-        $this->outputData['meta_keywords'] = $detail['meta_keywords'];
-        $this->outputData['meta_description'] = $detail['meta_description'];
-		$this->outputData['current_page'] = $this->uri->segment(1);
-        $this->outputData['detail'] = $detail;
-        $this->outputData['tags_posts'] = $this->tags_model->get_list_tags_posts();
-        //orther posts
-        $this->outputData['categories'] = $list_category = $this->page_model->list_category_posts($lang, '', '', '',array(TB_CGR_POSTS.'.isMenu' => 1));
-		//category root
-        $cate_detail = $this->page_model->view_category_posts($lang, array(TB_CGR_POSTS.'.alias'.$lang => $this->uri->segment(1)));
-        //find list cate child
-        $list_category = $this->page_model->list_category_posts($lang, '', '', '',array(TB_CGR_POSTS.'.id_parent' => $cate_detail['id']));
+    	$detail = $this->page_model->view_posts('', ["{$this->table}.id"=>$id]);
+    	$this->outputData['detail'] = $detail;
+    	$this->load->view('frontend/cart/cart_popup', $detail);
 
-        if( $list_category ) {
-        	$data = array();
+		exit();
+    }
 
-        	foreach ($list_category as $row ) {
-        		$row['link'] = './'.$this->uri->segment(1).'/'.$row['alias'].'/';
-        		$data[] = $row;
-        	}
+    /*
+    * Find parent id from id_cate  
+    * @param string $id_cate
+    *
+    * @return string
+    */
+    protected function findParentRoot($id_cate = '')
+    {
+    	$cate = $this->page_model->view_category_posts( '', array("{$this->tableCategory}.id_cate" => $id_cate) );
+    	$id_parent = $id_cate;
 
-			$this->outputData['other_posts'] = $data;
-			$this->outputData['name_cate'] = $cate_detail['name'];
-        } else {
-        	$this->outputData['other_posts'] = $this->page_model->list_posts($lang, array('0'=> 15), array(TB_POSTS.'.id_cate' => $detail['id_cate']), '', '','', $this->uri->segment(1));
+    	if(count($cate) > 0 && $cate['id_parent'] > 0) {
+			$id_parent = $cate['id_parent'];
+			$cate_child = $this->page_model->view_category_posts( '', array("{$this->tableCategory}.id_cate" => $id_parent) );
+            
+			if(count($cate_child) > 0 && $cate_child['id'] > 0) {
+				$id_parent = $this->findParentRoot( $cate_child['id']);
+			}
+    	}
+
+    	return $id_parent;
+    }
+
+    /*
+    * Get list category 
+    * 
+    * @param string $cateId
+    * @return string $listCategoryParent
+    */
+    protected function listCateParent( $cateId = '' )
+    {
+        if ( ! $cateId) {
+            return;
         }
 
-        $this->outputData['postHighlight'] = $this->page_model->list_posts($lang, (8), array(TB_POSTS.'.isHighlight' => 1, TB_POSTS.'.type' => 'posts'));	
-
-        $this->outputData['postNew'] = $this->page_model->list_posts($lang, (8), array( TB_POSTS.'.type' => 'posts'));	
-
-        $this->render_page('frontend/posts/detail');
-	}
-
-	function __child_cate($id_cate)
-	{
-		$lang = $this->lang_code;
-		$id_cate_child = $this->page_model->list_category_posts($lang, '', '', '',  array('id_parent' => $id_cate));
-
-	    if(	count($id_cate_child) > 0 ) :
-
-		    foreach( $id_cate_child as $row ) :
-		    	$n = $this->page_model->list_category_posts($lang,'', '', '',  array('id_parent' => $row['id']));
-
-		    	if( count($n) > 0 ) {
-		    		$id_cate .= ','.$this->__child_cate($row['id']);
-		    	} else {
-		    		$id_cate .= ','.$row['id'];
-		    	}
-
-		    endforeach;
-
-	    endif;
-
-	    return $id_cate;
-	}
-
-	function __parent_cate($id_cate , $list_id = '')
-	{
-		$lang = $this->lang_code;
-		$cate = $this->page_model->view_category_posts($lang,  array('id_cate' => $id_cate));
-
-	    if(	count($cate) > 0 ) {  
-	    	$list_id .= ($list_id != '') ? (','.$cate['id']) : ($cate['id']);
-
-	        if($cate['id_parent'] > 0) {	
-		    	$list_id .= ','.$this->__parent_cate($cate['id_parent']);
-		    }
-	    }
-
-	    return $list_id;
-	}
-    
-    
-
-    function listCateParent( $cateId = '' )
-    {
-     	if($cateId <= 0) 
-     		return null;
-     	
-		$listCategoryParent = $this->page_model->list_category_posts($this->lang_code, '', '', '', '', $cateId );
+		$listCategoryParent = $this->page_model->list_category_posts('', '', '', '', $cateId );
 
 		return $listCategoryParent;
     } 
 
+    /*
+    * parse string link url 
+    * @param int $url_id
+    * @return int $id
+    */
+    protected function getSegmentId($url_id)
+    {
+    	$segment = explode('-', $url_id);
+		$id = end($segment);
+        
+		return $id;
+    }
+
+    /*
+    * load theme 
+    * @param string $theme
+    */
+    protected function loadTheme($theme = '')
+    {
+    	$this->render_page('frontend/posts/'.$theme);
+    }
+
+    public function getLimit()
+    {
+        if (isset($_GET['per_page']) && $_GET['per_page'] != NULL) {
+            $this->perPage = $_GET['per_page'];
+        }
+
+        $this->limit = array($this->numberPage, $this->perPage);
+    } 
 }

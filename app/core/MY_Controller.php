@@ -25,7 +25,7 @@ class MY_Controller extends CI_Controller
 
     protected function render_page($the_view = NULL, $template = 'master') 
     {
-        if($template == 'json' || $this->input->is_ajax_request()) {
+        if ($template == 'json' || $this->input->is_ajax_request()) {
             header('Content-Type: application/json');
             echo json_encode($this->outputData);
         } elseif(is_null($template)) {

@@ -204,8 +204,14 @@ class Page_model extends My_Model
         }
         
         $this->db->where("{$this->table_posts}.active", 1);
-        $this->db->join("{$this->category_posts}","{$this->category_posts}.id_cate = {$this->table_posts}.id_cate", "left");
-        $this->db->select("{$this->table_posts}.name{$lang} as name,
+        $this->db->join(
+            "{$this->category_posts}",
+            "{$this->category_posts}.id_cate = {$this->table_posts}.id_cate", 
+            "left"
+        );
+
+        $this->db->select("
+            {$this->table_posts}.name{$lang} as name,
             {$this->table_posts}.alias{$lang} as alias,
             {$this->table_posts}.brief{$lang} as brief,
             {$this->table_posts}.description{$lang} as description,
@@ -223,10 +229,10 @@ class Page_model extends My_Model
             {$this->category_posts}.id_cate,
             {$this->category_posts}.alias as alias_cate"
         );
+
         $result = $this->db->get($this->table_posts)->result_array();
         $count = 0;
         $data = array();
-         
 
         foreach($result as $row)
         {
@@ -235,9 +241,7 @@ class Page_model extends My_Model
             $row['img'] = IMG_PATH_POSTS.$row['image'];
             $row['img_thumb'] = IMG_PATH_POSTS.'thumb/'.$row['image'];
            
-            //$row['link'] = './'.(($alias_cate != null) ? ($alias_cate) : $row['alias_cate']).'/'.$row['alias'].'-'.$row['id'].'.html';
-
-            $row['link'] = base_url() . $row['alias_cate'] . '/' . $row['alias'].'-'.$row['id'].'.html';
+            $row['link'] = base_url() . $row['alias_cate'] . '/' . $row['alias'].'-p' . $row['id'].'.html';
             $row['link_cate'] = './'.$row['alias_cate'];
             $row['date'] = date('d/m/Y H:i', strtotime($row['created_at']));
             $data[] = $row;
@@ -314,32 +318,39 @@ class Page_model extends My_Model
         return $data;
     }
 
-    function view_posts($lang = null, $condition = array(), $alias = "") 
+    public function view_posts($condition = array()) 
     {
-        if(is_array($condition) && count($condition) > 0) {
+        if (is_array($condition) && count($condition) > 0) {
             $this->db->where($condition);
         }
         
-        $this->db->join("{$this->category_posts}","{$this->category_posts}.id_cate = {$this->table_posts}.id_cate", "left");
-        $this->db->select("{$this->table_posts}.alias{$lang} as alias,
-            {$this->table_posts}.brief{$lang} as brief,
-            {$this->table_posts}.name{$lang} as name,
-            {$this->table_posts}.description{$lang} as description,
-            {$this->table_posts}.meta_title{$lang} as meta_title,
-            {$this->table_posts}.meta_keywords{$lang} as meta_keywords,
-            {$this->table_posts}.meta_description{$lang} as meta_description,
+        $this->db->join("
+            {$this->category_posts}",
+            "{$this->category_posts}.id_cate = {$this->table_posts}.id_cate", 
+            "left"
+        );
+
+        $this->db->select("
+            {$this->table_posts}.alias,
+            {$this->table_posts}.brief,
+            {$this->table_posts}.name,
+            {$this->table_posts}.description,
+            {$this->table_posts}.meta_title,
+            {$this->table_posts}.meta_keywords,
+            {$this->table_posts}.meta_description,
             {$this->table_posts}.image,
             {$this->table_posts}.id,
             {$this->table_posts}.file,
             {$this->table_posts}.id_cate,
             {$this->table_posts}.created_at,
-            {$this->category_posts}.alias as alias_cate");
+            {$this->category_posts}.alias as alias_cate
+        ");
 
         $result = $this->db->get("{$this->table_posts}");
         $result = $result->row_array();
-        $result['img_thumb'] = base_url().'uploads/posts/thumb/'.$result['image'];
-        $result['img'] = base_url().'uploads/posts/'.$result['image'];
-        $result['link'] = $alias;
+        $result['img_thumb'] = base_url() . 'uploads/posts/thumb/' . $result['image'];
+        $result['img'] = base_url() . 'uploads/posts/' . $result['image'];
+        $result['link'] = base_url() . $result['alias'] . '-p' . $result['id'] . 'html';
         $result['date'] = date('d/m/Y H:i', strtotime($result['created_at']));
 
         return $result;
@@ -409,25 +420,25 @@ class Page_model extends My_Model
     }
 
 
-    function view_category_posts($lang = null, $condition = array())
+    function view_category_posts($condition = array())
     {
         if(is_array($condition) && count($condition) > 0) {
             $this->db->where($condition);
         }
 
         $this->db->select("
-            {$this->category_posts}.brief{$lang} as brief,
-            {$this->category_posts}.name{$lang} as name,
+            {$this->category_posts}.brief,
+            {$this->category_posts}.name,
             {$this->category_posts}.id_cate as id,
             {$this->category_posts}.alias as alias,
             {$this->category_posts}.module,
             {$this->category_posts}.image,
             {$this->category_posts}.type,
             {$this->category_posts}.id_parent,
-            {$this->category_posts}.description{$lang} as description,
-            {$this->category_posts}.meta_title{$lang} as meta_title,
-            {$this->category_posts}.meta_keywords{$lang} as meta_keywords,
-            {$this->category_posts}.meta_description{$lang} as meta_description
+            {$this->category_posts}.description,
+            {$this->category_posts}.meta_title,
+            {$this->category_posts}.meta_keywords,
+            {$this->category_posts}.meta_description
         ");
         $result = $this->db->get("{$this->category_posts}");
         $result = $result->row_array();
@@ -685,6 +696,45 @@ class Page_model extends My_Model
 
 
         return count($result->result_array());
+    }
+
+
+    public function getCateChild($id_cate, $table = '')
+    {
+        $data = [];
+
+        $this->db->select("
+            {$table}.name, 
+            {$table}.id_cate as id, 
+            {$table}.active,  
+            {$table}.created_at
+        ");
+
+        $this->db->where('id_parent', $id_cate);
+  
+        $query = $this->db->get($table);
+
+        if($query->num_rows()>0) {
+            foreach($query->result_array() as $row) {
+                $data[]=$row;
+            }
+        }
+        
+        $string_id = $id_cate;
+        
+        if(!empty($data)) {
+            foreach($data as $row_id_cate)  {
+                if($string_id=='') {
+                    $string_id .= $row_id_cate['id'];  
+                } else {
+                    $string_id .=','.$row_id_cate['id'];   
+                }
+            }
+        } else {
+            $string_id = $id_cate;
+        }
+
+        return $string_id;
     }
 } 
 

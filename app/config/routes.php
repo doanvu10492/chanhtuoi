@@ -317,15 +317,14 @@ $route['thu-vien-anh|(thu-vien-anh|photo)/(:num)'] = "frontend/album/index/$1";
 
 
 $route['collection-2018'] = "frontend/products/list_category/$1";
-$route['(:any)-pr(:num)'] = "products/view/$1";
-$route['swatches|swatches/(:num)'] = "frontend/products/index";
+$route['(:any)-d(:num)'] = "frontend/products/view/$1";
 $route['tim-kiem|tim-kiem/(:num)'] = "frontend/products/index";
 $route['san-pham/(:any)|products/(:any)'] = "frontend/products/category/$1";
 $route['san-pham/(:any)-c(:num)'] = "frontend/products/category/$1";
 $route['san-pham|san-pham/(:num)'] = "frontend/products/index/$1";
 
 $route['gioi-thieu/(:any)'] = "frontend/posts/view/$1";
-$route['(:any)/(:any)-(:num)'] = "frontend/posts/view/$1";
+$route['(:any)-p(:num)'] = "frontend/posts/view/$1";
 // $route['(:any)/(:any)-(:num)'] = "frontend/products/view/$1";
 $route['(:any)-(:num)|(:any)/(:any)-(:num)'] = "frontend/posts/view/$1";
 $route['(:any)/(:any)'] = "frontend/posts/category/$1";
