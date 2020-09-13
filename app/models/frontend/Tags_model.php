@@ -49,13 +49,20 @@
 
     public function get_list_tags_posts($id = 0)
     {
-        if($id){
-             $this->db->where(TB_TAGS_PRODUCT.'.id_posts', $id);
-        }else{
+        if ($id) {
+            $this->db->where(TB_TAGS_PRODUCT.'.id_posts', $id);
+        } else {
             $this->db->where(TB_TAGS_PRODUCT.'.id_posts >', 0);
         }
+
         $this->db->select(TB_TAGS_PRODUCT.".*, {$this->table}.*");
-        $this->db->join(TB_TAGS_PRODUCT, TB_TAGS_PRODUCT.".id_tags = {$this->table}.id_tags", 'left' );
+        
+        $this->db->join(
+            TB_TAGS_PRODUCT, 
+            TB_TAGS_PRODUCT.".id_tags = {$this->table}.id_tags", 
+            'left' 
+        );
+
         $result = $this->db->get($this->table)->result_array();
         
         return $result;
@@ -64,13 +71,19 @@
 
     public function get_list_tags_products($id = 0)
     {
-        if($id){
-             $this->db->where(TB_TAGS_PRODUCT.'.id_product', $id);
-        }else{
+        if ($id) {
+            $this->db->where(TB_TAGS_PRODUCT.'.id_product', $id);
+        } else {
             $this->db->where(TB_TAGS_PRODUCT.'.id_product >', 0);
         }
+
         $this->db->select(TB_TAGS_PRODUCT.".*, {$this->table}.*");
-        $this->db->join(TB_TAGS_PRODUCT, TB_TAGS_PRODUCT.".id_tags = {$this->table}.id_tags", 'left' );
+        $this->db->join(
+            TB_TAGS_PRODUCT, 
+            TB_TAGS_PRODUCT.".id_tags = {$this->table}.id_tags", 
+            'left' 
+        );
+        
         $result = $this->db->get($this->table)->result_array();
         
         return $result;

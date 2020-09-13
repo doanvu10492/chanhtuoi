@@ -59,3 +59,25 @@ if ( ! function_exists('url_alias'))
 	   return $result;
 	}
 }
+
+/**
+ * Get id from url
+ *
+ * @access	public
+ * @param	string	$alias
+ * @param	string	$character
+ * @return	id
+ */
+if ( ! function_exists('getIdFromUrl'))
+{
+	function getIdFromUrl($alias, $character = '')
+	{
+        $id = explode('-', $alias);
+        
+        if ($character) {
+	        $id = (int) str_replace($character, '', end($id));
+        }
+
+		return (int) $id;
+	}
+}

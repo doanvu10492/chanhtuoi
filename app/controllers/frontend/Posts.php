@@ -107,19 +107,21 @@ class Posts extends Public_Controller
 
 		$alias = $urlSegmentOne;
 
-        $category = $this->page_model->view_category_posts(
-            ["{$this->tableCategory}.alias" => $urlSegmentOne] 
+        $category = $this->page_model->viewDetail(
+            ["{$this->tableCategory}.alias" => $urlSegmentOne],
+            TB_CGR_POSTS 
         );
 		
-		if( ! $category ) { 
-            $metaSeo = array(
+		if ( ! $category ) { 
+            $metaSeo = [
                 'title' => 'Không tìm thấy nội dung',
                 'keyword' => '',
                 'description' => '',
-            );
+            ];
 
             $this->outputData['current_page'] = 'notfound';
             $this->render_page('frontend/errors/notfound');
+            
             return;
         }
 
@@ -161,21 +163,16 @@ class Posts extends Public_Controller
 			'link' => './san-pham.html' 
 		];
 
-        $this->outputData['breadcrumb'] = __breadcrumb($this->listCateParent($listIdCate), $this->secondSegment);
-		$this->outputData['tags_posts'] = $this->tags_model->get_list_tags_posts();
-
+        $this->outputData['breadcrumb'] = __breadcrumb(
+            $this->listCateParent($listIdCate), 
+            $this->secondSegment
+        );
+		$this->outputData['tagPosts'] = $this->tags_model->get_list_tags_posts();
         $this->outputData['category'] = $category;
         $this->outputData['id_parent'] =  $category['id_parent'] > 0 ? $category['id_parent'] : $category['id'];
-        
-        // output seo
-        $metaSeo = array(
-        	'title' => $category['meta_title'],
-        	'keyword' => $category['meta_keywords'],
-        	'description' => $category['meta_description'],
-        );
-
-        $this->metaSeo($metaSeo);
         $this->outputData['current_page'] = $this->currentPage;
+        
+        $this->metaSeo($category);
         $this->loadTheme('list');
 	}
 
@@ -186,33 +183,26 @@ class Posts extends Public_Controller
     */
 	public function view()
     {
-		$segmentOne = $this->getSegmentId($this->uri->segment(1));
-        $stringNumber = explode('-', $segmentOne);
-        $id = (int) str_replace('p', '', end($stringNumber));
+        $id = getIdFromUrl($this->uri->segment(1), 'p');
 
-        if ( ! $this->page_model->check_exists(['id'=>$id], TB_POSTS) ) {
+        if ( ! $this->page_model->check_exists(['id' => $id], TB_POSTS) ) {
         	show_404();
         }
 
 		$detail = $this->page_model->view_posts(["{$this->table}.id" => $id]);
-		$string_cate = $this->page_model->getCateChild($detail['id_cate'], TB_CGR_POSTS);
-        $this->outputData['breadcrumb'] = __breadcrumb($this->listCateParent($string_cate), $this->secondSegment,  $detail['name']);
+		$stringCateIds = $this->page_model->getCateChild($detail['id_cate'], TB_CGR_POSTS);
+        
+        $this->outputData['breadcrumb'] = __breadcrumb(
+            $this->listCateParent($stringCateIds), 
+            $this->secondSegment,  
+            $detail['name']
+        );
 
-        $metaSeo = [
-        	'title' => $detail['meta_title'],
-        	'keyword' => $detail['meta_keywords'],
-        	'description' => $detail['meta_keywords'],
-        ];
-
-        $this->metaSeo($metaSeo);
+        $this->metaSeo($detail);
 		$this->outputData['current_page'] = $this->uri->segment(1);
-
-		// get big image slider
         $this->outputData['detail'] = $detail;
         $this->outputData['idRoot'] = $this->findParentRoot($detail['id_cate']);
-        $this->outputData['tags_posts'] = $this->tags_model->get_list_tags_posts();
-        
-        // sample posts
+        $this->outputData['tagsPosts'] = $this->tags_model->get_list_tags_posts();
         $this->outputData['other_posts'] = $this->page_model->listPosts( 
         	[
                 TB_POSTS . '.id_cate' => $detail['id_cate'], 

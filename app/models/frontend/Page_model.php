@@ -167,18 +167,13 @@ class Page_model extends My_Model
         return $result;
     }
 
-    /*
-    ** POSTS
-    */
-    public function listPosts($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = array(), $alias_cate = '')
+    
+    public function listPosts($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = array())
     { 
-        $lang = '';
-
         if (is_array($limit)) {
-
-            if(count($limit)==1)
+            if (count($limit)==1)
                 $this->db->limit($limit[0]);
-            else if(count($limit)==2)
+            else if (count($limit)==2)
                 $this->db->limit($limit[0],$limit[1]);
         }
 
@@ -191,15 +186,12 @@ class Page_model extends My_Model
         } else {
             $this->db->order_by("{$this->table_posts}.created_at desc");
         }
-        //$this->db->where("{$this->table_posts}.type", 'posts');
 
-        if (is_array($condition) && count($condition) > 0)
-        {
+        if (is_array($condition) && count($condition) > 0) {
             $this->db->where($condition);
         }
 
-        if (is_array($where_in) && count($where_in) > 0)
-        {
+        if (is_array($where_in) && count($where_in) > 0) {
             $this->db->where_in("{$this->table_posts}.id_cate", $where_in);
         }
         
@@ -211,38 +203,24 @@ class Page_model extends My_Model
         );
 
         $this->db->select("
-            {$this->table_posts}.name{$lang} as name,
-            {$this->table_posts}.alias{$lang} as alias,
-            {$this->table_posts}.brief{$lang} as brief,
-            {$this->table_posts}.description{$lang} as description,
-            {$this->table_posts}.meta_title{$lang} as meta_title,
-            {$this->table_posts}.meta_keywords{$lang} as meta_keywords,
-            {$this->table_posts}.meta_description{$lang} as meta_description,
-            {$this->table_posts}.image,
-            {$this->table_posts}.id,
-            {$this->table_posts}.size,
-            {$this->table_posts}.file,
-            {$this->table_posts}.number,
-            {$this->table_posts}.created_at,
-
-            {$this->category_posts}.name{$lang} as name_cate,
+            {$this->table_posts}.*,
+            {$this->category_posts}.name as name_cate,
             {$this->category_posts}.id_cate,
-            {$this->category_posts}.alias as alias_cate"
-        );
+            {$this->category_posts}.alias as alias_cate
+        ");
 
         $result = $this->db->get($this->table_posts)->result_array();
         $count = 0;
-        $data = array();
+        $data = [];
 
-        foreach($result as $row)
-        {
+        foreach ($result as $row) {
             $count++;
             $row['count'] = $count;
             $row['img'] = IMG_PATH_POSTS.$row['image'];
             $row['img_thumb'] = IMG_PATH_POSTS.'thumb/'.$row['image'];
            
             $row['link'] = base_url() . $row['alias_cate'] . '/' . $row['alias'].'-p' . $row['id'].'.html';
-            $row['link_cate'] = './'.$row['alias_cate'];
+            $row['link_cate'] = base_url() . $row['alias_cate'];
             $row['date'] = date('d/m/Y H:i', strtotime($row['created_at']));
             $data[] = $row;
         }
@@ -250,7 +228,7 @@ class Page_model extends My_Model
         return $data;
     }
 
-    function support_online() 
+    public function support_online() 
     {
         $this->db->where('active', 1);
         $this->db->order_by('ordering asc');
@@ -287,7 +265,7 @@ class Page_model extends My_Model
             $this->db->where($condition);
         }
 
-         $this->db->where("{$this->table_posts}.active", 1);
+        $this->db->where("{$this->table_posts}.active", 1);
         $this->db->select("{$this->table_posts}.name{$lang} as name,
             {$this->table_posts}.alias{$lang} as alias,
             {$this->table_posts}.brief{$lang} as brief,
@@ -499,7 +477,7 @@ class Page_model extends My_Model
     }
 
 
-    function viewSystemBranchs($condition = array())
+    public function viewSystemBranchs($condition = array())
     {
         if(is_array($condition) && count($condition) > 0) {
             $this->db->where($condition);
@@ -735,6 +713,18 @@ class Page_model extends My_Model
         }
 
         return $string_id;
+    }
+
+    public function viewDetail($condition = array(), $table = '')
+    {
+        if (is_array($condition) && count($condition) > 0) {
+            $this->db->where($condition);
+        }
+
+        $this->db->select("*");
+        $result = $this->db->get($table)->row_array();
+
+        return $result;
     }
 } 
 

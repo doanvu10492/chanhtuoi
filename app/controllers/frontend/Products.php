@@ -55,8 +55,8 @@ class Products extends Public_Controller
 	public function index()
     {
         $urlSegmentOne = $this->uri->segment(1);
-        $condition = [];
         $getRequest = $this->input->get();
+        $condition = [];
 
         if ($urlSegmentOne != 'tim-kiem') {
             $condition['alias_cate'] = $urlSegmentOne;
@@ -68,34 +68,31 @@ class Products extends Public_Controller
             }
         }
 
-        $allProducts = $this->products_model->list_products($condition);
+        $allProducts = $this->getCollection($condition);
 
         $this->_total = count($allProducts);
         $this->getLimit();
-        $this->outputData['pagination'] = $this->getPagination();
 
-        $this->outputData['total_products'] = $this->_total;
-        $this->outputData['list_products'] = $this->products_model->list_products($condition, $this->limit);
-        $this->outputData['breadcrumb'] = __breadcrumb('', $this->secondSegment);
-        $this->outputData['option'] = $this->select_option->dropdown(
-            ['table' => "{$this->tableCategory}"], 
-            '', 
-            '',
-            isset($getRequest['id_cate']) ? $getRequest['id_cate'] : ''
-        );
-    	$this->outputData['categories'] = $this->category_products_model->get_list_category();
-        $this->outputData['current_page'] = $this->currentPage;
-        $this->outputData['getRequest'] = $getRequest; 
-
-        $menu = $this->menu_model->getDetailData( ['alias' => 'home'] );
-        $metaSeo = [
-        	'title' => $menu['meta_title'],
-        	'keyword' => $menu['meta_keywords'],
-        	'description' => $menu['meta_keywords'],
+        $_outputData = [
+            'pagination' => $this->getPagination(),
+            'total_products' => $this->_total,
+            'list_products' => $this->getCollection($condition, $this->limit),
+            'breadcrumb' =>  __breadcrumb('', $this->secondSegment),
+            'option' => $this->select_option->dropdown(
+                ['table' => "{$this->tableCategory}"], 
+                '', 
+                '',
+                isset($getRequest['id_cate']) ? $getRequest['id_cate'] : ''
+            ), 
+            'categories' => $this->category_products_model->get_list_category(),
+            'current_page' => $this->currentPage,
+            'getRequest' => $getRequest
         ];
-        $this->metaSeo($metaSeo);
-
-        //load theme
+        
+        $this->outputData = array_merge($this->outputData, $_outputData);
+        $menu = $this->menu_model->getDetailData( ['alias' => 'home'] );
+        $this->metaSeo($menu);
+        
         $this->loadTheme('list');
 	}
 
@@ -106,34 +103,34 @@ class Products extends Public_Controller
     {
 		$urlSegmentOne = $this->uri->segment(1);
         $condition = []; 
-        $limit = [];
-		// to use $_GET();
+
 		$alias = $urlSegmentOne;
 
-        $category = $this->category_products_model->view_category(
-            ["{$this->tableCategory}.alias" => $urlSegmentOne] 
+        $category = $this->category_products_model->viewDetail(
+            ["{$this->tableCategory}.alias" => $urlSegmentOne],
+            $this->tableCategory 
         );
 		
-		if( ! $category ) { 
-            $metaSeo = array(
+		if ( ! $category ) { 
+            $metaSeo = [
                 'title' => 'Không tìm thấy nội dung',
                 'keyword' => '',
                 'description' => '',
-            );
+            ];
 
             $this->outputData['current_page'] = 'notfound';
             $this->render_page('frontend/errors/notfound');
+            
             return;
         }
 
 		$listIdCate = $this->category_products_model->get_cate_child($category['id']);
 		$this->outputData['idRoot'] = $this->findParentRoot($category['id_parent']);
 		$queryString = '';
+
 		$uri = base_url() . $urlSegmentOne;
 
-		// load pagination
-        $totalCategory = count( $this->products_model->list_products($condition, '', '', '', $listIdCate, $urlSegmentOne ) );
-        $total = count($totalCategory);
+        $total = count($this->getCollection($condition, '', $listIdCate));
 
         $data = [
         	'base_url' => $uri . $queryString,
@@ -142,36 +139,22 @@ class Products extends Public_Controller
 
         $this->getPagination($data);
 		
-        $this->outputData['list_products'] = $this->products_model->list_products(
-            '', 
-            $limit, 
-            '', 
-            '', 
-            $listIdCate, 
-            $urlSegmentOne 
-        );
+        $this->outputData['list_products'] = $this->getCollection($condition, $limit, $listIdCate, $urlSegmentOne);
        
-		// breadcrumb text_helper
 		$secondSegment = [
 			'name' => __translate('products'), 
 			'link' => './san-pham.html' 
 		];
 
-        $this->outputData['breadcrumb'] = __breadcrumb($this->listCateParent($listIdCate), $this->secondSegment);
-        $this->outputData['trademark'] = $this->trademark_model->list_trademark()->result();
-		$this->outputData['tags_products'] = $this->tags_model->get_list_tags_products();
-
-        $this->outputData['category'] = $category;
-        $this->outputData['id_parent'] =  $category['id_parent'] > 0 ? $category['id_parent'] : $category['id'];
-        
-        // output seo
-        $metaSeo = array(
-        	'title' => $category['meta_title'],
-        	'keyword' => $category['meta_keywords'],
-        	'description' => $category['meta_description'],
+        $this->outputData['breadcrumb'] = __breadcrumb(
+            $this->listCateParent($listIdCate), 
+            $this->secondSegment
         );
 
-        $this->metaSeo($metaSeo);
+		$this->outputData['tags_products'] = $this->tags_model->get_list_tags_products();
+        $this->outputData['category'] = $category;
+        $this->outputData['id_parent'] =  $category['id_parent'] ? $category['id_parent'] : $category['id'];
+        $this->metaSeo($category);
         $this->outputData['current_page'] = $this->currentPage;
         // load theme
         $this->loadTheme('list');
@@ -184,33 +167,24 @@ class Products extends Public_Controller
     */
 	public function view()
     {
-		$segmentOne = $this->getSegmentId($this->uri->segment(1));
-        $stringNumber = explode('-', $segmentOne);
-        $id = (int) str_replace('d', '', end($stringNumber));
+        $id = getIdFromUrl($this->uri->segment(1), 'd');
 
-        if ( ! $this->products_model->check_exists(['id'=>$id]) ) {
+        if ( ! $this->products_model->check_exists(['id' => $id]) ) {
         	show_404();
         }
 
 		$detail = $this->products_model->view_product(["{$this->table}.id" => $id] );
-		$string_cate = $this->category_products_model->get_cate_child($detail['id_cate']);
-        $this->outputData['breadcrumb'] = __breadcrumb($this->listCateParent($string_cate), $this->secondSegment,  $detail['name']);
-
-        $metaSeo = [
-        	'title' => $detail['meta_title'],
-        	'keyword' => $detail['meta_keywords'],
-        	'description' => $detail['meta_keywords'],
-        ];
-
-        $this->metaSeo($metaSeo);
+		$stringCateIds = $this->category_products_model->get_cate_child($detail['id_cate']);
+        
+        $this->outputData['breadcrumb'] = __breadcrumb(
+            $this->listCateParent($stringCateIds), 
+            $this->secondSegment,  
+            $detail['name']
+        );
 		$this->outputData['current_page'] = $this->uri->segment(1);
-
-		// get big image slider
         $this->outputData['detail'] = $detail;
         $this->outputData['idRoot'] = $this->findParentRoot($detail['id_cate']);
         $this->outputData['tags_products'] = $this->tags_model->get_list_tags_products();
-        
-        // sample products
         $this->outputData['other_products'] = $this->products_model->list_products( 
         	[
                 "id_cate" => $detail['id_cate'], 
@@ -219,6 +193,7 @@ class Products extends Public_Controller
         	[6]
         );
         
+        $this->metaSeo($detail);
         $this->loadTheme('detail');
 	}
 
@@ -261,39 +236,6 @@ class Products extends Public_Controller
         // load theme
         $this->loadTheme('list');
 	}
-
-    /*
-    * Comfirm code from input 
-    *
-    * @return json string
-    */
-    protected function comfirmCode()
-     {
-     	if($_POST['code_sale']) {
-     		if($_POST['code_sale'] == $this->config->item('code_sale')) {
-     			echo json_encode(array('text_sale' => "Mã khuyến mãi (".$_POST['code_sale'].") đã được xác nhận được khuyến mãi ".$this->config->item('number_sale')."%", 'number_sale' => $this->config->item('number_sale') )); exit();
-     		}
-     		echo json_encode(["error" => "Mã khuyến mãi này không đúng !"]); exit();
-     	}
-
-     	echo json_encode(["error" => "Vui lòng nhập Mã khuyến mãi !"]); exit();
-     }
-
-
-	protected function addToCart($id)
-    {
-    	$id = $this->uri->segment(2);
-
-    	if(!$this->products_model->check_exists(array('id'=>$id))) {
-        	show_404();
-        }
-
-    	$detail = $this->products_model->view_product('', ["{$this->table}.id"=>$id]);
-    	$this->outputData['detail'] = $detail;
-    	$this->load->view('frontend/cart/cart_popup', $detail);
-
-		exit();
-    }
 
     /*
     * Find parent id from id_cate  
@@ -340,12 +282,12 @@ class Products extends Public_Controller
     * @param int $url_id
     * @return int $id
     */
-    protected function getSegmentId($url_id)
+    protected function getSegmentId($urlId)
     {
-    	$segment = explode('-', $url_id);
+    	$segment = explode('-', $urlId);
 		$id = end($segment);
         
-		return $id;
+		return (int) $id;
     }
 
     /*
@@ -365,4 +307,16 @@ class Products extends Public_Controller
 
         $this->limit = array($this->numberPage, $this->perPage);
     } 
+
+    protected function getCollection($condition = array(), $limit = array(), $stringCateIds = '')
+    {
+        $collection = $this->products_model->list_products(
+            $condition, 
+            $limit, 
+            '',  
+            $stringCateIds 
+        );
+
+        return $collection;
+    }
 }

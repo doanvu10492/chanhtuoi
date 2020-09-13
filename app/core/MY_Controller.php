@@ -195,9 +195,9 @@ class Public_Controller extends MY_Controller
     */
     public function metaSeo($meta = array())
     {
-        $this->outputData['page_title'] = $meta['title'];
-        $this->outputData['meta_keywords'] = $meta['keyword'];
-        $this->outputData['meta_description'] = $meta['description'];
+        $this->outputData['page_title'] = $meta['meta_title'];
+        $this->outputData['meta_keywords'] = $meta['meta_keywords'];
+        $this->outputData['meta_description'] = $meta['meta_description'];
     }
 
     /*
