@@ -391,6 +391,13 @@ h4.modal-title {
     margin-top: 25px;
     color: #000;
 }
+.list-products .product-item figure {
+    height: 225px;
+}
+
+.list-products .product-item figure img {
+    height: 100%;
+}
 /** POSTS ***/
 #blog-list-page {
     background: #fff;

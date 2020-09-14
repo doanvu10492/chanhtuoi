@@ -20,7 +20,7 @@ class Category_products_model extends My_Model
     // --------------------------------------------------------------------
 
 
-    public function list_category_products($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = '' )
+    public function listCategoryProducts($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = '' )
     {
         if (is_array($limit)) {
             if(count($limit)==1)
@@ -194,7 +194,7 @@ class Category_products_model extends My_Model
         return $data;
     }
 
-    public function view_category($lang, $condition = array())
+    public function viewCategory($lang, $condition = array())
     {
         if(is_array($condition) && count($condition) > 0) {
             $this->db->where($condition);

@@ -20,7 +20,7 @@ class Products_model extends My_Model
      * Constructor 
      *
      */
-    function __construct() 
+    public function __construct() 
     {
     	$this->timestamps = TRUE;
 
@@ -28,7 +28,7 @@ class Products_model extends My_Model
     }
 
 
-    function list_products($condition = array(), $limit = array(), $order_by = null)
+    public function listProducts($condition = array(), $limit = array(), $order_by = null)
     {
         if (is_array($limit) && count($limit) > 0) {
             if(count($limit) == 1) {
@@ -77,7 +77,7 @@ class Products_model extends My_Model
         return $result;
     }
 
-    function parse_products_data($data)
+    public function parseProductsData($data)
     {
         $count = 0;
 
@@ -102,7 +102,7 @@ class Products_model extends My_Model
         return $data;
     }
         
-    function parse_products_row($data)
+    public function parseProductRow($data)
     {
         $data->image_path = IMG_PATH_PRODUCT.$data->image; 
         $data->image_path2 = IMG_PATH_PRODUCT.$data->image_2; 
@@ -110,18 +110,14 @@ class Products_model extends My_Model
         return $data;
     }
 
-    //insert images multiplite
-
-    function insert_images_product($data = array())
+    public function insertProductImages($data = array())
     {
         $this->db->insert(TB_IMG_PRODUCT, $data);
 
-        return TRUE;
+        return true;
     }
 
-    // list detail img of product
-
-    function get_img_detail($condition = array())
+    public function getImgDetail($condition = array())
     {
         $this->db->where($condition);
         $this->db->select('image, id_image');
@@ -136,13 +132,13 @@ class Products_model extends My_Model
         return $data;
     }
 
-    function delete_img_detail($condition = array())
+    public function deleleImgDetail($condition = array())
     {
         $this->db->where($condition);
         $this->db->delete(TB_IMG_PRODUCT);
     }
 
-    function getListColor()
+    public function getListColor()
     {
         $this->db->select('*');
         $result = $this->db->get('dv_color')->result();

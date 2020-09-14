@@ -139,7 +139,7 @@ class Page_model extends My_Model
     /*
     ** Category album
     */
-    public function view_category_album($condition = array())
+    public function viewCategoryAlbum($condition = array())
     {
         if (is_array($condition) && count($condition) > 0) {
             $this->db->where($condition);
@@ -335,7 +335,7 @@ class Page_model extends My_Model
     }
 
 
-    function list_category_posts($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = NULL)
+    public function listCategoryPosts($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = NULL)
     {
         if(is_array($limit)) {
             if(count($limit)==1)
@@ -398,7 +398,7 @@ class Page_model extends My_Model
     }
 
 
-    function view_category_posts($condition = array())
+    function viewCategoryPosts($condition = array())
     {
         if(is_array($condition) && count($condition) > 0) {
             $this->db->where($condition);

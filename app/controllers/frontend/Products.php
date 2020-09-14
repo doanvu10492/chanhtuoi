@@ -33,7 +33,6 @@ class Products extends Public_Controller
 	{
 		parent::__construct();
 
-	    // check status of page
 		if($this->config->item('site_status') == 0) {
 			redirect('offline');
         }
@@ -151,7 +150,7 @@ class Products extends Public_Controller
             $this->secondSegment
         );
 
-		$this->outputData['tags_products'] = $this->tags_model->get_list_tags_products();
+		$this->outputData['tags_products'] = $this->tags_model->getListTagsProducts();
         $this->outputData['category'] = $category;
         $this->outputData['id_parent'] =  $category['id_parent'] ? $category['id_parent'] : $category['id'];
         $this->metaSeo($category);
@@ -173,7 +172,7 @@ class Products extends Public_Controller
         	show_404();
         }
 
-		$detail = $this->products_model->view_product(["{$this->table}.id" => $id] );
+		$detail = $this->products_model->viewProduct(["{$this->table}.id" => $id] );
 		$stringCateIds = $this->category_products_model->get_cate_child($detail['id_cate']);
         
         $this->outputData['breadcrumb'] = __breadcrumb(
@@ -184,8 +183,8 @@ class Products extends Public_Controller
 		$this->outputData['current_page'] = $this->uri->segment(1);
         $this->outputData['detail'] = $detail;
         $this->outputData['idRoot'] = $this->findParentRoot($detail['id_cate']);
-        $this->outputData['tags_products'] = $this->tags_model->get_list_tags_products();
-        $this->outputData['other_products'] = $this->products_model->list_products( 
+        $this->outputData['tags_products'] = $this->tags_model->getListTagsProducts();
+        $this->outputData['other_products'] = $this->products_model->listProducts( 
         	[
                 "id_cate" => $detail['id_cate'], 
         		"id !="  => $id
@@ -207,33 +206,25 @@ class Products extends Public_Controller
 
         // Load pagination
 	    $queryString = './'.$this->uri->segment(1).'/'.$this->uri->segment(2);
-        $listTags = $this->tags_model->list_products_tags($id_tags);
+        $listTags = $this->tags_model->listProductsTags($id_tags);
         $total = count($listTags);
 
-        $data = array(
+        $data = [
         	'base_url' => $uri.$queryString,
         	'total' => $total
-        );
+        ];
 
         $this->getPagination($data);
 	   
 	    // Out put list products
-        $this->outputData['list_products'] = $this->tags_model->list_products_tags($id_tags, $limit);
+        $this->outputData['list_products'] = $this->tags_model->listProductsTags($id_tags, $limit);
 
         $this->outputData['current_page'] = 'products';
         $tags = $this->tags_model->get_infor( array(TB_TAGS.'.id_tags' => $id_tags ));
         $this->outputData['tags_detail'] = $tags;
-      	$this->outputData['tags_products'] = $this->tags_model->get_list_tags_products();
+      	$this->outputData['tags_products'] = $this->tags_model->getListTagsProducts();
 
-        // output seo
-        $metaSeo = array(
-        	'title' => $tags->meta_title,
-        	'keyword' => $tags->meta_keywords,
-        	'description' => $tags->meta_description,
-        );
-        $this->metaSeo($metaSeo);
-        
-        // load theme
+        $this->metaSeo($tags);
         $this->loadTheme('list');
 	}
 
@@ -245,12 +236,12 @@ class Products extends Public_Controller
     */
     protected function findParentRoot($id_cate = '')
     {
-    	$cate = $this->category_products_model->view_category( '', array("{$this->tableCategory}.id_cate" => $id_cate) );
+    	$cate = $this->category_products_model->viewCategory( '', array("{$this->tableCategory}.id_cate" => $id_cate) );
     	$id_parent = $id_cate;
 
     	if(count($cate) > 0 && $cate['id_parent'] > 0) {
 			$id_parent = $cate['id_parent'];
-			$cate_child = $this->category_products_model->view_category( '', array("{$this->tableCategory}.id_cate" => $id_parent) );
+			$cate_child = $this->category_products_model->viewCategory( '', array("{$this->tableCategory}.id_cate" => $id_parent) );
             
 			if(count($cate_child) > 0 && $cate_child['id'] > 0) {
 				$id_parent = $this->findParentRoot( $cate_child['id']);
@@ -272,7 +263,7 @@ class Products extends Public_Controller
             return;
         }
 
-		$listCategoryParent = $this->category_products_model->list_category_products('', '', '', '', $cateId );
+		$listCategoryParent = $this->category_products_model->listCategoryProducts('', '', '', '', $cateId );
 
 		return $listCategoryParent;
     } 
@@ -310,7 +301,7 @@ class Products extends Public_Controller
 
     protected function getCollection($condition = array(), $limit = array(), $stringCateIds = '')
     {
-        $collection = $this->products_model->list_products(
+        $collection = $this->products_model->listProducts(
             $condition, 
             $limit, 
             '',  

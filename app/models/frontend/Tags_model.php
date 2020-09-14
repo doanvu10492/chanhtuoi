@@ -47,7 +47,7 @@
       // --------------------------------------------------------------------   
     }
 
-    public function get_list_tags_posts($id = 0)
+    public function getListTagsPosts($id = 0)
     {
         if ($id) {
             $this->db->where(TB_TAGS_PRODUCT.'.id_posts', $id);
@@ -69,7 +69,7 @@
     }
 
 
-    public function get_list_tags_products($id = 0)
+    public function getListTagsProducts($id = 0)
     {
         if ($id) {
             $this->db->where(TB_TAGS_PRODUCT.'.id_product', $id);
@@ -131,7 +131,7 @@
         
     }
 
-    public function list_products_tags($id = 0, $limit = array())
+    public function listProductsTags($id = 0, $limit = array())
     {
 
          if(is_array($limit))        

@@ -71,9 +71,8 @@ class Posts extends Public_Controller
         $this->_total = count($allProducts);
         $this->getLimit();
         $this->outputData['pagination'] = $this->getPagination();
-
         $this->outputData['total_posts'] = $this->_total;
-        $this->outputData['listPosts'] = $this->page_model->listPosts($condition, $this->limit);
+        $this->outputData['listPosts'] = $this->getCollection($condition, $this->limit);
         $this->outputData['breadcrumb'] = __breadcrumb('', $this->secondSegment);
         $this->outputData['option'] = $this->select_option->dropdown(
             ['table' => "{$this->tableCategory}"], 
@@ -81,19 +80,12 @@ class Posts extends Public_Controller
             '',
             isset($getRequest['id_cate']) ? $getRequest['id_cate'] : ''
         );
-    	$this->outputData['categories'] = $this->page_model->list_category_posts();
+    	$this->outputData['categories'] = $this->page_model->listCategoryPosts();
         $this->outputData['current_page'] = $this->currentPage;
         $this->outputData['getRequest'] = $getRequest; 
 
-        $menu = $this->menu_model->getDetailData( ['alias' => 'home'] );
-        $metaSeo = [
-        	'title' => $menu['meta_title'],
-        	'keyword' => $menu['meta_keywords'],
-        	'description' => $menu['meta_keywords'],
-        ];
-        $this->metaSeo($metaSeo);
-
-        //load theme
+        $menu = $this->menu_model->getDetailData( ['alias' => 'home'] );        
+        $this->metaSeo($menu);
         $this->loadTheme('list');
 	}
 
@@ -130,14 +122,7 @@ class Posts extends Public_Controller
 		$queryString = '';
 		$uri = base_url() . $urlSegmentOne;
 
-        $this->_total = count( $this->page_model->listPosts(
-            $condition, 
-            '', 
-            '', 
-            '', 
-            $listIdCate, 
-            $urlSegmentOne 
-        ));
+        $this->getCollection($condition, '', $listIdCate);
 
         $this->getLimit();
         $this->outputData['pagination'] = $this->getPagination();
@@ -148,15 +133,7 @@ class Posts extends Public_Controller
         ];
 
         $this->getPagination($data);
-		
-        $this->outputData['listPosts'] = $this->page_model->listPosts(
-            $condition, 
-            $this->limit, 
-            '', 
-            '', 
-            $listIdCate, 
-            $urlSegmentOne 
-        );
+        $this->outputData['listPosts'] = $this->getCollection($condition, $this->limit, $listIdCate);
        
 		$secondSegment = [
 			'name' => __translate('posts'), 
@@ -167,7 +144,7 @@ class Posts extends Public_Controller
             $this->listCateParent($listIdCate), 
             $this->secondSegment
         );
-		$this->outputData['tagPosts'] = $this->tags_model->get_list_tags_posts();
+		$this->outputData['tagPosts'] = $this->tags_model->getListTagsPosts();
         $this->outputData['category'] = $category;
         $this->outputData['id_parent'] =  $category['id_parent'] > 0 ? $category['id_parent'] : $category['id'];
         $this->outputData['current_page'] = $this->currentPage;
@@ -202,7 +179,7 @@ class Posts extends Public_Controller
 		$this->outputData['current_page'] = $this->uri->segment(1);
         $this->outputData['detail'] = $detail;
         $this->outputData['idRoot'] = $this->findParentRoot($detail['id_cate']);
-        $this->outputData['tagsPosts'] = $this->tags_model->get_list_tags_posts();
+        $this->outputData['tagsPosts'] = $this->tags_model->getListTagsPosts();
         $this->outputData['other_posts'] = $this->page_model->listPosts( 
         	[
                 TB_POSTS . '.id_cate' => $detail['id_cate'], 
@@ -222,70 +199,27 @@ class Posts extends Public_Controller
 		$id_tags = explode('-', $this->uri->segment(2));
 		$id_tags = end($id_tags);
 
-        // Load pagination
-	    $queryString = './'.$this->uri->segment(1).'/'.$this->uri->segment(2);
-        $listTags = $this->tags_model->listPosts_tags($id_tags);
+	    $queryString = './' . $this->uri->segment(1) . '/' . $this->uri->segment(2);
+        $listTags = $this->tags_model->listPostsTags($id_tags);
         $total = count($listTags);
 
-        $data = array(
-        	'base_url' => $uri.$queryString,
+        $data = [
+        	'base_url' => $uri . $queryString,
         	'total' => $total
-        );
+        ];
 
         $this->getPagination($data);
-	   
-	    // Out put list posts
-        $this->outputData['listPosts'] = $this->tags_model->listPosts_tags($id_tags, $limit);
-
+        $this->outputData['listPosts'] = $this->tags_model->listPostsTags($id_tags, $limit);
         $this->outputData['current_page'] = 'posts';
-        $tags = $this->tags_model->get_infor( array(TB_TAGS.'.id_tags' => $id_tags ));
+        $tags = $this->tags_model->viewDetail([TB_TAGS.'.id_tags' => $id_tags]);
         $this->outputData['tags_detail'] = $tags;
-      	$this->outputData['tags_posts'] = $this->tags_model->get_list_tags_posts();
+      	$this->outputData['tags_posts'] = $this->tags_model->getListTagsPosts();
 
-        // output seo
-        $metaSeo = array(
-        	'title' => $tags->meta_title,
-        	'keyword' => $tags->meta_keywords,
-        	'description' => $tags->meta_description,
-        );
-        $this->metaSeo($metaSeo);
-        
-        // load theme
+        $this->metaSeo($tags);
         $this->loadTheme('list');
 	}
 
-    /*
-    * Comfirm code from input 
-    *
-    * @return json string
-    */
-    protected function comfirmCode()
-     {
-     	if($_POST['code_sale']) {
-     		if($_POST['code_sale'] == $this->config->item('code_sale')) {
-     			echo json_encode(array('text_sale' => "Mã khuyến mãi (".$_POST['code_sale'].") đã được xác nhận được khuyến mãi ".$this->config->item('number_sale')."%", 'number_sale' => $this->config->item('number_sale') )); exit();
-     		}
-     		echo json_encode(["error" => "Mã khuyến mãi này không đúng !"]); exit();
-     	}
-
-     	echo json_encode(["error" => "Vui lòng nhập Mã khuyến mãi !"]); exit();
-     }
-
-
-	protected function addToCart($id)
-    {
-    	$id = $this->uri->segment(2);
-
-    	if(!$this->page_model->check_exists(array('id'=>$id))) {
-        	show_404();
-        }
-
-    	$detail = $this->page_model->view_posts('', ["{$this->table}.id"=>$id]);
-    	$this->outputData['detail'] = $detail;
-    	$this->load->view('frontend/cart/cart_popup', $detail);
-
-		exit();
-    }
+   
 
     /*
     * Find parent id from id_cate  
@@ -295,14 +229,14 @@ class Posts extends Public_Controller
     */
     protected function findParentRoot($id_cate = '')
     {
-    	$cate = $this->page_model->view_category_posts( '', array("{$this->tableCategory}.id_cate" => $id_cate) );
+    	$cate = $this->page_model->viewCategoryPosts(['id_cate' => $id_cate]);
     	$id_parent = $id_cate;
 
-    	if(count($cate) > 0 && $cate['id_parent'] > 0) {
+    	if (count($cate) > 0 && $cate['id_parent'] > 0) {
 			$id_parent = $cate['id_parent'];
-			$cate_child = $this->page_model->view_category_posts( '', array("{$this->tableCategory}.id_cate" => $id_parent) );
+			$cate_child = $this->page_model->viewCategoryPosts(['id_cate' => $id_parent]);
             
-			if(count($cate_child) > 0 && $cate_child['id'] > 0) {
+			if (count($cate_child) > 0 && $cate_child['id'] > 0) {
 				$id_parent = $this->findParentRoot( $cate_child['id']);
 			}
     	}
@@ -322,7 +256,7 @@ class Posts extends Public_Controller
             return;
         }
 
-		$listCategoryParent = $this->page_model->list_category_posts('', '', '', '', $cateId );
+		$listCategoryParent = $this->page_model->getListTagsPosts('', '', '', '', $cateId );
 
 		return $listCategoryParent;
     } 
@@ -355,6 +289,18 @@ class Posts extends Public_Controller
             $this->perPage = $_GET['per_page'];
         }
 
-        $this->limit = array($this->numberPage, $this->perPage);
+        $this->limit = [$this->numberPage, $this->perPage];
+    }
+
+    protected function getCollection($condition = array(), $limit = array(), $stringCateIds = '')
+    {
+        $collection = $this->page_model->listPosts(
+            $condition, 
+            $limit, 
+            '',  
+            $stringCateIds 
+        );
+
+        return $collection;
     } 
 }

@@ -34,7 +34,7 @@
         return $result;
     }
 
-    public function insert_tags_product($data = array())
+    public function insertProductTags($data = array())
     {
         $this->db->insert(TB_TAGS_PRODUCT, $data);
         return TRUE;
@@ -68,7 +68,7 @@
     }
 
 
-    public function check_tag_product_exist($condition = array())
+    public function checkProductTagExist($condition = array())
     {
         $this->db->where($condition);
         $this->db->select('*');
@@ -77,7 +77,7 @@
         return $query->num_rows() ? true : false;
     }
 
-    public function get_list_tags($id_product)
+    public function getListTags($id_product)
     {
         $this->db->where(TB_TAGS_PRODUCT.'.id_product', $id_product);
         $this->db->select(TB_TAGS_PRODUCT.".*, {$this->table}.*");

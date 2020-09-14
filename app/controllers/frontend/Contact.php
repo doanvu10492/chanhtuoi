@@ -4,19 +4,18 @@ class Contact extends Public_Controller
     public $outputData;
 	public $loggedInUser;
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->config->db_config_fetch();
 
-	    // check status of page
-		if( ! $this->config->item('site_status'))
+		if ( ! $this->config->item('site_status'))
 			redirect('offline');
 
 		$this->load->model('frontend/contact_model');
 	}
 
-	function index()
+	public function index()
 	{
         $this->load->library('form_validation');
 		$this->load->helper('form');
@@ -25,7 +24,7 @@ class Contact extends Public_Controller
         	$this->config->item('field_error_end_tag')
         );
 
-	   if($this->input->post('send')) {
+	   if ($this->input->post('send')) {
 			$this->form_validation->set_rules(
 				'name',
 				'lang:page_title_validation',
@@ -132,7 +131,7 @@ class Contact extends Public_Controller
     *
     * @return json
     */
-	function addEmail()
+	public function addEmail()
 	{
 		$arrRes = [
 			'message' => 'Vui lòng nhập email !',
@@ -158,7 +157,7 @@ class Contact extends Public_Controller
 	}
 
 
-	function sendPhone()
+	public function sendPhone()
 	{
 		$arrRes = [
 			'message' => 'Vui lòng nhập email !',
@@ -196,7 +195,7 @@ class Contact extends Public_Controller
 		echo json_encode($arrRes); exit();
 	}
 
-	function store()
+	public function store()
 	{
 		$this->outputData['storeDefault'] = $this->page_model->viewSystemBranchs(['isHighlight' => 1 ]);
 		$this->outputData['stores'] = $this->page_model->listSystemBranchs(['id_parent' => 0 ]);
@@ -373,7 +372,6 @@ class Contact extends Public_Controller
 
 
 				if ( $mail->Send()) {
-					// $this->contact_model->insertData($insertData);
 					$this->generateFormKey();
 					$resp = [
 						'success' => true,
@@ -387,6 +385,5 @@ class Contact extends Public_Controller
 		}
 
 		echo json_encode($resp); die;
-
 	}
 }

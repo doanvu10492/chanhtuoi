@@ -22,7 +22,7 @@
     // --------------------------------------------------------------------
 
 
-    public function list_products($condition = array(), $limit = array(), $order_by = NULL, $where_in = NULL)
+    public function listProducts($condition = array(), $limit = array(), $order_by = NULL, $where_in = NULL)
     {
         if (is_array($limit) && count($limit) > 0) {
             if(count($limit) == 1) {
@@ -99,13 +99,11 @@
             {$this->category}.alias as alias_cate
         ");
 
-        $result = $this->db->get($this->table);
-
-        $result = $result->result_array();
-        
+        $result = $this->db->get($this->table)->result_array();
         $count = 0;
         $data = array();
-        foreach($result as $item) {
+
+        foreach ($result as $item) {
             $count++;
             $item['count'] = $count;
             $item['price_old'] =  $item['promotion'] ? $item['price'] : (0);
@@ -123,7 +121,7 @@
         return $data;
     }
 
-    public function view_product($condition = array(), $lang = null)
+    public function viewProduct($condition = array(), $lang = null)
     {
         if(is_array($condition) && count($condition) > 0)
         {

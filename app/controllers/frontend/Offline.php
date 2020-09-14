@@ -7,7 +7,7 @@ class Offline extends CI_Controller
         $this->config->db_config_fetch();
     } 
 
-    function index()
+    public function index()
     {
        $status = $this->config->item('site_status');
         if ($status == 0) {
@@ -15,6 +15,5 @@ class Offline extends CI_Controller
         } else {
             redirect(base_url());
         }
- 
     }
 }

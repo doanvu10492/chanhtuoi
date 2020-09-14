@@ -1,23 +1,16 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Select_option
 {
-
-    public $param = NULL;
-
-    /**
-       line level
-    **/
+    public $param = [];
     public $string = '---';
 
 
-	function __construct()
+	public function __construct()
 	{
-		
 		$this->CI = & get_instance();
-
-	} //Controller End
+	} 
     
-    function get($params = array(), $id_parent = 0)
+    public function getSelect($params = array(), $id_parent = 0)
     {
     	$this->CI->db->select('*');
 
@@ -31,9 +24,9 @@ class Select_option
         
     }	
 
-	function dropdown($params = array(), $parentId = 0, $string = NULL, $activeId = NULL)
+	public function dropdown($params = array(), $parentId = 0, $string = NULL, $activeId = NULL)
 	{
-		$this->get($params, $parentId);
+		$this->getSelect($params, $parentId);
 		$option = ! $parentId ? '<option value="">Chọn danh mục</option>' : '';
         $string .= $string ? $string : '---';
 
@@ -41,7 +34,9 @@ class Select_option
 			foreach ($this->data as $key => $val) {
 			    $selected = $activeId == $val['id_cate'] ? 'selected' : '';
 				
-			    $option .= "<option  " . $selected ." value='".$val["id_cate"] . "'>|" . $string . $val['name'] . "</option>";
+			    $option .= "<option  " . $selected ." value='".$val["id_cate"] . "'>|";
+			    $option .= $string . $val['name'];
+			    $option .= "</option>";
 
 			    $option .= $this->dropdown($params, $val['id_cate'], $string, $activeId);
 			}
@@ -50,35 +45,31 @@ class Select_option
 		return $option;
 	}
 	
-
-
-	function dropdown_pages($params = array(), $id_parent = 0, $string = NULL, $id_active = NULL)
+	public function dropdown_pages($params = array(), $id_parent = 0, $string = NULL, $id_active = NULL)
 	{
-		//call get select database
 
 		$this->get($params, $id_parent);
-
 		$option = ($id_parent == 0) ? ('<option>--Chọn bài viết cha--</option>') : ('');
-
         $string .= ($string != NULL) ? ($string) : ('---');
 
-        if(count($this->data) > 0)
-	        {
+        if (count($this->data) > 0) {
             
-			foreach($this->data as $key => $val){
+			foreach ($this->data as $key => $val) {
 
-				   $selected = (isset($id_active) && $id_active == $val['id']) ? ('SELECTED') : ('');
-					
-				    $option .= "<option  ".$selected." value='".$val["id"]."'>|".$string.$val['name']."</option>";
+			    $selected = (isset($id_active) && $id_active == $val['id']) ? ('SELECTED') : ('');
+				
+			    $option .= "<option  " . $selected ." value='".$val["id_cate"] . "'>|";
+			    $option .= $string . $val['name'];
+			    $option .= "</option>";
 
-				    $option .= $this->dropdown_pages($params, $val['id'], $string, $id_active);
-				}
-            }
+			    $option .= $this->dropdown_pages($params, $val['id'], $string, $id_active);
+			}
+        }
+
 		return $option;
-
 	}
 
-	function dropdownSelect($params = array() , $selectedId = NULL, $optionDefault = 'Chọn hạng xe', $checkActive = false, $hide = false)
+	public function dropdownSelect($params = array() , $selectedId = NULL, $optionDefault = 'Chọn hạng xe', $checkActive = false, $hide = false)
 	{
 		$this->getCollection($params, true);
 
@@ -103,7 +94,7 @@ class Select_option
 		return $option;
 	}
 
-	function getCollection($params = array(), $orderByActive = false)
+	public function getCollection($params = array(), $orderByActive = false)
     {
     	$this->CI->db->select('*');
 
@@ -118,4 +109,4 @@ class Select_option
         
     	$this->data = $this->CI->db->get($params['table'])->result_array();
     }	
-} //Class 
+} 

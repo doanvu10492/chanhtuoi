@@ -43,13 +43,16 @@ class Home extends Public_Controller
 
 	protected function getAds()
 	{
-		$cateImgPartner = $this->page_model->view_category_album('', array(TB_CGR_ALBUM.'.type' => 'round-img')); 
+		$model = $this->page_model->viewCategoryAlbum(['type' => 'round-img']); 
 
-		if($cateImgPartner) {
-			$this->outputData['listAds'] = $this->page_model->listAlbum(array(TB_ALBUM.'.id_cate' => $cateImgPartner['id']), array(2));
+		if ($model) {
+			$this->outputData['listAds'] = $this->page_model->listAlbum([TB_ALBUM.'.id_cate' => $model['id']], array(2));
 		}
 	}
 
+	/**
+	* Meta seo for homepage
+	**/
 	public function _metaSeo()
 	{
 		$menu = $this->menu_model->getDetailData( array('current_page' => 'trang-chu') );
@@ -69,7 +72,7 @@ class Home extends Public_Controller
 
 	protected function loadTheme($theme = '')
 	{
-		$this->render_page('frontend/layout/'.$theme);
+		$this->render_page('frontend/layout/' . $theme);
 	}
 
 	protected function setlang()
@@ -83,31 +86,11 @@ class Home extends Public_Controller
 
 	protected function getAdsHome()
 	{
-		$cateAdsHome = $this->page_model->view_category_album(['type' => 'ads']); 
+		$cateAdsHome = $this->page_model->viewDetail(['type' => 'ads'], TB_CGR_ALBUM); 
 
         if ($cateAdsHome) {
-            $this->outputData['adsHome'] = $this->page_model->listAlbum([TB_ALBUM.'.id_cate' => $cateAdsHome['id']], [2]);
+            $this->outputData['adsHome'] = $this->page_model->listAlbum([TB_ALBUM.'.id_cate' => $cateAdsHome['id_cate']], [2]);
         }
-	}
-
-	protected function listFourCategories() {
-		$categories = $this->page_model->list_category_posts('', '', '', '', array(
-			TB_CGR_POSTS.'.module' => 2,
-			TB_CGR_POSTS.'.active' => 1,
-			TB_CGR_POSTS.'.isHome' => 1
-		));
-		$data = [];
-		foreach ($categories as $cate) {
-			$cate['posts'] =  $this->page_model->listPosts(array(
-				TB_POSTS.'.isHighlight' => IS_HIGHLIGHT, 
-				TB_POSTS.'.type' => 'posts',
-				TB_POSTS.'.id_cate' => $cate['id']
-			), array(4));
-
-			$data[] = $cate;
-		}
-
-		$this->outputData['fourCategories'] = $data;
 	}
 
 	public function getCateOfHotProducts() 
@@ -119,7 +102,7 @@ class Home extends Public_Controller
 			$arrCateIds = $cate['id'];
 		}
 
-		$highlightProductCategories = $this->products_model->list_products(
+		$highlightProductCategories = $this->products_model->listProducts(
 			['isHighlight' => 1], 
 			array(40), 
 			'', 
@@ -135,7 +118,7 @@ class Home extends Public_Controller
 
 	protected function getHighlightProductCategories()
 	{
-		$cates = $this->category_products_model->list_category_products([
+		$cates = $this->category_products_model->listCategoryProducts([
 			'isHighlight' => 1
 		], array(6));
 
@@ -145,7 +128,7 @@ class Home extends Public_Controller
 
 	public function getHighlightPostCategories() 
 	{
-		$postCategories = $this->page_model->list_category_posts(
+		$postCategories = $this->page_model->listCategoryPosts(
 			['isHighlight' => 1 ], 
 			array(6)
 		);
@@ -170,8 +153,3 @@ class Home extends Public_Controller
 		]; 
 	}
 }
-
-//End Buyer Class
-//------------------------------------------------------------------------------
-/* End of file welcome.php */
-/* Location: ./system/app/controllers/Home.php */

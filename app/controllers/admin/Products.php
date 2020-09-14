@@ -75,12 +75,12 @@ class Products extends Admin_Controller
         }
 
     	$this->getLimit();
-        $this->_total = count($this->products_model->list_products($condition)->result());
+        $this->_total = count($this->products_model->listProducts($condition)->result());
         
 		$pagination = $this->getPagination();
 
-        $collection = $this->products_model->list_products($condition, $this->limit)->result();
-        $listProducts = $this->products_model->parse_products_data($collection);
+        $collection = $this->products_model->listProducts($condition, $this->limit)->result();
+        $listProducts = $this->products_model->parseProductsData($collection);
 
         $optionCategoryProduct = $this->select_option->dropdown(['table' => TB_CGR_PRODUCTS], '', '', $this->cateId);
 
@@ -173,12 +173,12 @@ class Products extends Admin_Controller
             $subPage = 'add_products';
 	    } else {
 		    $productDetail =  $this->products_model->get_infor(['id' => $id]);
-	        $product = $this->products_model->parse_products_row($productDetail);
-	        $product->tags = $this->tags_model->get_list_tags($id);
+	        $product = $this->products_model->parseProductRow($productDetail);
+	        $product->tags = $this->tags_model->getListTags($id);
 		    $cateId = count($product) > 0 && $product->id_cate > 0 ? $product->id_cate : '';
            
             $pageTitle = 'Chỉnh sửa bài viết';
-		    $imgDetail = $this->products_model->get_img_detail(['id_product' => $id]);
+		    $imgDetail = $this->products_model->getImgDetail(['id_product' => $id]);
             $subPage = 'updated_products';
 		}
 
@@ -217,18 +217,16 @@ class Products extends Admin_Controller
 
     	foreach ($arrTags as $tag) {
     		$tagItem = trim(url_alias($tag));
-
-    		// check tags exist
+            
     		if ( ! $this->tags_model->check_exists(array(TB_TAGS.'.alias'=> $tagItem))) {
     			$tagId = $this->tags_model->insertDataId(['alias' => $tagItem, 'name_tags'=> $tag ]);
-    			$this->tags_model->insert_tags_product(['id_product' => $productId, 'id_tags' => $tagId]);
+    			$this->tags_model->insertProductTags(['id_product' => $productId, 'id_tags' => $tagId]);
     		} else {
     			$tagInfor = $this->tags_model->get_infor([TB_TAGS.'.alias' => $tagItem]);
     			
-    			// check tags products exist
-    			if( ! $this->tags_model->check_tag_product_exist(array('id_tags' => $tagInfor->id_tags, 'id_product' => $productId )))
+    			if( ! $this->tags_model->checkProductTagExist(array('id_tags' => $tagInfor->id_tags, 'id_product' => $productId )))
     			{
-                    $this->tags_model->insert_tags_product(array('id_product' => $productId, 'id_tags' => $tagInfor->id_tags));
+                    $this->tags_model->insertProductTags(array('id_product' => $productId, 'id_tags' => $tagInfor->id_tags));
     			}
 
     		}
@@ -238,9 +236,8 @@ class Products extends Admin_Controller
     public function delete($id)
     { 
     	$product = $this->products_model->get_infor(array('id'=> $id));
-    	$product = $this->products_model->parse_products_row($product);
+    	$product = $this->products_model->parseProductRow($product);
         
-        // delete img avatar of product
     	if (realpath($product->image_path))	{
     		unlink(realpath($product->image_path));
 
@@ -250,14 +247,13 @@ class Products extends Admin_Controller
     		
     	}
 
-        // delete detail images of product
-        $listImgDetail = $this->products_model->get_img_detail(array('id_product' => $id));
+        $listImgDetail = $this->products_model->getImgDetail(array('id_product' => $id));
 
         if (count($listImgDetail) > 0) {
         	foreach ($listImgDetail as $row) {
         		unlink(realpath($row['image']));
         		// delete image in database
-        		$this->products_model->delete_img_detail(array('id_image' => $row['id_image']));
+        		$this->products_model->deleleImgDetail(array('id_image' => $row['id_image']));
         	}
         }
 
@@ -302,7 +298,7 @@ class Products extends Admin_Controller
             $fileUpload = $this->upload_library->multiple_upload($uploadPath, 'img_detail');
 
             for ($i=0; $i < count($fileUpload); $i++) {
-                $this->products_model->insert_images_product([
+                $this->products_model->insertProductImages([
                     'id_product' => $productId, 
                     'image' => $fileUpload[$i]
                 ]);
@@ -324,9 +320,9 @@ class Products extends Admin_Controller
         echo json_encode(['result' => admin_url('products')]); exit(); 
     }
 
-    public function delele_img_detail($idImage)
+    public function deleleImgDetail($idImage)
     {
-    	$img = $this->products_model->get_img_detail( ['id_image' => $idImage] );
+    	$img = $this->products_model->getImgDetail( ['id_image' => $idImage] );
     
     	if (count($img) <= 0) {
     		redirect($_SERVER['HTTP_REFERER']);
@@ -338,7 +334,7 @@ class Products extends Admin_Controller
     		unlink($unlink); 
     	}
 
-        $this->products_model->delete_img_detail(['id_image' => $idImage]);
+        $this->products_model->deleleImgDetail(['id_image' => $idImage]);
         $this->session->set_flashdata('flash_message','Bạn vừa xóa 1 ảnh của sản phẩm');
 
         redirect($_SERVER['HTTP_REFERER']);
