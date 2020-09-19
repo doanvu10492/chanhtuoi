@@ -47,11 +47,11 @@
                 <div class="filter-products">
                     <ul class="list-inline">
                         <li><label>Sắp xếp theo :</label></li>
-                        <li><a href="tim-kiem?order_price=">Mới nhất</a></li>
-                        <li><a href="tim-kiem?order_price=desc">Giá giảm dần</a></li>
-                        <li><a href="tim-kiem?order_price=asc">Giá tăng dần</a></li>
-                        <li><a href="tim-kiem?isSale=1">Khuyến mãi</a></li>
-                         <li><a href="tim-kiem?isHighlight=1">Bán chạy</a></li>
+                        <li><a href="tim-kiem?order_price=" class="btn btn-default">Mới nhất</a></li>
+                        <li><a href="tim-kiem?price=desc" class="btn btn-default">Giá giảm dần</a></li>
+                        <li><a href="tim-kiem?price=asc" class="btn btn-default">Giá tăng dần</a></li>
+                        <li><a href="tim-kiem?isSale=1" class="btn btn-default">Khuyến mãi</a></li>
+                         <li><a href="tim-kiem?isHighlight=1" class="btn btn-default">Bán chạy</a></li>
                     </ul>
                 </div>
             </div>

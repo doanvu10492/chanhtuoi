@@ -28,6 +28,7 @@ class Posts extends Public_Controller
     * numberPage
     */
     public $numberPage = 15;
+    public $_total = 0;
 
 	public function __construct()
 	{
@@ -94,7 +95,7 @@ class Posts extends Public_Controller
     */
 	public function category()
     {
-		$urlSegmentOne = $this->uri->segment(1);
+		$urlSegmentOne = $this->uri->segment(2);
         $condition = []; 
 
 		$alias = $urlSegmentOne;
@@ -117,7 +118,7 @@ class Posts extends Public_Controller
             return;
         }
 
-		$listIdCate = $this->page_model->getCateChild($category['id'], TB_CGR_POSTS);
+		$listIdCate = $this->page_model->getCateChild($category['id_cate'], TB_CGR_POSTS);
 		$this->outputData['idRoot'] = $this->findParentRoot($category['id_parent']);
 		$queryString = '';
 		$uri = base_url() . $urlSegmentOne;
@@ -144,6 +145,7 @@ class Posts extends Public_Controller
             $this->listCateParent($listIdCate), 
             $this->secondSegment
         );
+
 		$this->outputData['tagPosts'] = $this->tags_model->getListTagsPosts();
         $this->outputData['category'] = $category;
         $this->outputData['id_parent'] =  $category['id_parent'] > 0 ? $category['id_parent'] : $category['id'];
@@ -256,7 +258,7 @@ class Posts extends Public_Controller
             return;
         }
 
-		$listCategoryParent = $this->page_model->getListTagsPosts('', '', '', '', $cateId );
+		$listCategoryParent = $this->page_model->listCategoryPosts(['id_cate' => $cateId ]);
 
 		return $listCategoryParent;
     } 

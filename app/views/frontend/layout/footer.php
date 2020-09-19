@@ -74,7 +74,7 @@
     </div>
   </div>
     <!-- back to top -->
-    <span class="gotop" id="back-top"><a href="#top"><p><i class="fa fa-angle-up" aria-hidden="true"></i></p></a></span>
+    <!-- <span class="gotop" id="back-top"><a href="#top"><p><i class="fa fa-angle-up" aria-hidden="true"></i></p></a></span> -->
 
 </footer>
 <script src="./assets/bootstrap/js/bootstrap.min.js"></script>

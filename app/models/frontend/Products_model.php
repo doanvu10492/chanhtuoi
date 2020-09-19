@@ -12,7 +12,6 @@
     public function __construct() 
     {
     	$this->table = TB_PRODUCTS;
-        $this->trademark = TB_TRADEMARK;
     	$this->primary_key = 'id';
     	$this->timestamps = TRUE;
     	parent::__construct();
@@ -109,12 +108,12 @@
             $item['price_old'] =  $item['promotion'] ? $item['price'] : (0);
             $item['price'] =  $item['promotion'] ? $item['promotion'] : ($item['price']);
             $item['date'] = $this->format_date($item['created_at']);
-            $item['img'] = $this->parse_image_data($item['image']);
-            $item['img2'] = $this->parse_image_data($item['image_2']);
-            $item['img_thumb'] = $this->parse_image_data($item['image'], true);
-            $item['img_thumb2'] = $this->parse_image_data($item['image_2'], true);
-            $item['link'] = $this->parse_link_product($item);
-            $item['link_cart'] = $this->parse_link_cart($item['id']);
+            $item['img'] = $this->parseImageData($item['image']);
+            $item['img2'] = $this->parseImageData($item['image_2']);
+            $item['img_thumb'] = $this->parseImageData($item['image'], true);
+            $item['img_thumb2'] = $this->parseImageData($item['image_2'], true);
+            $item['link'] = $this->parseLinkProduct($item);
+            $item['link_cart'] = $this->parseLinkCart($item['id']);
             $data[] = $item;
         }
 
@@ -123,13 +122,15 @@
 
     public function viewProduct($condition = array(), $lang = null)
     {
-        if(is_array($condition) && count($condition) > 0)
-        {
+        if(is_array($condition) && count($condition) > 0) {
             $this->db->where($condition);
         }
-        $this->db->join("{$this->category}","{$this->category}.id_cate = {$this->table}.id_cate", "left");
-        $this->db->join("{$this->trademark}","{$this->trademark}.id = {$this->table}.trademark", "left");
-
+        
+        $this->db->join(
+            "{$this->category}",
+            "{$this->category}.id_cate = {$this->table}.id_cate", 
+            "left"
+        );
             
         $this->db->select("
             {$this->table}.name as name,
@@ -156,29 +157,30 @@
             {$this->table}.promotion,
             {$this->table}.color, 
             {$this->table}.size, 
-            {$this->trademark}.name as trademark,
             {$this->table}.price_old,
-            
-            {$this->category}.name as name_cate, {$this->category}.id_cate,  {$this->category}.alias as alias_cate  ");
+            {$this->category}.name as name_cate, 
+            {$this->category}.id_cate,  
+            {$this->category}.alias as alias_cate  
+        ");
         
         $query = $this->db->get("{$this->table}");
         $product = $query->row_array();
 
-        if(count($product)) {
-            $product['link'] = $this->parse_link_product($product);
-            $product['link_cart'] = $this->parse_link_cart($product['id']);
-            $product['img_thumb'] = $this->parse_image_data($product['image'], true);
-            $product['img'] = $this->parse_image_data($product['image']);
+        if (count($product)) {
+            $product['link'] = $this->parseLinkProduct($product);
+            $product['link_cart'] = $this->parseLinkCart($product['id']);
+            $product['img_thumb'] = $this->parseImageData($product['image'], true);
+            $product['img'] = $this->parseImageData($product['image']);
             $product['price_old'] =  $product['promotion'] ? $product['price'] : (0);
             $product['price'] = $product['promotion'] ? $product['promotion'] : ($product['price']);
             $product['date'] = $this->format_date($product);
-            $product['products_img_detail'] = $this->get_image_detail($product['id']);
+            $product['products_img_detail'] = $this->getImageDetail($product['id']);
         }
 
         return $product;
     }
 
-    public function get_image_detail( $id ) 
+    public function getImageDetail( $id ) 
     {
         $this->db->where('id_product', $id);
         $this->db->select('image, id_image as id, id_product');
@@ -197,14 +199,14 @@
         return $data;
     }
 
-    public function parse_image_data($img = '', $thumb = false) 
+    public function parseImageData($img = '', $thumb = false) 
     {
         $link_img = ($thumb) ? (IMG_PATH_PRODUCT.'thumb') : (IMG_PATH_PRODUCT);
 
         return $link_img.'/'.$img;
     }
 
-    public function parse_link_cart($id = 0) 
+    public function parseLinkCart($id = 0) 
     {
         return './product-add-cart/'.$id.'.html';
     }
@@ -218,7 +220,7 @@
         return $date;
     }
 
-    public function parse_link_product($product) 
+    public function parseLinkProduct($product) 
     {
         return base_url() . $product['alias'].'-d'. $product['id'] . '.html';
     }

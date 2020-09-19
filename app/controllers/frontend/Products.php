@@ -29,15 +29,19 @@ class Products extends Public_Controller
     */
     public $numberPage = 20;
 
+    /*
+    * Order by
+    */
+    public $orderBy = 'created_at desc';
+
 	public function __construct()
 	{
 		parent::__construct();
 
-		if($this->config->item('site_status') == 0) {
+		if ( ! $this->config->item('site_status')) {
 			redirect('offline');
         }
 
-        // load model
 		$this->load->model([
 			'frontend/products_model',
 			'backend/trademark_model', 
@@ -59,11 +63,15 @@ class Products extends Public_Controller
 
         if ($urlSegmentOne != 'tim-kiem') {
             $condition['alias_cate'] = $urlSegmentOne;
-        } 
+        }
 
         foreach ($getRequest as $key => $value) {
             if ($value && in_array($key, $this->searchKeys)) {
                 $condition[$key] = $value;
+            }
+
+            if ($value && in_array($key, ['price'])) {
+                $this->orderBy = $key . ' ' . $value;
             }
         }
 
@@ -75,7 +83,7 @@ class Products extends Public_Controller
         $_outputData = [
             'pagination' => $this->getPagination(),
             'total_products' => $this->_total,
-            'list_products' => $this->getCollection($condition, $this->limit),
+            'list_products' => $this->getCollection($condition),
             'breadcrumb' =>  __breadcrumb('', $this->secondSegment),
             'option' => $this->select_option->dropdown(
                 ['table' => "{$this->tableCategory}"], 
@@ -89,7 +97,7 @@ class Products extends Public_Controller
         ];
         
         $this->outputData = array_merge($this->outputData, $_outputData);
-        $menu = $this->menu_model->getDetailData( ['alias' => 'home'] );
+        $menu = $this->menu_model->getDetailData(['alias' => 'home']);
         $this->metaSeo($menu);
         
         $this->loadTheme('list');
@@ -102,8 +110,6 @@ class Products extends Public_Controller
     {
 		$urlSegmentOne = $this->uri->segment(1);
         $condition = []; 
-
-		$alias = $urlSegmentOne;
 
         $category = $this->category_products_model->viewDetail(
             ["{$this->tableCategory}.alias" => $urlSegmentOne],
@@ -123,39 +129,26 @@ class Products extends Public_Controller
             return;
         }
 
-		$listIdCate = $this->category_products_model->get_cate_child($category['id']);
 		$this->outputData['idRoot'] = $this->findParentRoot($category['id_parent']);
-		$queryString = '';
 
-		$uri = base_url() . $urlSegmentOne;
+        $stringCateIds = $this->category_products_model->getCateChild($category['id']);
+        $arrCateIds = $stringCateIds ? explode(',', $stringCateIds) : [];
 
-        $total = count($this->getCollection($condition, '', $listIdCate));
+        $this->_total = count($this->getCollection($condition, $arrCateIds));
+        $this->getLimit();
 
-        $data = [
-        	'base_url' => $uri . $queryString,
-        	'total' => $total
-        ];
-
-        $this->getPagination($data);
-		
-        $this->outputData['list_products'] = $this->getCollection($condition, $limit, $listIdCate, $urlSegmentOne);
-       
-		$secondSegment = [
-			'name' => __translate('products'), 
-			'link' => './san-pham.html' 
-		];
-
+        $this->outputData['pagination'] = $this->getPagination();
+        $this->outputData['list_products'] = $this->getCollection($condition, $arrCateIds);
         $this->outputData['breadcrumb'] = __breadcrumb(
-            $this->listCateParent($listIdCate), 
-            $this->secondSegment
+            $this->listCateParent($arrCateIds)
         );
-
 		$this->outputData['tags_products'] = $this->tags_model->getListTagsProducts();
         $this->outputData['category'] = $category;
         $this->outputData['id_parent'] =  $category['id_parent'] ? $category['id_parent'] : $category['id'];
-        $this->metaSeo($category);
         $this->outputData['current_page'] = $this->currentPage;
-        // load theme
+
+        $this->metaSeo($category);
+        
         $this->loadTheme('list');
 	}
 
@@ -172,11 +165,16 @@ class Products extends Public_Controller
         	show_404();
         }
 
-		$detail = $this->products_model->viewProduct(["{$this->table}.id" => $id] );
-		$stringCateIds = $this->category_products_model->get_cate_child($detail['id_cate']);
-        
+		$detail = $this->products_model->viewProduct(["{$this->table}.id" => $id]);
+        $category = $this->category_products_model->viewDetail(
+            ["{$this->tableCategory}.id_cate" => $detail['id_cate']]
+        );
+
+        $stringCateIds = $this->category_products_model->getCateChild($category['id']);
+        $arrCateIds = $stringCateIds ? explode(',', $stringCateIds) : [];
+
         $this->outputData['breadcrumb'] = __breadcrumb(
-            $this->listCateParent($stringCateIds), 
+            $this->listCateParent($arrCateIds), 
             $this->secondSegment,  
             $detail['name']
         );
@@ -236,34 +234,34 @@ class Products extends Public_Controller
     */
     protected function findParentRoot($id_cate = '')
     {
-    	$cate = $this->category_products_model->viewCategory( '', array("{$this->tableCategory}.id_cate" => $id_cate) );
-    	$id_parent = $id_cate;
+    	$cate = $this->category_products_model->viewDetail(["{$this->tableCategory}.id_cate" => $id_cate] );
+    	$parentId = $id_cate;
 
-    	if(count($cate) > 0 && $cate['id_parent'] > 0) {
-			$id_parent = $cate['id_parent'];
-			$cate_child = $this->category_products_model->viewCategory( '', array("{$this->tableCategory}.id_cate" => $id_parent) );
+    	if (count($cate) > 0 && $cate['id_parent'] > 0) {
+			$parentId = $cate['id_parent'];
+			$cateChild = $this->category_products_model->viewDetail(["{$this->tableCategory}.id_cate" => $parentId] );
             
-			if(count($cate_child) > 0 && $cate_child['id'] > 0) {
-				$id_parent = $this->findParentRoot( $cate_child['id']);
+			if (count($cateChild) > 0 && $cateChild['id'] > 0) {
+				$parentId = $this->findParentRoot( $cateChild['id']);
 			}
     	}
 
-    	return $id_parent;
+    	return $parentId;
     }
 
     /*
     * Get list category 
     * 
-    * @param string $cateId
+    * @param string $arrCateIds
     * @return string $listCategoryParent
     */
-    protected function listCateParent( $cateId = '' )
+    protected function listCateParent( $arrCateIds = array() )
     {
-        if ( ! $cateId) {
+        if ( ! $arrCateIds) {
             return;
         }
 
-		$listCategoryParent = $this->category_products_model->listCategoryProducts('', '', '', '', $cateId );
+		$listCategoryParent = $this->category_products_model->listCategoryProducts('', '', '', '', $arrCateIds );
 
 		return $listCategoryParent;
     } 
@@ -299,12 +297,12 @@ class Products extends Public_Controller
         $this->limit = array($this->numberPage, $this->perPage);
     } 
 
-    protected function getCollection($condition = array(), $limit = array(), $stringCateIds = '')
+    protected function getCollection($condition = array(), $stringCateIds = '')
     {
         $collection = $this->products_model->listProducts(
             $condition, 
-            $limit, 
-            '',  
+            $this->limit, 
+            $this->orderBy,  
             $stringCateIds 
         );
 

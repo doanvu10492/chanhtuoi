@@ -3,6 +3,7 @@ class Contact extends Public_Controller
 {
     public $outputData;
 	public $loggedInUser;
+	protected $secondSegment = null;
 	
 	public function __construct()
 	{
@@ -11,6 +12,11 @@ class Contact extends Public_Controller
 
 		if ( ! $this->config->item('site_status'))
 			redirect('offline');
+
+		$this->secondSegment = [
+			'name' => 'Liên hệ', 
+			'link' => base_url() . 'lien-he.html' 
+		];
 
 		$this->load->model('frontend/contact_model');
 	}
@@ -115,13 +121,11 @@ class Contact extends Public_Controller
 			}
 		}
 
-		// Seo
-		$menu = $this->menu_model->getDetailData(['current_page' => 'contact']);
-		$settings	 = 	$this->settings_model->getSiteSettings();
+        $menu = $this->menu_model->getDetailData(['current_page' => 'contact']);
+		$this->metaSeo($menu);
+
 		$this->outputData['current_page'] = $this->uri->segment(1);
-        $this->outputData['page_title'] = ( $menu['meta_title'] != null) ? ( $menu['meta_title']) : ( $settings['meta_title']);
-        $this->outputData['meta_keywords'] = ( $menu['meta_keywords'] != null) ? ( $menu['meta_keywords']) : ( $settings['meta_keywords']);;
-        $this->outputData['meta_description'] = ( $menu['meta_description'] != null) ? ( $menu['meta_description']) : ( $settings['meta_description']);
+        $this->outputData['breadcrumb'] = __breadcrumb('', $this->secondSegment);
 
         $this->render_page('frontend/contact/contact');
 	}

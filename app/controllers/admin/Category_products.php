@@ -57,6 +57,8 @@ class Category_products extends Admin_Controller
 	    		$data['updated_at'] = date('Y-m-d H:i:s');
 	    		unset($data['id']);
 
+                $data['alias'] = $this->createAliasName();
+
              	if ($id == 0) {
              		$data['created_at'] = date('Y-m-d H:i:s');
              		$this->category_products_model->insertData($data);

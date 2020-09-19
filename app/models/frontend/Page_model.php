@@ -168,7 +168,11 @@ class Page_model extends My_Model
     }
 
     
-    public function listPosts($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = array())
+    public function listPosts($condition = array(), 
+        $limit = array(), 
+        $keywords = NULL, 
+        $order_by = NULL, 
+        $where_in = array())
     { 
         if (is_array($limit)) {
             if (count($limit)==1)
@@ -218,10 +222,10 @@ class Page_model extends My_Model
             $row['count'] = $count;
             $row['img'] = IMG_PATH_POSTS.$row['image'];
             $row['img_thumb'] = IMG_PATH_POSTS.'thumb/'.$row['image'];
-           
-            $row['link'] = base_url() . $row['alias_cate'] . '/' . $row['alias'].'-p' . $row['id'].'.html';
+            $row['link'] = base_url() . $row['alias'] .'-p' . $row['id'].'.html';
             $row['link_cate'] = base_url() . $row['alias_cate'];
-            $row['date'] = date('d/m/Y H:i', strtotime($row['created_at']));
+            $row['date'] = date('H:i d/m/Y', strtotime($row['created_at']));
+
             $data[] = $row;
         }
 
@@ -334,13 +338,12 @@ class Page_model extends My_Model
         return $result;
     }
 
-
     public function listCategoryPosts($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = NULL)
     {
-        if(is_array($limit)) {
-            if(count($limit)==1)
+        if (is_array($limit)) {
+            if (count($limit)==1)
                 $this->db->limit($limit[0]);
-            else if(count($limit)==2)
+            else if (count($limit)==2)
                 $this->db->limit($limit);
         }
 
@@ -390,7 +393,7 @@ class Page_model extends My_Model
         foreach($result as $row) {
             $count++;
             $row['count'] = $count;
-            $row['link'] = './'.$row['alias'].'.html';
+            $row['link'] = base_url() . 'blog/' . $row['alias'] . '.html';
             $data []= $row;
         }
 
@@ -692,17 +695,17 @@ class Page_model extends My_Model
   
         $query = $this->db->get($table);
 
-        if($query->num_rows()>0) {
-            foreach($query->result_array() as $row) {
+        if ($query->num_rows()>0) {
+            foreach ($query->result_array() as $row) {
                 $data[]=$row;
             }
         }
         
         $string_id = $id_cate;
         
-        if(!empty($data)) {
-            foreach($data as $row_id_cate)  {
-                if($string_id=='') {
+        if (!empty($data)) {
+            foreach ($data as $row_id_cate)  {
+                if ($string_id=='') {
                     $string_id .= $row_id_cate['id'];  
                 } else {
                     $string_id .=','.$row_id_cate['id'];   

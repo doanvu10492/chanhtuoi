@@ -140,6 +140,11 @@ class Admin_Controller extends MY_Controller
            
         echo json_encode(['result' => admin_url('menu')]); exit(); 
     }
+
+    public function createAliasName()
+    {
+        return trim($this->input->post('alias')) ?: url_alias($this->input->post('name'));
+    }
 }
 
 class Public_Controller extends MY_Controller 

@@ -8,6 +8,7 @@ $(function() {
             console.log('error loading ' + element.data('src'));
         }
     });
+
 	$(".fancybox").fancybox();
 	$(".flexnav").flexNav();
 	$("#myCarousel").carousel();
@@ -77,7 +78,6 @@ $(function() {
 		$(this).empty();
 	});
 
-	//handle click button receive messages
 	$('#submit-phone').on('click', function(e) {
 		content = $('#callback_form').serialize();
 		
@@ -117,37 +117,7 @@ $(function() {
 		var activeTab = $(this).attr("rel"); 
 		$("#"+activeTab).show(); 
 	});
-	$("#list-partner").owlCarousel({
-		items:1,
-		nav:true,
-		loop: true,
-		autoPlay : 5000,
-		nav:false,dots:true,
-		animateOut: 'slideOutUp',
-	  	animateIn: 'slideInUp',
-		itemsCustom:[[0, 2], [480, 5], [768, 5], [992, 5], [1200, 7] ],
-		pagination: false,
-		slideSpeed : 800,
-		addClassActive: true,  
-		afterAction: function (e) {
-		if(this.$owlItems.length > this.options.items){
-		$('.slider-partner .navslider').show();
-		}else{
-		$('.slider-partner .navslider').hide();
-		}
-		}            
-		});
-		$('.slider-partner .navslider .prev').on('click', function(e){
-		e.preventDefault();
-		$('.parter-slider .inner').trigger('owl.prev');
-		});
-
-		$('.slider-partner .navslider .next').on('click', function(e){
-		e.preventDefault();
-		$('.slider-partner .inner').trigger('owl.next');
-	});
-
-
+	
 
 	$(window).scroll(function() {
 		headerTop = $('.header-top').height();
@@ -164,37 +134,6 @@ $(function() {
 		$('.td-drop-down-search').toggleClass('td-drop-down-search-open');
 	});
 		
-	$('#sidebar-left .box-cate-left').on('click','h3', function(){
-		if($(this).parent('.box-cate-left').hasClass('show')){
-			$(this).parent('.box-cate-left').removeClass('show').find('ul').slideUp(300);
-		}else{
-			$(this).parent('.box-cate-left').addClass('show').find('ul').slideDown(300);
-		}
-		
-
-	});
-
-	$('#sidebar-left ').on('click','h2', function(){
-		if($(this).parent('#sidebar-left').hasClass('show')){
-			$(this).parent('#sidebar-left').removeClass('show').find('filter-main').slideUp(300);
-		}else{
-			$(this).parent('#sidebar-left').addClass('show').find('filter-main').slideDown(300);
-		}
-		
-
-	});
-
-	$('#sidebar-left .box-cate-left i.fa-sort-desc').on('click', function(){
-		$(this).closest('li').find('ul').first().slideToggle();
-	});
-
-	$('.about-pannel button.btn-link').click(function(){
-		idCollape = $(this).attr('data-target');
-		$('.about-pannel button.btn-link').addClass('collapsed');
-		$('.about .collapse').removeClass('in');
-	});
-
-
 
 	$('a.buy-now').on('click', function(e){
 		e.preventDefault();
@@ -266,7 +205,6 @@ $(function() {
 		}
 	});
 
-	//handel cart
 
 	$('#cartModal #hidden-btn-add').on('click', function(){
 		
@@ -390,66 +328,6 @@ $(function() {
 				}
 			}
 		})
-	});
-
-	$('.product-number-input').on('click', 'button', function() {
-		var qty = $('.product-number-input input').val();
-		if ( $(this).hasClass('bootstrap-touchspin-down')) {
-			if (qty > 1) {
-				--qty;
-			}
-		} else {
-			++qty;
-		}
-
-		$('.product-number-input input').val(qty);
-	});
-
-	$('.product-option-size').on('click', '.product-size', function() {
-		// $('.product-option-size input').removeAttr('checked');
-		// $('.product-option-size input').attr('checked');
-		$(this).parent('.lb_size_gs').find('input').attr('checked');
-		$('.product-option-size .product-size').removeClass('selected');
-		$(this).addClass('selected');
-	})
-
-	$('.product-option-color').on('click', '.product-color', function() {
-		$('.product-option-color input').removeAttr('checked');
-		// $('.product-option-color input').attr('checked');
-		$(this).parent('.lb_size_gs').find('input').attr('checked');
-		$('.product-option-color .product-color').removeClass('selected');
-		$(this).addClass('selected');
-	});
-
-	//handle click button receive messages
-	$('#registerLearnForm').on('click', 'button[type="submit"]', function(e) {
-		content = $('#registerLearnForm').serialize();
-		e.preventDefault();
-		if ( msg = validRegisterForm()) {
-			$('#registerLearnForm .messages-register').empty().html('<p class= "error-messages">' + msg + '</p>');
-			return true;
-		}
-		
-		$.ajax({
-			type : 'POST',
-			url	 : './register-learn.html',
-			data : content,
-			success: function(data){
-				result = JSON.parse(data);
-
-				if(result.success) {
-					$(this).find('p.error').val('');
-					$('.messages-register').empty().html('<div class = "success-messages"><p>' + result.message + '</p></div>');
-					$("#registerLearnForm").find('input[name="form_key"]').val(result.form_key);
-					$("#registerLearnForm").find('input:text, select, textarea').val('');
-				} else {
-					$(this).find('p.error').val('');
-					$('.messages-register').empty().append('<p class= "error-messages">' + result.message + '</p>');
-				}
-			}
-		})
-		
-		return false;
 	});
 });
 

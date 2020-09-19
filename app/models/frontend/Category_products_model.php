@@ -20,7 +20,12 @@ class Category_products_model extends My_Model
     // --------------------------------------------------------------------
 
 
-    public function listCategoryProducts($condition = array(), $limit = array(), $keywords = NULL, $order_by = NULL, $where_in = '' )
+    public function listCategoryProducts(
+        $condition = array(), 
+        $limit = array(), 
+        $keywords = NULL, 
+        $order_by = NULL, 
+        $where_in = '' )
     {
         if (is_array($limit)) {
             if(count($limit)==1)
@@ -43,8 +48,7 @@ class Category_products_model extends My_Model
             $this->db->where($condition);
         }
 
-        if ($where_in != NULL) {
-            $where_in = explode(',', $where_in);
+        if (is_array($where_in) && count($where_in) > 0) {
             $this->db->where_in("{$this->table}.id_cate", $where_in);
         }
         
@@ -58,25 +62,22 @@ class Category_products_model extends My_Model
             {$this->table}.image,
             {$this->table}.id_cate as id,
             {$this->table}.created_at
-            ");
+        ");
+        
         $result = $this->db->get($this->table)->result_array();
         $data = array();
         $count = 0;
-        foreach($result as $row)
-        {
+        
+        foreach ($result as $row) {
             $count++;
             $row['count'] = $count;
-            $row['link'] = './san-pham/'.$row['alias'].'-c'.$row['id'].'.html';
+            $row['link'] = base_url() . $row['alias'] . '.html';
             
             $data[] = $row;
         }
 
         return $data;
-
-
-    }//End of getSiteSettings Function
-
-
+    }
 
     public function list_category_products_search( $type = 1)
     {
@@ -100,11 +101,11 @@ class Category_products_model extends My_Model
 
 
 
-    public function get_cate_child($id_cate)
+    public function getCateChild($id_cate)
     {
         $data = array();
         $this->db->select("{$this->table}.name, {$this->table}.id_cate as id, {$this->table}.active,  {$this->table}.created_at");
-        $this->db->where('id_parent',$id_cate);
+        $this->db->where('id_parent', $id_cate);
 
         //Check For Limit   
         $query = $this->db->get($this->table);
@@ -194,20 +195,20 @@ class Category_products_model extends My_Model
         return $data;
     }
 
-    public function viewCategory($lang, $condition = array())
+    public function viewDetail($condition = array())
     {
         if(is_array($condition) && count($condition) > 0) {
             $this->db->where($condition);
         }
 
         $this->db->select("
-            {$this->table}.name{$lang} as name,
-            {$this->table}.alias{$lang} as alias,
-            {$this->table}.brief{$lang} as brief,
+            {$this->table}.name,
+            {$this->table}.alias,
+            {$this->table}.brief,
             {$this->table}.id_parent,
-            {$this->table}.meta_title{$lang} as meta_title,
-            {$this->table}.meta_keywords{$lang} as meta_keywords,
-            {$this->table}.meta_description{$lang} as meta_description,
+            {$this->table}.meta_title,
+            {$this->table}.meta_keywords,
+            {$this->table}.meta_description,
             {$this->table}.image,
             {$this->table}.id_cate as id,
             {$this->table}.created_at,

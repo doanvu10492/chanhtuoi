@@ -20,13 +20,15 @@
     <div class="container">
         <div class="row">
             <div class="tab-categories">
-                <ul class="list-inline">
-                    <li><a href="">Khuyến mãi hot</a></li>
-                    <?php foreach ($cateOfHotProducts['cates'] as $cate) { ?>
-                        <li><a href="<?= $cate['link'] ?>"><?= $cate['name'] ?></a></li>
-                    <?php } ?>
-                </ul>
-                <a href="#" class="pull-right view-more">Xem thêm</a>
+                    <div class="cate-child list-inline">
+                        <div class="left">
+                            <a href="">Khuyến mãi hot</a>
+                        </div>
+                        <?php foreach ($cateOfHotProducts['cates'] as $cate) { ?>
+                           <a href="<?= $cate['link'] ?>" class="btn btn-default btn-sm"><?= $cate['name'] ?></a>
+                        <?php } ?>
+                    </div>
+                <a href="#" class="pull-right view-more">Xem thêm <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
             </div>
         </div>
         <div class="row">
@@ -41,10 +43,15 @@
     <div class="container">
         <div class="row">
             <div class="tab-categories">
-                <ul class="list-inline">
-                    <li><a href="">Khuyến mãi đề xuất</a></li>
-                </ul>
-                <a href="#" class="pull-right view-more">Xem thêm</a>
+                <div class="cate-child list-inline">
+                    <div class="left">
+                        <a href="">Khuyến mãi hot</a>
+                    </div>
+                    <?php foreach ($cateOfHotProducts['cates'] as $cate) { ?>
+                       <a href="<?= $cate['link'] ?>" class="btn btn-default btn-sm"><?= $cate['name'] ?></a>
+                    <?php } ?>
+                </div>
+                <a href="#" class="pull-right view-more">Xem thêm <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
             </div>
         </div>
         <div class="row">
@@ -59,12 +66,10 @@
     <div class="container">
         <div class="row">
             <div class="tab-categories">
-                <ul class="list-inline">
                     <?php foreach ($highlightPostCategories['cates'] as $cate) { ?>
                          <li><a href="<?= $cate['link'] ?>"><?= $cate['name'] ?></a></li>
                     <?php } ?>
                 </ul>
-                <a href="#" class="pull-right view-more">Xem thêm</a>
             </div>
         </div>
         <div class="post-cate list-posts">

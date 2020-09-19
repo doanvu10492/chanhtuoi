@@ -3,21 +3,10 @@
 <div class="box box-default">
  
 
-<div class="box-header with-border">
-  <h3 class="box-title">Sửa danh mục</h3>
-
-  <div class="box-tools pull-right">
-    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
-  </div>
-</div>
+<?php $this->load->view('admin/block/box_header'); ?>
 
 <div class="nav-tabs-custom">
-
-<ul class="nav nav-tabs">
-    <li class="active"><a href="#vi" data-toggle="tab" aria-expanded="true">Tiếng việt</a></li>
-     <li ><a href="#seo" data-toggle="tab" aria-expanded="true">Seo</a></li>
-</ul>
+    <?php $this->load->view('admin/block/tab'); ?>
   
 <form action="<?php echo admin_url('category_products/updated/'.$id); ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
 <div class="tab-content">
@@ -52,7 +41,7 @@
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Danh mục:</label>
                 <div class="col-sm-10" >
-                    <select name="id_parent" id="category_products">
+                    <select name="id_parent" id="category_products" class="form-control">
                     	<?php echo $option; ?>
                     </select>
                 </div>

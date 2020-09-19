@@ -116,7 +116,6 @@ class Sidebar_model extends My_Model
 
         if(count($result) > 0) {
             foreach ($result as $row) {
-                // $row['link'] = './san-pham/'.$row['alias'].'-c'.$row['id'].'.html';
                 if($this->check_parent_menu($row['id'])) {
                      $row['child'] = $this->menu_top($row['id'], $lang, $row['alias']);  
                 }

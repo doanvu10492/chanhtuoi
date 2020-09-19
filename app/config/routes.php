@@ -77,6 +77,23 @@ $route['admin/products/delete/(:num)'] = 'admin/products/delete/$1';
 $route['admin/products/delele_img_detail/(:num)'] = 'admin/products/delele_img_detail/$1';
 
 
+$route['admin/coupon/table_price'] = 'admin/products/table_price';
+$route['admin/coupon'] = 'admin/products';
+$route['admin/coupon/list_products'] = 'admin/products/index';
+$route['admin/coupon/updateStatus/(:num)'] = 'admin/products/updateStatus/$1';
+$route['admin/coupon/updated/(:num)'] = 'admin/products/updated/$1';
+$route['admin/coupon/delListChoose'] = 'admin/products/delListChoose';
+$route['admin/coupon/delete/(:num)'] = 'admin/products/delete/$1';
+$route['admin/coupon/delele_img_detail/(:num)'] = 'admin/products/delele_img_detail/$1';
+
+$route['admin/category_coupon'] = 'admin/category_products';
+$route['admin/category_coupon/delete/(:num)'] = 'admin/category_products/delete/$1';
+$route['admin/category_coupon'] = 'admin/category_products';
+$route['admin/category_coupon/updated/(:num)'] = 'admin/category_products/updated/$1';
+$route['admin/category_coupon/updateStatus/(:num)'] = 'admin/category_products/updateStatus/$1';
+$route['admin/category_coupon/delete/(:num)'] = 'admin/category_products/delete/$1';
+$route['admin/category_coupon/delListChoose'] = 'admin/category_products/delListChoose';
+
 
 $route['admin/category_products'] = 'admin/category_products';
 $route['admin/category_products/delete/(:num)'] = 'admin/category_products/delete/$1';
@@ -325,7 +342,6 @@ $route['san-pham|san-pham/(:num)'] = "frontend/products/index/$1";
 
 $route['gioi-thieu/(:any)'] = "frontend/posts/view/$1";
 $route['(:any)-p(:num)'] = "frontend/posts/view/$1";
-// $route['(:any)/(:any)-(:num)'] = "frontend/products/view/$1";
 $route['(:any)-(:num)|(:any)/(:any)-(:num)'] = "frontend/posts/view/$1";
-$route['(:any)/(:any)'] = "frontend/posts/category/$1";
-$route['(:any)'] = "frontend/posts/category/$1";
+$route['blog/(:any)'] = "frontend/posts/category/$1";
+$route['(:any)'] = "frontend/products/category/$1";
