@@ -48,11 +48,13 @@ class Products extends Admin_Controller
 	*/
 	public $_total = 0;
 
+    protected $_type = 'product';
+
     public function __construct()
     {
     	parent::__construct();
 
-        if(!isAdmin())
+        if (!isAdmin())
 			redirect_admin('login');
 
     	$this->config->db_config_fetch();
@@ -61,11 +63,15 @@ class Products extends Admin_Controller
 		$this->load->library('Upload_library');
 		$this->load->model( 'backend/products_model');
 		$this->load->model('backend/tags_model');
+
+        $this->_type = $this->uri->segment(2) === TYPE_COUPON ? TYPE_COUPON : TYPE_PRODUCT;
     }
 
     public function index()
     {  
         $condition = []; 
+
+        $condition['type'] = $this->_type;
         $getRequest = $this->input->get();
 
         foreach ($getRequest as $key => $value) {
@@ -82,7 +88,12 @@ class Products extends Admin_Controller
         $collection = $this->products_model->listProducts($condition, $this->limit)->result();
         $listProducts = $this->products_model->parseProductsData($collection);
 
-        $optionCategoryProduct = $this->select_option->dropdown(['table' => TB_CGR_PRODUCTS], '', '', $this->cateId);
+        $optionCategoryProduct = $this->select_option->dropdown(
+            ['table' => TB_CGR_PRODUCTS, 'where' => ['type' => $this->_type]], 
+            '', 
+            '', 
+            $this->cateId
+        );
 
         // $this->session->set_userdata('query_href_back', $this->queryString);
 
@@ -136,6 +147,7 @@ class Products extends Admin_Controller
                 $tags = $this->input->post('tags');
                 unset($data['images_old'], $data['tags']);
 
+                $data['type'] = $this->_type;
                 $data['image'] = $images;
                 $data['alias'] = $alias;
                 $data['updated_at'] = date('Y-m-d H:i:s');
@@ -147,7 +159,7 @@ class Products extends Admin_Controller
                     $data['active'] = 1;
                 	$productId = $this->products_model->insertDataId($data);
 		    		$this->session->unset_userdata('images');
-		    		$this->session->set_flashdata('flash_message','Bạn vừa thêm 1 slide mới');
+		    		$this->session->set_flashdata('flash_message','Bạn vừa thêm 1 sản phẩm mới');
                 } else {
                 	$productId = $id;
 		            $key = array('id' => $id);
@@ -164,7 +176,7 @@ class Products extends Admin_Controller
 
                 $this->uploadMultipleImg($productId);
 
-	    		redirect_admin('products' . $this->session->userdata('query_href_back'));
+	    		redirect_admin($this->uri->segment(2) . $this->session->userdata('query_href_back'));
 	    	}
 	    }
 
@@ -183,12 +195,20 @@ class Products extends Admin_Controller
 		}
 
         $optionCategories = $this->select_option->dropdown(
-            ['table' => TB_CGR_PRODUCTS], 
+            ['table' => TB_CGR_PRODUCTS, 'where' => ['type' => $this->_type]], 
             '', 
             '', 
             $id ? $product->id_cate : '', 
             $id ? $product->type : ''
         );
+
+        $optionCouponSources = $this->select_option->dropdown(
+            ['table' => TB_CGR_PRODUCTS, 'where' => ['type' => TYPE_COUPON]], 
+            '', 
+            '', 
+            $id ? $product->id_cate_coupon : ''
+        );
+
 
         $this->outputData = [
             'pageTitle' => $pageTitle,
@@ -196,7 +216,8 @@ class Products extends Admin_Controller
             'subPage'=> 'add_products',
             'id' => $id,
             'page' => $id ? $product : '',
-            'option' => $this->select_option->dropdown(['table' => TB_CGR_PRODUCTS], '', '', '' ,1),
+            'option' => $optionCategories,
+            'optionCouponSources' => $optionCouponSources,
             'listColor' => $this->products_model->getListColor(),
             'imgDetail' => $id ? $imgDetail : '',
         ];
@@ -261,7 +282,7 @@ class Products extends Admin_Controller
 		$this->products_model->deleteData($id);
 		$this->session->set_flashdata('flash_message','Bạn vừa xóa thành công một mẩu tin');
 
-		redirect_admin('products/list_products');
+		redirect_admin( $this->uri->segment(2) . '/list_products');
     }
 
     public function upload()
@@ -342,7 +363,11 @@ class Products extends Admin_Controller
 
     public function loadTheme($theme = '')
     {
-    	$this->render('admin/products/'.$theme);
+        if ($this->uri->segment(2) === 'coupon') {
+            $this->render('admin/coupon/' . $theme);
+        } else {
+            $this->render('admin/products/' . $theme);
+        }
     }
 
     public function getLimit()

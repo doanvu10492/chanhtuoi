@@ -95,6 +95,15 @@ $route['admin/category_coupon/delete/(:num)'] = 'admin/category_products/delete/
 $route['admin/category_coupon/delListChoose'] = 'admin/category_products/delListChoose';
 
 
+$route['admin/coupon_source'] = 'admin/category_products';
+$route['admin/coupon_source/delete/(:num)'] = 'admin/category_products/delete/$1';
+$route['admin/coupon_source'] = 'admin/category_products';
+$route['admin/coupon_source/updated/(:num)'] = 'admin/category_products/updated/$1';
+$route['admin/coupon_source/updateStatus/(:num)'] = 'admin/category_products/updateStatus/$1';
+$route['admin/coupon_source/delete/(:num)'] = 'admin/category_products/delete/$1';
+$route['admin/coupon_source/delListChoose'] = 'admin/category_products/delListChoose';
+
+
 $route['admin/category_products'] = 'admin/category_products';
 $route['admin/category_products/delete/(:num)'] = 'admin/category_products/delete/$1';
 $route['admin/category_products'] = 'admin/category_products';

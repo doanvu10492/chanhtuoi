@@ -81,7 +81,7 @@ class Products_model extends My_Model
     {
         $count = 0;
 
-        foreach($data as $row) {
+        foreach ($data as $row) {
             $count++;
             $row->count = $count;
             $row->image_path = IMG_PATH_PRODUCT.$row->image;

@@ -53,6 +53,7 @@ class Category_products_model extends My_Model
             {$this->table}.isLeft, 
             {$this->table}.id_cate as id, 
             {$this->table}.active, 
+            {$this->table}.type,
             {$this->table}.created_at,
             {$this->table}.updated_at"
         );
@@ -62,19 +63,34 @@ class Category_products_model extends My_Model
         return $result;
     }
 
-    function parse_category_data($data)
+    public function parse_category_data($data)
     {
     	$count = 0;
-    	foreach($data as $row)
-    	{
+
+    	foreach ($data as $row) {
+
+            switch ($row->type) {
+                case 'coupon':
+                    $linkType = 'category_coupon';
+                    break;
+
+                case 'source':
+                    $linkType = 'coupon_source';
+                    break;
+                
+                default:
+                    $linkType = 'category_products';
+                    break;
+            }
+
     		$count++;
     		$row->count = $count;
-    		$row->link_update = admin_url('category_products/updated/'.$row->id);
-    		$row->link_delete = admin_url('category_products/delete/'.$row->id);
-            $row->link_active = admin_url('category_products/updateStatus/'.$row->id);
-            $row->icon_active = ($row->active==1) ? ("glyphicon-ok") : ("glyphicon-remove");
-            $row->icon_highlight = ($row->isHighlight==1) ? ("glyphicon-ok") : ("glyphicon-remove");
-            $row->icon_left = ($row->isLeft==1) ? ("glyphicon-ok") : ("glyphicon-remove");
+    		$row->link_update = admin_url($linkType . '/updated/' . $row->id);
+    		$row->link_delete = admin_url($linkType . '/delete/' . $row->id);
+            $row->link_active = admin_url($linkType . '/updateStatus/' . $row->id);
+            $row->icon_active = $row->active ? ("glyphicon-ok") : ("glyphicon-remove");
+            $row->icon_highlight = $row->isHighlight ? ("glyphicon-ok") : ("glyphicon-remove");
+            $row->icon_left = $row->isLeft ? ("glyphicon-ok") : ("glyphicon-remove");
     	}
     	return $data;
     }

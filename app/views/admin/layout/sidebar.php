@@ -58,7 +58,7 @@
       </a>
                 <ul class="treeview-menu">
                     <li><a href="<?php echo admin_url('products/list_products');?>"><i class="fa fa-circle-o"></i>Danh sách sản phẩm</a></li>
-                    <li class="<?php echo ($subPage == 'cate1') ? ('active') : (''); ?>">
+                    <li class="<?php echo ($subPage == 'category_products') ? ('active') : (''); ?>">
                         <a href="<?php echo admin_url('category_products');?>"><i class="fa fa-circle-o"></i>  Danh mục sản phẩm
           </a>
                     </li>
@@ -67,15 +67,19 @@
 
             <li class="treeview <?php echo ($currentPage == 'list_products') ? ('active') : (''); ?>">
                 <a href="#">
-                    <i class="fa fa-share"></i> <span>Mã sản phẩm</span>
+                    <i class="fa fa-share"></i> <span>Mã giảm giá</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
                   </a>
                 <ul class="treeview-menu">
-                    <li><a href="<?php echo admin_url('coupon/list_products');?>"><i class="fa fa-circle-o"></i>Danh sách mã sản phẩm</a></li>
-                    <li class="<?php echo ($subPage == 'cate1') ? ('active') : (''); ?>">
-                        <a href="<?php echo admin_url('category_coupon');?>"><i class="fa fa-circle-o"></i>  Danh mục mã sản phẩm
+                    <li><a href="<?php echo admin_url('coupon/list_products');?>"><i class="fa fa-circle-o"></i>Danh sách mã giảm giá</a></li>
+                    <li class="<?php echo ($subPage == 'category_coupon') ? ('active') : (''); ?>">
+                        <a href="<?php echo admin_url('category_coupon');?>"><i class="fa fa-circle-o"></i>  Nguồn mã giảm giá
+          </a>
+                    </li>
+                    <li class="<?php echo ($subPage == 'coupon_source') ? ('active') : (''); ?>">
+                        <a href="<?php echo admin_url('coupon_source');?>"><i class="fa fa-circle-o"></i>  Danh mục giảm giá
           </a>
                     </li>
                 </ul>
@@ -133,40 +137,6 @@
       </a>
             </li>
             <?php } ?>
-            <li class="<?= ($currentPage == 'student') ? ('active') : (''); ?>">
-                <a href="<?= admin_url('student')?>">
-        <i class="fa fa-th"></i> <span>Quản lý học viên</span>
-      </a>
-            </li>
-            <?php if (adminRoleName() != 'manage_store' && adminRoleName() != 'accountant') { ?>
-            <li class="<?= ($currentPage == 'opening_schedule') ? ('active') : (''); ?>">
-                <a href="<?= admin_url('opening_schedule')?>">
-        <i class="fa fa-th"></i> <span>Quản lý lịch khai giảng</span>
-      </a>
-            </li>
-            <li class="treeview <?php echo ($currentPage == 'categories') ? ('active') : (''); ?>">
-                <a href="#">
-        <i class="fa fa-share"></i> <span>Quản lý danh mục</span>
-        <span class="pull-right-container">
-          <i class="fa fa-angle-left pull-right"></i>
-        </span>
-      </a>
-                <ul class="treeview-menu">
-                    <li class="<?php echo ($subPage == 'degree') ? ('active') : (''); ?>"><a href="<?=admin_url('degree')?>"><i class="fa fa-circle-o"></i>Hạng xe</a></li>
-                    <li class="<?php echo ($subPage == 'address') ? ('active') : (''); ?>">
-                        <a href="<?=admin_url('address')?>"><i class="fa fa-circle-o"></i> Địa chỉ</a>
-                    </li>
-                    <li class="<?php echo ($subPage == 'course') ? ('active') : (''); ?>">
-                        <a href="<?=admin_url('course')?>"><i class="fa fa-circle-o"></i> Mã khóa</a>
-                    </li>
-                    <li class="<?php echo ($subPage == 'schedule') ? ('active') : (''); ?>">
-                        <a href="<?=admin_url('schedule')?>"><i class="fa fa-circle-o"></i>Khai giảng </a>
-                    </li>
-                    <li class="<?php echo ($subPage == 'car') ? ('active') : (''); ?>">
-                        <a href="<?=admin_url('car')?>"><i class="fa fa-circle-o"></i> Xe học </a>
-                    </li>
-                </ul>
-            </li>
 
             <li class="<?php echo ($currentPage == 'menu') ? ('active') : (''); ?>">
                 <a href="<?php echo admin_url('menu'); ?>">
@@ -174,7 +144,6 @@
             
           </a>
             </li>
-            <?php } ?>
         </ul>
 
     </section>

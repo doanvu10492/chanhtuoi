@@ -4,16 +4,11 @@ class Sidebar_model extends My_Model
     public function __construct()
     {
         parent::__construct();
-        //ALBUM
+
         $this->table_album = TB_ALBUM;
         $this->category_album = TB_CGR_ALBUM;
-        //VIDEO
         $this->table_video = TB_VIDEO;
-
-        //VIDEO
         $this->table_links = TB_LINKS;
-
-        //POSTS
         $this->table_posts= TB_POSTS;
         $this->category_posts = TB_CGR_POSTS;
     }

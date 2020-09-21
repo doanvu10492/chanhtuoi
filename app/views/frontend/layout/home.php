@@ -16,6 +16,26 @@
     </div>
 </section>
 
+<section id="highlight-cate-coupon" class="cate-products-home">
+    <div class="container">
+        <div class="row">
+            <div class="tab-categories">
+                    <div class="cate-child list-inline">
+                        <div class="left">
+                            <a href="">Mã khuyến mãi</a>
+                        </div>
+                    </div>
+                <a href="#" class="pull-right view-more">Xem thêm <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="list-categories-coupons">
+            <?php $this->load->view('frontend/block/cate_coupons', ['categories' => $cateCoupons]); ?>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section id="hot-promo" class="cate-products-home">
     <div class="container">
         <div class="row">

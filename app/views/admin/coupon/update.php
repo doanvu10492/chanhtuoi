@@ -17,7 +17,7 @@
 <div class="nav-tabs-custom">
     <?php $this->load->view('admin/block/tab'); ?>
     
-    <form action="<?php echo admin_url('products/updated/'.$id); ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+    <form action="<?php echo admin_url('coupon/updated/'.$id); ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
         <div class="tab-content">
         	<div class="tab-pane active" id="vi">
              <!-- /.box-header -->
@@ -81,6 +81,18 @@
                     <p class="error"><?php echo form_error('id_cate'); ?></p>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Nguồn giảm giá:</label>
+                <div class="col-sm-10">
+
+                    <select name="id_cate_coupon" class="form-control">
+                        <?php echo $optionCouponSources; ?>
+                    </select>
+                    <p class="error"><?php echo form_error('id_cate_coupon'); ?></p>
+                </div>
+            </div>
+
 		    <div class="form-group" >
                 <label for="inputEmail3" class="col-sm-2 control-label">Tags:</label>
                 <div class="col-sm-10">
@@ -116,43 +128,7 @@
 	        <!-- /.box-body -->
         </div>
         <!--product many -->
-               
-
-        <div class="form-group" style="display: none">
-            <label for="file" class="col-sm-2 control-label">Hình chi tiết: </label>
-            <div class="col-sm-10" id="list_img_detail">
-            <?php
-                if (isset($imgDetail) && $imgDetail) {
-              	  	foreach($imgDetail as $image) {
-            ?>
-                <span style="float:left;">
-                    <a href="<?=$image['image']?>"><img src="<?=$image['image']?>" alt="" class="thumb size48" style="float:left"></a>
-                    <a class="del-img-item" href="<?php echo admin_url('products/delele_img_detail/'.$image['id_image'])?>" onclick="return confirm('Bạn muốn xóa hình này?');"><i class="fa fa-remove"></i></a>
-                </span>
-            <?php
-                }
-            }
-            ?>
-           </div>
-        </div>
-              
-              
-
-        <div class="form-group" style="display: none">
-            <label for="file" class="col-sm-2 control-label">Thêm: </label>
-            <div class="col-sm-10" id="list_img">
-                <div class="img_item1 img_item">
-				 	<input type="file" name="img_detail[]" id="tr1" /> 
-				 	<a href="javascript:void(0)" onclick="add(1)" class="btn btn-default add-1">
-				 	     <i class="fa fa-plus"></i>
-				 	</a>
-				 	<a href="javascript:void(0)" onclick="del(1)" class="btn btn-default">
-				 	     <i class="fa fa-trash-o" aria-hidden="true"></i>
-				 	</a>
-			 	</div>
-           </div>
-        </div>
-                 
+                         
                 
         <!--end product many -->
 		    <div class="form-group overload-hidden">
@@ -167,9 +143,6 @@
 </div>
 
 <script type="text/javascript"  language="javascript">
-	$(function() {
-	  $('.selectpicker').selectpicker();
-	});
 	CKEDITOR.replace('description');
 	CKEDITOR.replace('download');
 	CKEDITOR.replace('info_detail');

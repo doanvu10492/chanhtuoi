@@ -1,6 +1,6 @@
 <div class="action-list-admin">
      <ul class="list-inline ">
-          <li><a href="<?php echo admin_url('products/updated/0');  ?>"><i class="fa fa-plus" aria-hidden="true"></i>Thêm</a></li>
+          <li><a href="<?php echo admin_url('coupon/updated/0');  ?>"><i class="fa fa-plus" aria-hidden="true"></i>Thêm</a></li>
      </ul>
 </div>
 
@@ -36,12 +36,9 @@
 			        <th></th>
 			        <th class="size_stt">STT</th>
 					<th class="width75">Hình ảnh</th>
-		            <th>Tên sản phẩm</th>
+		            <th>Tên</th>
 		            <th>Danh mục</th>
-		            <!-- <th>Ngày đăng</th> -->
-		            <th class="width85 text-center">Mới</th>
-					<th class="width85 text-center">Bán chạy</th>
-					<th class="text-center" style="width: 120px">Khuyến mãi</th>
+					<th class="width85 text-center">Nổi bật</th>
 		            <th class="width85">Trạng thái</th>
 		            <th class="th-action">Sửa || Xóa</th>
 				</tr>
@@ -65,19 +62,10 @@
 					<p style="clear: both; font-size: 13px; color: #777; font-style: italic; margin-top: 5px"><?= $row->code; ?></p>
 				</td>
 	            <td> <?php echo $row->name_cate; ?> </td>
-				<!-- <td> <?php echo $row->created_at; ?> </td> -->
-				<td>
-				     <a href="<?php echo $row->link_active; ?>" data-action='isNew' rel="<?php echo $row->icon_new; ?>" class="btn-status glyphicon <?php echo $row->icon_new; ?>"> </a>
-				
-				</td> 
 				<td>
 				     <a href="<?php echo $row->link_active; ?>" data-action='isHighlight' rel="<?php echo $row->icon_highlight; ?>" class="btn-status glyphicon <?php echo $row->icon_highlight; ?>"> </a>
 				
 				</td>
-				<td>
-				     <a href="<?php echo $row->link_active; ?>" data-action='isSale' rel="<?php echo $row->icon_left; ?>" class="btn-status glyphicon <?php echo $row->icon_sale; ?>"> 
-				     </a>
-				</td> 
 				<td>
 				     <a href="<?php echo $row->link_active; ?>" data-action='active' rel="<?php echo $row->active; ?>" class="btn-status glyphicon <?php echo $row->icon_active; ?>"></a>
 				</td>

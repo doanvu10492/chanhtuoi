@@ -25,10 +25,9 @@ class Home extends Public_Controller
 	 * Loads Home page of the site.
 	 *
 	 * @access	public
-	 * @param	nil
 	 * @return	void
 	 */	
-	function index()
+	public function index()
 	{
 		$this->generateFormKey();
 		$this->getCateOfHotProducts();
@@ -37,6 +36,7 @@ class Home extends Public_Controller
         $this->output->cache(5);
         $this->getAdsHome();
         $this->getHighlightPostCategories();
+        $this->getCateCoupons();
         $this->loadTheme('home');
        
 	} 
@@ -103,7 +103,7 @@ class Home extends Public_Controller
 		}
 
 		$highlightProductCategories = $this->products_model->listProducts(
-			['isHighlight' => 1], 
+			['isHighlight' => 1, 'type' => 'product'], 
 			array(40), 
 			'', 
 			'',
@@ -119,7 +119,8 @@ class Home extends Public_Controller
 	protected function getHighlightProductCategories()
 	{
 		$cates = $this->category_products_model->listCategoryProducts([
-			'isHighlight' => 1
+			'isHighlight' => 1,
+			'type' => TYPE_PRODUCT
 		], array(6));
 
 		return $cates;
@@ -129,7 +130,7 @@ class Home extends Public_Controller
 	public function getHighlightPostCategories() 
 	{
 		$postCategories = $this->page_model->listCategoryPosts(
-			['isHighlight' => 1 ], 
+			['isHighlight' => 1 , 'type' => TYPE_PRODUCT ], 
 			array(6)
 		);
 
@@ -151,5 +152,16 @@ class Home extends Public_Controller
 			'cates' => $postCategories,
 			'posts' => $highlightPostCategories
 		]; 
+	}
+
+
+	public function getCateCoupons() 
+	{
+		$categories = $this->category_products_model->listCategoryProducts([
+			'isHighlight' => 1,
+			'type' => TYPE_COUPON
+		], array(6));
+
+		$this->outputData['cateCoupons'] = $categories; 
 	}
 }

@@ -18,10 +18,10 @@ class Select_option
     	    $this->CI->db->where($params['where']);
         }
 
-        $this->CI->db->where('id_parent', $id_parent);
+        $this->CI->db->where('id_parent', $id_parent); 
+       
 
     	$this->data = $this->CI->db->get($params['table'])->result_array();
-        
     }	
 
 	public function dropdown($params = array(), $parentId = 0, $string = NULL, $activeId = NULL)

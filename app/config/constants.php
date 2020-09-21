@@ -133,6 +133,7 @@ define('TB_OPENING_SCHEDULE', 'dv_opening_schedule');
 define('TB_SCHEDULE', 'dv_schedule');
 define('TB_MODULE', 'dv_module');
 define('TB_EXAM_RESULT', 'dv_exam_result');
+define('TB_CGR_PRODUCTS_RELATED', 'dv_category_products_related');
 
 
 //vairable
@@ -143,3 +144,6 @@ define('UN_STATUS', 0);
 define('IS_STATUS', 1);
 define('IS_ACTIVE', 1);
 define('UN_ACTIVE', 0);
+define('TYPE_PRODUCT', 'product');
+define('TYPE_COUPON', 'coupon');
+define('TYPE_SOURCE', 'source');
