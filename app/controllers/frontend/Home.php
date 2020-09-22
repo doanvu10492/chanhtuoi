@@ -159,7 +159,7 @@ class Home extends Public_Controller
 	{
 		$categories = $this->category_products_model->listCategoryProducts([
 			'isHighlight' => 1,
-			'type' => TYPE_COUPON
+			'type' => TYPE_SOURCE
 		], array(6));
 
 		$this->outputData['cateCoupons'] = $categories; 

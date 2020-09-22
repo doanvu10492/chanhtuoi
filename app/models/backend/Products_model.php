@@ -82,16 +82,27 @@ class Products_model extends My_Model
         $count = 0;
 
         foreach ($data as $row) {
+
+            switch ($row->type) {
+                case 'coupon':
+                    $linkType = 'coupon';
+                    break;
+                
+                default:
+                    $linkType = 'products';
+                    break;
+            }
+
             $count++;
             $row->count = $count;
             $row->image_path = IMG_PATH_PRODUCT.$row->image;
             $row->image_path2 = IMG_PATH_PRODUCT.$row->image_2;
-            $row->image_thumb = IMG_PATH_PRODUCT.'thumb/'.$row->image;
-            $row->image_thumb2 = IMG_PATH_PRODUCT.'thumb/'.$row->image_2;
-            $row->link_update = admin_url('products/updated/'.$row->id);
-            $row->link_delete = admin_url('products/delete/'.$row->id);
-            $row->link_vip = admin_url('products/updateStatus/'.$row->id);
-            $row->link_active = admin_url('products/updateStatus/'.$row->id);
+            $row->image_thumb = IMG_PATH_PRODUCT.'thumb/' . $row->image;
+            $row->image_thumb2 = IMG_PATH_PRODUCT.'thumb/' . $row->image_2;
+            $row->link_update = admin_url($linkType. '/updated/' . $row->id);
+            $row->link_delete = admin_url( $linkType . '/delete/' . $row->id);
+            $row->link_vip = admin_url($linkType . '/updateStatus/' . $row->id);
+            $row->link_active = admin_url($linkType . '/updateStatus/' . $row->id);
             $row->icon_active = ($row->active==1) ? ("glyphicon-ok") : ("glyphicon-remove");
             $row->icon_new = ($row->isNew==1) ? ("glyphicon-ok") : ("glyphicon-remove");
             $row->icon_left = ($row->isLeft==1) ? ("glyphicon-ok") : ("glyphicon-remove");

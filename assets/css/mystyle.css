@@ -1786,6 +1786,31 @@ a.a-register-now {
     font-size: 20px;
     padding: 20px 0;
 }
+/**** COUPON ****/
+.cate-coupons {
+    text-align: center;
+    border: 1px solid #f1f1f1;
+    padding-top: 15px;
+}
+
+.cate-coupons a {
+    font-family: OpensansBold;
+    color: #333;
+    display: inline-block;
+    margin: 5px 0;
+    font-size: 15px;
+}
+.list-categories-coupons {
+    overflow: hidden;
+    background: #fff;
+    margin-bottom: 10px;
+    margin: 0 5px;
+}
+
+.cate-coupons-info p {
+    height: 51px;
+    overflow: hidden;
+}
 @media screen and (min-width: 1024px) {
 }
 /*Ipad ngang(1024 x 768)*/

@@ -71,17 +71,6 @@
 	             <p class="error"><?php echo form_error('image'); ?></p>
 	           </div>
 	        </div> 
-			<div class="form-group">
-                <label for="inputEmail3" class="col-sm-2 control-label">Danh mục:</label>
-                <div class="col-sm-10">
-
-                    <select name="id_cate" class="form-control" id="category_products">
-                    	<?php echo $option; ?>
-                    </select>
-                    <p class="error"><?php echo form_error('id_cate'); ?></p>
-                </div>
-            </div>
-
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Nguồn giảm giá:</label>
                 <div class="col-sm-10">
@@ -90,6 +79,16 @@
                         <?php echo $optionCouponSources; ?>
                     </select>
                     <p class="error"><?php echo form_error('id_cate_coupon'); ?></p>
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Danh mục:</label>
+                <div class="col-sm-10">
+
+                    <select name="id_cate" class="form-control" id="category_products">
+                    	<?php echo $option; ?>
+                    </select>
+                    <p class="error"><?php echo form_error('id_cate'); ?></p>
                 </div>
             </div>
 

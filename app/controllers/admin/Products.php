@@ -64,7 +64,8 @@ class Products extends Admin_Controller
 		$this->load->model( 'backend/products_model');
 		$this->load->model('backend/tags_model');
 
-        $this->_type = $this->uri->segment(2) === TYPE_COUPON ? TYPE_COUPON : TYPE_PRODUCT;
+        $this->_type = $this->currentPage = $this->uri->segment(2) === TYPE_COUPON ? TYPE_COUPON : TYPE_PRODUCT;
+        $this->subPage = $this->uri->segment(2);
     }
 
     public function index()
@@ -100,7 +101,7 @@ class Products extends Admin_Controller
     	$this->outputData = [
 			'pageTitle' => 'Danh sách sản phẩm',
 			'currentPage' => $this->currentPage,
-			'subPage'=> 'list_products',
+			'subPage'=> $this->subPage,
 			'pages' => $listProducts,
 			'pagination' => $pagination,
 			'keyword' => $this->keyword,
@@ -182,7 +183,6 @@ class Products extends Admin_Controller
 
 	    if ( ! $id ) {
 	    	$pageTitle = 'Thêm sản phẩm mới';
-            $subPage = 'add_products';
 	    } else {
 		    $productDetail =  $this->products_model->get_infor(['id' => $id]);
 	        $product = $this->products_model->parseProductRow($productDetail);
@@ -191,8 +191,9 @@ class Products extends Admin_Controller
            
             $pageTitle = 'Chỉnh sửa bài viết';
 		    $imgDetail = $this->products_model->getImgDetail(['id_product' => $id]);
-            $subPage = 'updated_products';
 		}
+
+        $subPage = $this->subPage;
 
         $optionCategories = $this->select_option->dropdown(
             ['table' => TB_CGR_PRODUCTS, 'where' => ['type' => $this->_type]], 
@@ -203,17 +204,16 @@ class Products extends Admin_Controller
         );
 
         $optionCouponSources = $this->select_option->dropdown(
-            ['table' => TB_CGR_PRODUCTS, 'where' => ['type' => TYPE_COUPON]], 
+            ['table' => TB_CGR_PRODUCTS, 'where' => ['type' => TYPE_SOURCE]], 
             '', 
             '', 
             $id ? $product->id_cate_coupon : ''
         );
 
-
         $this->outputData = [
             'pageTitle' => $pageTitle,
             'currentPage' => $this->currentPage,
-            'subPage'=> 'add_products',
+            'subPage'=> $this->subPage,
             'id' => $id,
             'page' => $id ? $product : '',
             'option' => $optionCategories,

@@ -8,7 +8,7 @@ class Products extends Public_Controller
     public $table = TB_PRODUCTS;
     public $tableCategory = TB_CGR_PRODUCTS;
     public $currentPage = 'products';
-    public $searchKeys = ['id_cate', 'keyword', 'isHighlight', 'isSale'];
+    public $searchKeys = ['id_cate', 'keyword', 'isHighlight', 'isSale', 'type'];
     /*
     * String after link
     */
@@ -44,7 +44,6 @@ class Products extends Public_Controller
 
 		$this->load->model([
 			'frontend/products_model',
-			'backend/trademark_model', 
 			'frontend/category_products_model', 
 			'menu_model', 
 			'frontend/tags_model'
@@ -64,6 +63,8 @@ class Products extends Public_Controller
         if ($urlSegmentOne != 'tim-kiem') {
             $condition['alias_cate'] = $urlSegmentOne;
         }
+
+        $condition['type'] = TYPE_PRODUCT;
 
         foreach ($getRequest as $key => $value) {
             if ($value && in_array($key, $this->searchKeys)) {
@@ -110,6 +111,8 @@ class Products extends Public_Controller
     {
 		$urlSegmentOne = $this->uri->segment(1);
         $condition = []; 
+
+        $condition['type'] = TYPE_PRODUCT;
 
         $category = $this->category_products_model->viewDetail(
             ["{$this->tableCategory}.alias" => $urlSegmentOne],

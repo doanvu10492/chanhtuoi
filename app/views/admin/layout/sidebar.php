@@ -48,8 +48,7 @@
         </a>
                     </li>
                 </ul>
-            </li>
-            <li class="treeview <?php echo ($currentPage == 'list_products') ? ('active') : (''); ?>">
+            <li class="treeview <?php echo ($currentPage == TYPE_PRODUCT) ? ('active') : (''); ?>">
                 <a href="#">
         <i class="fa fa-share"></i> <span>Sản phẩm</span>
         <span class="pull-right-container">
@@ -57,15 +56,14 @@
         </span>
       </a>
                 <ul class="treeview-menu">
-                    <li><a href="<?php echo admin_url('products/list_products');?>"><i class="fa fa-circle-o"></i>Danh sách sản phẩm</a></li>
+                    <li class="<?php echo ($subPage == 'products') ? ('active') : (''); ?>"><a href="<?php echo admin_url('products/list_products');?>"><i class="fa fa-circle-o"></i>Danh sách sản phẩm</a></li>
                     <li class="<?php echo ($subPage == 'category_products') ? ('active') : (''); ?>">
-                        <a href="<?php echo admin_url('category_products');?>"><i class="fa fa-circle-o"></i>  Danh mục sản phẩm
-          </a>
+                        <a href="<?php echo admin_url('category_products');?>"><i class="fa fa-circle-o"></i>  Danh mục sản phẩm</a>
                     </li>
                 </ul>
             </li>
 
-            <li class="treeview <?php echo ($currentPage == 'list_products') ? ('active') : (''); ?>">
+            <li class="treeview <?php echo in_array($currentPage, [TYPE_COUPON, TYPE_SOURCE]) ? ('active') : (''); ?>">
                 <a href="#">
                     <i class="fa fa-share"></i> <span>Mã giảm giá</span>
                     <span class="pull-right-container">
@@ -73,14 +71,12 @@
                     </span>
                   </a>
                 <ul class="treeview-menu">
-                    <li><a href="<?php echo admin_url('coupon/list_products');?>"><i class="fa fa-circle-o"></i>Danh sách mã giảm giá</a></li>
+                    <li class="<?php echo ($subPage == 'coupon') ? ('active') : (''); ?>"><a href="<?php echo admin_url('coupon/list_products');?>"><i class="fa fa-circle-o"></i>Danh sách mã giảm giá</a></li>
                     <li class="<?php echo ($subPage == 'category_coupon') ? ('active') : (''); ?>">
-                        <a href="<?php echo admin_url('category_coupon');?>"><i class="fa fa-circle-o"></i>  Nguồn mã giảm giá
-          </a>
+                        <a href="<?php echo admin_url('category_coupon');?>"><i class="fa fa-circle-o"></i>Danh mục giảm giá</a>
                     </li>
                     <li class="<?php echo ($subPage == 'coupon_source') ? ('active') : (''); ?>">
-                        <a href="<?php echo admin_url('coupon_source');?>"><i class="fa fa-circle-o"></i>  Danh mục giảm giá
-          </a>
+                        <a href="<?php echo admin_url('coupon_source');?>"><i class="fa fa-circle-o"></i>Nguồn mã giảm giá</a>
                     </li>
                 </ul>
             </li>

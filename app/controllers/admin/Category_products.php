@@ -6,6 +6,8 @@ class Category_products extends Admin_Controller
 {
 	public $outputData;
     protected $_type = 'product';
+    protected $currentPage = TYPE_PRODUCT;
+    protected $subPage = null;
     
     public function __construct()
     {
@@ -21,8 +23,6 @@ class Category_products extends Admin_Controller
         $this->load->model('backend/category_products_model');
         $this->load->model('backend/category_products_related_model');
 
-        $this->_type = $this->uri->segment(2) === 'category_coupon' ? 'coupon' : 'product';
-
         switch ($this->uri->segment(2)) {
             case 'category_coupon':
                 $this->_type = TYPE_COUPON;
@@ -36,6 +36,9 @@ class Category_products extends Admin_Controller
                 $this->_type = TYPE_PRODUCT;
                 break;
         }
+
+        $this->currentPage = $this->_type;
+        $this->subPage = $this->uri->segment(2);
     }
 
 
@@ -43,8 +46,8 @@ class Category_products extends Admin_Controller
     {
     	$this->outputData = [
 			'pageTitle' => 'Danh sách danh mục',
-			'currentPage' => 'list_products',
-			'subPage'=> 'cate1',
+			'currentPage' => $this->currentPage,
+			'subPage'=> $this->subPage,
 			'list_category' => $this->tableListCategory(),
             'urlDeleteAll' => admin_url('category_products/del_list_choose')
 		];
@@ -116,19 +119,17 @@ class Category_products extends Admin_Controller
 
 	    if ($id == 0) {
 	    	$pageTitle = 'Thêm mới danh mục';
-	    	$subPage = 'add_category_products';
 	    	$action = 'Thêm mới';
 	    } else {
 	    	$pageTitle = 'Cập nhật danh mục';
-	    	$subPage = 'updated_products';
 	    	$action = 'Cập nhập';
 		    $getDetail =  $this->category_products_model->get_infor(['id_cate' => $id]);
 	    }
 
 	    $this->outputData = [
 			'pageTitle' => $pageTitle,
-			'currentPage' => 'list_products',
-			'subPage'=> $subPage,
+			'currentPage' => $this->currentPage,
+			'subPage'=> $this->subPage,
 			'page' => $id ? $getDetail : 0,
 			'id' => $id,
 			'option' => $this->select_option->dropdown(
