@@ -33,10 +33,17 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputEmail3" class="col-sm-2 control-label">đường dẫn bài viết:</label>
+                <label for="inputEmail3" class="col-sm-2 control-label">Đường dẫn bài viết:</label>
                 <div class="col-sm-10">
                     <input type="text" name="alias" class="form-control required" value="<?php echo (isset($page->alias)) ? ($page->alias) : (set_value('alias')); ?>"  placeholder="VD: san-pham, lam-dep">
                     <p class="error"><?=form_error('alias')?></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">Link liên kết tiếp thị</label>
+                <div class="col-sm-10">
+                    <textarea  class="form-textarea form-control" rows="6" name="outlink"><?= isset($page->outlink) ? $page->outlink : set_value('outlink'); ?>
+                    </textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -171,6 +178,7 @@
 	  $('.selectpicker').selectpicker();
 	});
 	CKEDITOR.replace('description');
+    CKEDITOR.replace('brief');
 	CKEDITOR.replace('download');
 	CKEDITOR.replace('info_detail');
 	CKEDITOR.replace('description_en');

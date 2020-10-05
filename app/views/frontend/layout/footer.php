@@ -1,44 +1,29 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 
 <footer id="footer">
-  <div class="footer-top">
+    <div class="footer-top">
     <div class="container">
 
-      <div class="footer-line-contact-social">
-        <p class="footer-line-contact-social-text">Tìm chúng tôi trên:</p>
-                  <ul class="footer-line-contact-social-list">
-                          <li><a href="https://www.facebook.com/chanhtuoicom/" target="_blank" rel="nofollow">
-                <i class="fa fa-facebook"></i>
-              </a></li>
-                          <li><a href="https://www.youtube.com/channel/UCwLeVIbBtTff39PfgbbK0RA" target="_blank" rel="nofollow">
-                <i class="fa fa-youtube-play"></i>
-              </a></li>
-                          <li><a href="https://chanhtuoi.com/rss/" target="_blank" rel="nofollow">
-                <i class="fa fa-rss"></i>
-              </a></li>
-                        <li><a href="https://zalo.me/1178192780778137156"><img src="https://chanhtuoi.com/assets/img/icon/zalo-icon.png" alt="zalo-icon"></a></li>
-          </ul>
-              </div>
-
-      <div class="footer-line-contact-email">
-        <?php $this->load->view('frontend/block/send_email') ?>
-      </div>
-
-              <div class="footer-line-contact-short-link"><a href="#" rel="nofollow">
-          <p class="footer-line-contact-short-link__text">Nhận mã giảm giá, ưu đãi độc quyền qua Email của bạn mỗi ngày.</p>
-        </a></div>
-      
+        <div class="footer-line-contact-social">
+            <p class="footer-line-contact-social-text">Tìm chúng tôi trên:</p>
+            <?php $this->load->view('frontend/block/social_network') ?>
+        </div>
+        <div class="footer-line-contact-email">
+            <?php $this->load->view('frontend/block/send_email') ?>
+        </div>
+        <div class="footer-line-contact-short-link"><a href="#" rel="nofollow">
+            <p class="footer-line-contact-short-link__text">Nhận mã giảm giá, ưu đãi độc quyền qua Email của bạn mỗi ngày.</p>
+            </a>
+        </div>
     </div>
   </div>
 
   <div class="footer-link">
       <div class="container">
         <ul class="list-inline">
-          <li><a href="/ma-giam-gia-lazada-c25.html">Mã giảm giá Lazada</a></li>
-          <li><a href="/ma-giam-gia-shopee-c23.html">Mã giảm giá Shopee</a></li>
-          <li><a href="/ma-giam-gia-tiki-c22.html">Mã giảm giá Tiki</a></li>
-          <li><a href="/ma-giam-gia-sendo-c52.html">Mã giảm giá Sendo</a></li>
-          <li><a href="https://chanhtuoi.com/may-lam-da-vien-p1797.html">Máy làm đá viên</a></li>
+            <?php foreach ($couponSourceInFooter as $row) : ?>
+                <li><a href="<?= $row['link'] ?>"><?= $row['name'] ?></a></li>
+            <?php endforeach; ?>
       </ul>
       </div>
     </div>
@@ -46,13 +31,20 @@
   <div class="footer-middle">
     <div class="container">
       <div class="row">
-        <div class="col-md-4 col-sm-4 col-xs-12 left-footer-address">
+        <div class="col-md-3 col-sm-4 col-xs-12 left-footer-address">
           <?= $this->config->item('footer') ?>
         </div>
-        <div class="col-md-4 col-sm-4 col-xs-12">
-          <?= $this->config->item('about') ?>
+        <div class="col-md-3 col-sm-4 col-xs-12">
+            <div class="ul-link-ft">
+              <?= $this->config->item('about') ?>
+          </div>
         </div>
-        <div class="col-md-4 col-sm-4 col-xs-12">
+        <div class="col-md-3 col-sm-4 col-xs-12">
+            <div class="ul-link-ft">
+              <?= $this->config->item('product_text') ?>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-4 col-xs-12">
           <div class="box-fanpage-map">
             <div class="title-hd">
               <h3>Fanpage</h3>
@@ -63,16 +55,14 @@
       </div>
       
     </div>   
-  </div>
-  <div class="footer-bottom">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="copyright">
-          <p><?= $this->config->item('copyright') ?></p>
-        </div>
-      </div>
     </div>
-  </div>
+    <div class="footer-bottom">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="copyright"><p><?= $this->config->item('copyright') ?></p></div>
+            </div>
+        </div>
+    </div>
     <!-- back to top -->
     <!-- <span class="gotop" id="back-top"><a href="#top"><p><i class="fa fa-angle-up" aria-hidden="true"></i></p></a></span> -->
 

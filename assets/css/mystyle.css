@@ -139,7 +139,12 @@ body {
 header#header, .footer-top {
     background: #fb5630
 }
-
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+    color: #333;
+    background-color: #ebebeb;
+    border-color: #adadad;
+    box-shadow: none;
+}
 /**** HEADER *****/
 
 header#header {
@@ -237,14 +242,14 @@ h4.modal-title {
     color: #fff;
 }
 .header-banner-search {
-    display: inline-block;
 }
 .td-head-form-search-wrap {
     padding: 0 20px;
 }
 .header-search {
-    max-width: 500px;
-    padding: 0 20px;
+    padding: 0;
+    width: 55%;
+    display: inline-block;
 }
 .search-offer > * {
     display: inline-block;
@@ -265,6 +270,14 @@ h4.modal-title {
     width: 100%;
     display: block;
     max-height: 140px;
+}
+
+.account-header {
+    display: inline;
+}
+
+.account-header span {
+    margin-left: 10px;
 }
 /***** CATEGORIES HOME *****/
 .tab-categories ul li {
@@ -324,6 +337,17 @@ h4.modal-title {
 .tab-categories .cate-child a, .tab-categories .cate-child .left {
     display: inline-block;
     margin-right: 12px;
+    position: relative;
+}
+.tab-categories .cate-child .left:after {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 25px solid transparent;
+    border-left: 20px solid #fb5630;
+    border-bottom: 25px solid transparent;
+    right: 1px;
 }
 
 .tab-categories .cate-child a {
@@ -334,16 +358,16 @@ h4.modal-title {
 
 .tab-categories .cate-child .left a {
     padding: 10px 20px;
-    background: #f7f7f7 url(../../assets/img/layout/heading-bg.png) top right no-repeat;
+    background: #fb5630 url(../../assets/img/layout/heading-bg.png) top right no-repeat;
     background-position: 100% 101%;
     padding-right: 40px;
-    font-family: OpensansBold;
     font-size: 17px;
     margin-right: 0;
     text-transform: uppercase;
+    color: #fff;
 }
 .list-products {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .cate-child .left {
     margin-right: 0;
@@ -386,6 +410,16 @@ h4.modal-title {
     display: block;
     clear: both;
     text-align: center;
+}
+.pagination-link ul li a {
+    padding: 7px 15px;
+    font-size: 16px;
+}
+
+.pagination-link ul li a.active {
+    background: #fb5630;
+    color: #fff;
+    font-weight: bold;
 }
 .filter-products {
     line-height: 40px;
@@ -448,6 +482,20 @@ h4.modal-title {
 .sp-lightbox {
     z-index: 9999 !important
 }
+.infor-prod .value {
+    font-size: 22px;
+    color: #f00;
+    font-weight: bold;
+}
+
+.infor-prod .buy-now-product {
+    margin-top: 10px;
+    padding: 6px 50px;
+    background: #fb5630;
+    color: #fff;
+    text-transform: uppercase;
+    border-color: #fb5630;
+}
 /** POSTS ***/
 #blog-list-page {
     background: #fff;
@@ -480,6 +528,18 @@ h4.modal-title {
     overflow: hidden;
     display: block;
     font-size: 16px;
+}
+.list-posts .post-item .post-info > p:last-child {
+    height: 50px;
+    overflow: hidden;
+}
+#latest-posts .list-posts {
+    clear: both;
+    padding: 0;
+    padding-top: 15px;
+    background: #fff;
+    overflow: hidden;
+    margin: 0 7px;
 }
 #list-article h1 {
     padding: 20px 10px;
@@ -611,7 +671,6 @@ footer#footer {
     clear: both;
     float: left;
     color: #ffffff;
-    height: 50px;
     padding: 5px;
 }
 .footer-line-contact-social {
@@ -625,33 +684,7 @@ footer#footer {
     overflow: hidden;
     color: #fff
 }
-.footer-line-contact-social-list {
-    width: calc(100% - 130px);
-    float: left;
-    padding: 9.5px 0;
-}
-.footer-line-contact-social-list li {
-    display: inline-block;
-}
-.footer-line-contact-social-list li a {
-    color: #ffffff;
-    padding: 0 7px;
-    float: left;
-    height: 21px;
-}
-.footer-line-contact-social-list li a i {
-    width: 20px;
-    height: 20px;
-    font-size: 20px;
-    text-align: center;
-    line-height: 20px;
-}
-.footer-line-contact-social-list li a .fa-facebook {
-    color: #4267B2;
-}
-.footer-line-contact-social-list li a .fa-youtube-play {
-    color: #EA4335;
-}
+
 .footer-line-contact-email {
     width: 40%;
     float: left;
@@ -722,10 +755,10 @@ footer#footer {
 }
 #footer h3 {
     text-transform: uppercase;
-    font-size: 22px;
+    font-size: 18px;
     margin-bottom: 20px;
     font-weight: normal;
-    font-family: Opensans;  
+    color: #000;
 }
 #footer strong { font-weight: normal; }
 .copyright {
@@ -778,9 +811,6 @@ footer#footer {
     padding: 25px 0 50px;
     margin-top: 60px;
     border-top: 1px solid rgba(255, 255, 255, 0.18);
-}
-.footer-top {
-    padding-bottom: 15px;
 }
 .footer-top a {
     font-size: 14px !important;
@@ -863,6 +893,34 @@ footer#footer {
 
 .receive-email-ft  button {
     height: 33px;
+}
+ul.hr_list.social_icons li {
+    display: inline-block;
+    margin-top: 5px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    background: #fb5630;
+}
+
+ul.hr_list.social_icons li a {
+    color: #fff;
+}
+
+ul.hr_list.social_icons li a i {
+    font-size: 18px;
+}
+.ul-link-ft ul li a {
+    color: #333;
+    display: block;
+    clear: both;
+    line-height: 30px;
+}
+
+.ul-link-ft ul li {
+    clear: both;
+    display: block;
 }
 /*
 * BREADCRUMD
@@ -1071,14 +1129,11 @@ form#contactform {
 */
 p.error-messages {
     font-size: 13px;
-    color: #f00;
-    margin-top: -10px;
+    color: #a11f0a;
 }
 .success-messages p {
-    color: #109714;
-    font-weight: bold;
+    color: #fbfaf9;
     font-size: 13px;
-    margin-top: -10px;
 }
 #registerLearnForm .error-messages {
     text-align: center;
@@ -1194,15 +1249,15 @@ span.star-red, span.help {
 }
 .name-register {
     text-align: center;
-    margin: 5px 0 30px 0;
-    margin-top: 5px;
+    padding: 20px 0 30px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(48,51,57,.15);
     color: #444!important;
-    margin-bottom: 20px!important;
+    margin-bottom: 10px !important;
     font-size: 20px;
     font-weight: normal;
     text-transform: uppercase;
+    text-align: left;
 }
 .form-control:focus{
     border-color: #66afe9;
@@ -1800,16 +1855,163 @@ a.a-register-now {
     margin: 5px 0;
     font-size: 15px;
 }
+.cate-coupons-info a {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .list-categories-coupons {
     overflow: hidden;
     background: #fff;
-    margin-bottom: 10px;
-    margin: 0 5px;
+    margin: 0 5px 15px;
 }
 
 .cate-coupons-info p {
     height: 51px;
     overflow: hidden;
+}
+.coupons-container > * {
+    background: #fff;
+}
+.block-filter-coupons li a.active {
+    background: #1F7ECB;
+    color: #fff;
+}
+/*
+* COUPONS 
+*/
+
+#header-coupons h1 {
+    padding: 20px 0;
+    text-align: center;
+    font-size: 25px;
+    color: #000;
+    font-family: 'OpenSans', 'sans-serif';
+    display: block;
+}
+
+.block-filter-coupons {
+    display: block;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.block-filter-coupons li a {
+    display: block;
+    margin: 6px 3px;
+    padding: 7px 20px;
+    background: #f3f4f6;
+    line-height: 20px;
+    border-radius: 999px;
+    transition: 0.2s;
+    color: #333;
+}
+.block-filter-coupons li a:hover{
+    background: #1f7ecb;
+    color: #fff
+}
+.list-coupons .coupon-item {
+    box-shadow: 0 10px 10px -5px rgba(31,31,31,.5);
+    -webkit-box-shadow: 0 10px 10px -5px rgba(31,31,31,.5);
+    -khtml-box-shadow: 0 10px 10px -5px rgba(31,31,31,.5);
+    -moz-box-shadow: 0 10px 10px -5px rgba(31,31,31,.5);
+    -ms-box-shadow: 0 10px 10px -5px rgba(31,31,31,.5);
+    -o-box-shadow: 0 10px 10px -5px rgba(31,31,31,.5);
+    padding: 10px;
+    margin-bottom: 15px;
+}
+.coupon-item .shortname {
+    border: 1px solid rgb(251 86 48 / 25%);
+    background: #f1f1f1;
+    padding: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.coupon-item .shortname a {
+    background: #ffffff;
+    line-height: 70px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #E00034;
+    height: 70px;
+    overflow: hidden;
+    display: block;
+}
+
+.coupon-item .coupon-info a {
+    display: block;
+    clear: both;
+    margin-bottom: 10px;
+    font-weight: bold;
+    line-height: 18px;
+    font-size: 13px;
+    height: 36px;
+    overflow: hidden;
+    color: #000;
+}
+
+.coupon-item .coupon-info .short-content {
+    font-size: 13px;
+    line-height: 1.4;
+    clear: both;
+    margin-bottom: 10px;
+    height: 36px;
+    overflow: hidden;
+}
+.coupon-item .code-icon {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin: 1px;
+    background: #1da64c;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 3px;
+        line-height: 30px;
+}
+.coupon-item .code-text {
+    width: calc(100% - 34px);
+    float: left;
+    line-height: 34px;
+    text-align: center;
+    padding: 0 10px;
+    font-weight: bold;
+}
+.get-coupon-code {
+    height: 36px;
+    display: block;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px dashed #cccccc;
+    border-radius: 3px;
+    clear: both;
+}
+.coupon-item .coupon-info p.short-content {
+    margin-bottom: 10px;
+}
+.highlight-coupons .shortname a {
+    font-size: 15px;
+    line-height: 1.4;
+    height: auto;
+    padding: 10px 0;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.highlight-coupons {
+    margin-left: -20px;
+    background: #fff;
+    padding: 4px;
+}
+
+.highlight-coupons .coupon-item {
+    margin-bottom: 10px;
 }
 @media screen and (min-width: 1024px) {
 }

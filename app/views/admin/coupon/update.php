@@ -33,7 +33,21 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputEmail3" class="col-sm-2 control-label">đường dẫn bài viết:</label>
+                <label for="inputEmail3" class="col-sm-2 control-label required">Tên coupon:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="shortname" class="form-control" value="<?php echo (isset($page->shortname)) ? ($page->shortname) : (set_value('shortname')); ?>"  placeholder="Tên website">
+                    <p class="error"><?php echo form_error('shortname'); ?></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">Link liên kết tiếp thị</label>
+                <div class="col-sm-10">
+                    <textarea  class="form-textarea form-control" rows="6" name="outlink"><?= isset($page->outlink) ? $page->outlink : set_value('outlink'); ?>
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Đường dẫn bài viết:</label>
                 <div class="col-sm-10">
                     <input type="text" name="alias" class="form-control required" value="<?php echo (isset($page->alias)) ? ($page->alias) : (set_value('alias')); ?>"  placeholder="VD: san-pham, lam-dep">
                     <p class="error"><?=form_error('alias')?></p>
@@ -46,31 +60,6 @@
                     <p class="error"><?php echo form_error('code'); ?></p>
                 </div>
             </div>
-			<div class="form-group">
-                <label for="inputEmail3" class="col-sm-2 control-label">Giá:</label>
-                <div class="col-sm-10">
-                    <input type="number" name="price" class="form-control required" value="<?php echo (isset($page->price)) ? ($page->price) : (set_value('price')); ?>" >
-                    <p class="error"><?php echo form_error('price'); ?></p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="inputEmail3" class="col-sm-2 control-label">Giá Khuyến mãi:</label>
-                <div class="col-sm-10">
-                    <input type="number" name="promotion" class="form-control" value="<?php echo (isset($page->promotion)) ? ($page->promotion) : (set_value('promotion')); ?>" >
-                    <p class="error"><?php echo form_error('promotion'); ?></p>
-                </div>
-            </div>
-
-	        <div class="form-group">
-	            <label for="file" class="col-sm-2 control-label">File upload: <span class="required">*</span></label>
-	             <div class="col-sm-10">
-				 <a class="fancybox img" href="<?php echo (isset($page->image)) ? ($page->image_path) : (''); ?>"><img src="<?php echo (isset($page->image)) ? ($page->image_path) : (IMG_PATH_PRODUCT.set_value('image')); ?>" alt="" class="thumb size48" ></a>
-
-	             <input  type="hidden" name="images_old" value="<?php echo isset($page->image) ? ($page->image) : (''); ?>" />
-	             <input type="file" name="images"  >
-	             <p class="error"><?php echo form_error('image'); ?></p>
-	           </div>
-	        </div> 
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Nguồn giảm giá:</label>
                 <div class="col-sm-10">
@@ -92,26 +81,12 @@
                 </div>
             </div>
 
-		    <div class="form-group" >
-                <label for="inputEmail3" class="col-sm-2 control-label">Tags:</label>
-                <div class="col-sm-10">
-                    <input type="text" name="tags" class="form-control" value="<?php echo (isset($page->tags)) ? ($page->tags) : (set_value('tags')); ?>">
-                    <p class="error"><?php echo form_error('tags'); ?></p>
-                </div>
-
-            </div>
 		    <div class="form-group">
 		        <label for="inputEmail3" class="col-sm-2 control-label">Mô tả ngắn:</label>
 		        <div class="col-sm-10">
 		             <textarea id="brief" class="form-textarea form-control" rows="6" name="brief"><?php echo (isset($page->brief)) ? ($page->brief) : (set_value('brief')); ?></textarea>
 		        </div>
 		    </div>
-			<div class="form-group">
-			    <label for="inputEmail3" class="col-sm-2 control-label">Mô tả sản phẩm:</label>
-			    <div class="col-sm-10">
-			         <textarea id="description" class="form-textarea form-control"  rows="6" name="description"><?php echo (isset($page->description)) ? ($page->description) : (set_value('description')); ?></textarea>
-			    </div>
-			</div>
         </div>
         
         <!-- /.col -->
@@ -140,13 +115,8 @@
        </form>
 </div>
 </div>
-
 <script type="text/javascript"  language="javascript">
-	CKEDITOR.replace('description');
-	CKEDITOR.replace('download');
-	CKEDITOR.replace('info_detail');
-	CKEDITOR.replace('description_en');
-	CKEDITOR.replace('info_detail_en');
+    CKEDITOR.replace('brief');
 </script> 
 
 

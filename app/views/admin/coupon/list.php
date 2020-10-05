@@ -8,11 +8,9 @@
     <div class="box-header with-border">
 	    <!-- box search -->
 	  	<div class="box-search row">
-		    <form action="<?php echo admin_url('products')?>" method="get" enctype="multipart/form-data">
-			    <div class="col-md-4">   
-			    </div> 
+		    <form action="<?php echo admin_url('coupon')?>" method="get" enctype="multipart/form-data">
 		        <div class="col-md-3">   
-		           <input  name="keyword" type="text" placeholder="Từ khóa" value="<?= isset($getRequest['keyword']) ? $getRequest['keyword'] : ''; ?>" class="form-control" />
+		           <input  name="keyword" type="text" placeholder="Tiêu đề coupon" value="<?= isset($getRequest['keyword']) ? $getRequest['keyword'] : ''; ?>" class="form-control" />
 		        </div>
 		        <div class="col-md-3">    
 		            <div class="form-group">
@@ -20,8 +18,8 @@
 	                    	<?php echo $option; ?>
 	                    </select>
 	                </div>
-		        </div> 
-		        <div class="col-md-2">   
+		        </div>  
+		        <div class="col-md-3">   
 		            <input type="submit" class="submit blue-btn" value="Tìm kiếm" />
 		        </div>
 		    </form>
@@ -35,8 +33,8 @@
 			    <tr>
 			        <th></th>
 			        <th class="size_stt">STT</th>
-					<th class="width75">Hình ảnh</th>
-		            <th>Tên</th>
+					<th>Tiêu đề</th>
+		            <th>Tên coupon</th>
 		            <th>Danh mục</th>
 					<th class="width85 text-center">Nổi bật</th>
 		            <th class="width85">Trạng thái</th>
@@ -54,12 +52,9 @@
 			    <td><input type="checkbox" name="checklist"  value="<?php echo $row->id ?>"></td>
 			    <td><?php echo $i.'.'; ?></td>
 				<td>
-				    <a href="<?php echo $row->image_path; ?>" title="preview">
-				        <img src="<?php echo $row->image_path; ?>" alt="" class="thumb size48">
-				    </a>
+				    <?php echo $row->name; ?> 
 				</td>
-				<td> <?php echo $row->name; ?> 
-					<p style="clear: both; font-size: 13px; color: #777; font-style: italic; margin-top: 5px"><?= $row->code; ?></p>
+				<td> <?= $row->shortname; ?>
 				</td>
 	            <td> <?php echo $row->name_cate; ?> </td>
 				<td>

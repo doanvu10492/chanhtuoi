@@ -148,7 +148,7 @@ class Posts extends Public_Controller
 
 		$this->outputData['tagPosts'] = $this->tags_model->getListTagsPosts();
         $this->outputData['category'] = $category;
-        $this->outputData['id_parent'] =  $category['id_parent'] > 0 ? $category['id_parent'] : $category['id'];
+        $this->outputData['id_parent'] =  $category['id_parent'] > 0 ? $category['id_parent'] : $category['id_parent'];
         $this->outputData['current_page'] = $this->currentPage;
         
         $this->metaSeo($category);

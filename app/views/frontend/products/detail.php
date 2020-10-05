@@ -24,7 +24,7 @@
     <div class="row">
       <div class="col-sm-5 col-xs-12">
         <div class="img-product-detail img-product">
-          <?php if( count($detail['products_img_detail']) > 0 ) { ?>
+          <?php if( count($detail['products_img_detail']) > 111110 ) { ?>
             <div class="sp-wrap">
               <?php foreach( $detail['products_img_detail'] as $row) : ?>
                   <a href="<?=$row['img']?>" >
@@ -49,8 +49,21 @@
 
       <div class="col-sm-7">
         <div class="infor-prod">
-          <h1><?=$detail['name'] ?></h1>
-          <p>Mã sản phẩm: <?=$detail['code'] ?></p>
+            <h1><?=$detail['name'] ?></h1>
+            
+            <p class="price"><span><strong>Giá: </strong></span>
+                  <?php if ($detail['price'] > 0) { ?>
+                  <?php if ($detail['price_old']): ?>
+                      <span class="price-old"><?= number_format($detail['price_old']) ?>đ</span>
+                  <?php endif; ?>
+                              <span class="value"><?= number_format($detail['price']) ?></span>đ
+                  <?php } else { ?>
+                      Giá liên hệ
+                  <?php } ?>
+              </p>
+            <p><strong>Mã sản phẩm: </strong><?=$detail['code'] ?></p>
+            <p><?=$detail['brief'] ?></p>
+            <a class="btn btn-default buy-now-product" href="<?= $detail['outlink'] ?>">Mua Ngay</a>
         </div>
       </div>
     </div>

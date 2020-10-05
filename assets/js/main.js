@@ -58,15 +58,15 @@ $(function() {
 
 		$.ajax({
 			type : 'POST',
-			url	 : './receive_messages',
+			url	 : './dang-ky-nhan-khuyen-mai',
 			data : content,
 			success: function(data) {
 				result = JSON.parse(data);
 
-				if(result.result) {
-					$('div.messages-register').empty().html('<div class = "success-messages"><p>' + result.result + '</p></div>');
+				if(result.success) {
+					$('div.messages-register').empty().html('<div class = "success-messages"><p>' + result.message + '</p></div>');
 				} else {
-					$('div.messages-register').empty().append('<p class= "error-messages">' + result.error + '</p>');
+					$('div.messages-register').empty().append('<p class= "error-messages">' + result.message + '</p>');
 				}
 			}
 		})
@@ -329,6 +329,28 @@ $(function() {
 			}
 		})
 	});
+
+	$('.filter-data').on('click', 'a', function(e){
+        e.preventDefault();
+        
+        $(this).parent().parent().find('li > a.active').removeClass('active');
+
+        $(this).addClass('active');
+
+        var stringUrl = '?';
+
+        $('.filter-data').find('li a.active').each(function(){
+            if (typeof $(this).data('value') != 'undefined') {
+                console.log($(this).data('value'));
+                let param = $(this).data('name') + '=' + $(this).data('value');
+                stringUrl += stringUrl === '?' ? param : '&' + param;
+            }
+        });
+        
+        base_url = window.location.pathname;
+        
+        window.location = base_url + stringUrl;
+    });
 });
 
 function validRegisterForm() {

@@ -83,6 +83,7 @@
             {$this->table}.price_old,
             {$this->table}.active,
             {$this->table}.id,
+            {$this->table}.shortname,
             {$this->table}.info_detail as info_detail,
             {$this->table}.image_2,
             {$this->table}.code, 
@@ -92,6 +93,7 @@
             {$this->table}.isNew, 
             {$this->table}.color, 
             {$this->table}.size, 
+            {$this->table}.outlink, 
             {$this->table}.created_at,
             {$this->category}.name as name_cate, 
             {$this->category}.id_cate,  
@@ -114,6 +116,7 @@
             $item['img_thumb2'] = $this->parseImageData($item['image_2'], true);
             $item['link'] = $this->parseLinkProduct($item);
             $item['link_cart'] = $this->parseLinkCart($item['id']);
+            $item['outlink'] = base_url() . 'redirect-out-link?link=' . base64_encode($item['outlink']);
             $data[] = $item;
         }
 
@@ -155,8 +158,10 @@
             {$this->table}.guarantee,
             {$this->table}.download,
             {$this->table}.promotion,
+            {$this->table}.shortname,
             {$this->table}.color, 
             {$this->table}.size, 
+            {$this->table}.outlink, 
             {$this->table}.price_old,
             {$this->category}.name as name_cate, 
             {$this->category}.id_cate,  
@@ -174,6 +179,7 @@
             $product['price_old'] =  $product['promotion'] ? $product['price'] : (0);
             $product['price'] = $product['promotion'] ? $product['promotion'] : ($product['price']);
             $product['date'] = $this->format_date($product);
+            $product['outlink'] = base_url() . 'redirect-out-link?link=' . base64_encode($product['outlink']);
             $product['products_img_detail'] = $this->getImageDetail($product['id']);
         }
 
@@ -225,7 +231,7 @@
         return base_url() . $product['alias'].'-d'. $product['id'] . '.html';
     }
 
-    function getListColor($whereIn)
+    public function getListColor($whereIn)
     {
         if ($whereIn != NULL) {
             $whereIn = explode(',', $whereIn);
@@ -234,6 +240,54 @@
         $this->db->select('*');
         $result = $this->db->get('dv_color')->result_array();
         
+        return $result;
+    }
+
+    public function listCategoryCoupons($condition = array(), $limit = array(), $order_by = '')
+    {
+        if (is_array($limit) && count($limit) > 0) {
+            if(count($limit) == 1) {
+                $this->db->limit($limit[0]);
+            } else {
+                $this->db->limit($limit[0], $limit[1]);
+            }
+        } 
+
+        if ($order_by != NULL) {
+            $this->db->order_by($order_by);
+        } else {
+            $this->db->order_by('id desc');
+        }
+        
+        if( is_array($condition) && count($condition) > 0) {
+            $arrWhere = [];
+            foreach ($condition as $key => $value) {
+                $arrWhere["{$this->table}.{$key}"] = $value;
+            }
+
+            $this->db->where($arrWhere);
+
+            unset($arrWhere);
+        }
+       
+        $this->db->where("{$this->table}.active", IS_ACTIVE)
+            ->order_by("{$this->table}.updated_at desc")
+            ->join(
+                "{$this->category}",
+                "{$this->category}.id_cate = {$this->table}.id_cate", 
+                "inner"
+            );
+         
+        $this->db->select("
+            {$this->category}.name as name_cate, 
+            {$this->category}.id_cate as id, 
+            count(*) as count
+        ");
+
+        $this->db->group_by("{$this->table}.id_cate_coupon, {$this->table}.id_cate");
+        $result = $this->db->get($this->table)->result_array();
+        
+
         return $result;
     }
 

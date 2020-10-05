@@ -37,6 +37,8 @@ class Home extends Public_Controller
         $this->getAdsHome();
         $this->getHighlightPostCategories();
         $this->getCateCoupons();
+        $this->getHighlightCoupons();
+        $this->getRecommendedPromotion();
         $this->loadTheme('home');
        
 	} 
@@ -104,7 +106,7 @@ class Home extends Public_Controller
 
 		$highlightProductCategories = $this->products_model->listProducts(
 			['isHighlight' => 1, 'type' => 'product'], 
-			array(40), 
+			array(10), 
 			'', 
 			'',
 			$arrCateIds 
@@ -130,7 +132,7 @@ class Home extends Public_Controller
 	public function getHighlightPostCategories() 
 	{
 		$postCategories = $this->page_model->listCategoryPosts(
-			['isHighlight' => 1 , 'type' => TYPE_PRODUCT ], 
+			['isHighlight' => 1  ], 
 			array(6)
 		);
 
@@ -160,8 +162,28 @@ class Home extends Public_Controller
 		$categories = $this->category_products_model->listCategoryProducts([
 			'isHighlight' => 1,
 			'type' => TYPE_SOURCE
-		], array(6));
+		], array(8));
 
 		$this->outputData['cateCoupons'] = $categories; 
+	}
+
+	public function getHighlightCoupons() 
+	{
+		$coupons = $this->products_model->listProducts(
+			['isHighlight' => 1, 'type' => TYPE_COUPON], 
+			array(3)
+		);
+
+		$this->outputData['highlightCoupons'] = $coupons; 
+	}
+
+	public function getRecommendedPromotion() 
+	{
+		$coupons = $this->products_model->listProducts(
+			['isSale' => 1, 'type' => TYPE_PRODUCT], 
+			array(10)
+		);
+
+		$this->outputData['recommendedPromotion'] = $coupons; 
 	}
 }

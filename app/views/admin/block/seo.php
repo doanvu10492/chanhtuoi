@@ -11,8 +11,7 @@
             <div class="form-group">
                 <label  class="col-sm-2 control-label">Meta keywords:</label>
                 <div class="col-sm-10">
-                    <textarea  class="form-textarea form-control" rows="6" name="meta_keywords"><?php echo (isset($page->meta_keywords)) ? ($page->meta_keywords) : (set_value('meta_keywords')); ?>
-                    </textarea>
+                    <textarea  class="form-textarea form-control" rows="6" name="meta_keywords"><?php echo (isset($page->meta_keywords)) ? ($page->meta_keywords) : (set_value('meta_keywords')); ?></textarea>
                 </div>
             </div>
             <div class="form-group">

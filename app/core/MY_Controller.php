@@ -179,10 +179,20 @@ class Public_Controller extends MY_Controller
         ]);
 
         $this->outputData['logo'] = $this->config->item('logo'.$this->lang_code);
-        $this->outputData['menu_top'] = $this->sidebar_model->menu_top('', $this->lang_code);
+        $this->outputData['menu_top'] = $this->sidebar_model->menuMain('', $this->lang_code);
+        $this->outputData['couponSourceInFooter'] = $this->couponSourceInFooter(); 
     }
    
     
+    protected function couponSourceInFooter()
+    {
+        $categories = $this->category_products_model->listCategoryProducts([
+            'isLeft' => 1,
+            'type' => TYPE_SOURCE
+        ], array(8));
+
+        return $categories;
+    }
     /*
     * Render view
     * @param string $the_view

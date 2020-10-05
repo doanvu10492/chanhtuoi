@@ -85,18 +85,14 @@ class Products extends Admin_Controller
         $this->_total = count($this->products_model->listProducts($condition)->result());
         
 		$pagination = $this->getPagination();
-
         $collection = $this->products_model->listProducts($condition, $this->limit)->result();
         $listProducts = $this->products_model->parseProductsData($collection);
-
         $optionCategoryProduct = $this->select_option->dropdown(
             ['table' => TB_CGR_PRODUCTS, 'where' => ['type' => $this->_type]], 
             '', 
             '', 
-            $this->cateId
+            isset($condition['id_cate']) ? $condition['id_cate'] : 0
         );
-
-        // $this->session->set_userdata('query_href_back', $this->queryString);
 
     	$this->outputData = [
 			'pageTitle' => 'Danh sách sản phẩm',

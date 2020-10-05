@@ -120,11 +120,8 @@ class Category_posts extends Admin_Controller
     	if (count($getData) > 0) {
     	 	$string .= $parentId == 0 ? '' : "----";
     	 	foreach ($getData as $row) {
-    	 		$link = base_url() . $row->alias; 
+    	 		$link = base_url() . 'blog/' . $row->alias; 
 
-    	 		if ($row->id_parent == 0 ) { 
-    	 			$root = base_url() . $row->alias . '/'; 
-    	 		}
     	 		$count = ++$i;
     	 		$row->count = $count;
     	 		$row->string = $string;

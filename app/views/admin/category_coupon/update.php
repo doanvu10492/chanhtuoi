@@ -33,9 +33,9 @@
 	        <div class="form-group overload-hidden">
 				<label for="inputEmail3" class="col-sm-2 control-label">Hình ảnh:</label>
 				<div class="col-sm-10">
-				    <img src="<?php echo (isset($page->image)) ? ( $page->image) : (''); ?>" alt="" class="thumb width85" >
+				    <img src="<?= isset($page->image) ? $page->image : ''; ?>" alt="" class="thumb width85" >
 	                
-	                <input  type="text" name="image" id="image_en" readonly="true" value="<?php echo (isset($page->image)) ? ($page->image) : (''); ?>"	 />
+	                <input  type="text" name="image" id="image_en" readonly="true" value="<?= isset($page->image) ? $page->image : ''; ?>"	 />
 	                <input type="button" id="file2" class="form-file fl fileBrowse" value="Chọn tệp" data-target='image_en' name="hinhanh">
 				</div>
 			</div>
@@ -50,15 +50,21 @@
 			<div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Sắp xếp:</label>
                 <div class="col-sm-10">
-                    <input type="text" name="ordering" class="form-control" value="<?php echo (isset($page->ordering)) ? ($page->ordering) : (set_value('ordering')); ?>">
+                    <input type="text" name="ordering" class="form-control" value="<?= isset($page->ordering) ? $page->ordering : set_value('ordering'); ?>">
                 </div>
             </div>
 	        <div class="form-group">
 		        <label for="inputEmail3" class="col-sm-2 control-label">Nội dung ngắn:</label>
 		        <div class="col-sm-10">
-		             <textarea id="brief" class="form-textarea form-control" rows="6" name="brief"><?php echo (isset($page->brief)) ? ($page->brief) : (set_value('brief')); ?></textarea>
+		             <textarea id="brief" class="form-textarea form-control" rows="6" name="brief"><?= isset($page->brief) ? $page->brief : set_value('brief'); ?></textarea>
 		        </div>
 		    </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Nội dung:</label>
+                <div class="col-sm-10">
+                     <textarea id="description" class="form-textarea form-control" rows="6" name="description"><?= isset($page->description) ? $page->description : set_value('brief'); ?></textarea>
+                </div>
+            </div>
     	</div>
 	</div>
 </div>
@@ -83,7 +89,6 @@
 </div>
 <script type="text/javascript"  language="javascript">
 	CKEDITOR.replace('description');
-	CKEDITOR.replace('description_en');
 </script> 
 
 

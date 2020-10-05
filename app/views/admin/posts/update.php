@@ -21,7 +21,7 @@
                     <p class="error"><?=form_error('name')?></p>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display: none">
                 <label for="inputEmail3" class="col-sm-2 control-label">Number:</label>
                 <div class="col-sm-10">
                     <input type="text" name="number" class="form-control" value="<?php echo (isset($page->number)) ? ($page->number) : (set_value('number')); ?>"  placeholder="Tên website">
@@ -64,7 +64,7 @@
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Nội dung ngắn:</label>
                 <div class="col-sm-10">
-                     <textarea id="brief" class="form-textarea" cols="100" rows="6" name="brief"><?php echo (isset($page->brief)) ? ($page->brief) : (set_value('brief')); ?></textarea>
+                     <textarea id="brief" class="form-textarea form-control" cols="100" rows="6" name="brief"><?php echo (isset($page->brief)) ? ($page->brief) : (set_value('brief')); ?></textarea>
                 </div>
             </div>
             <div class="form-group">

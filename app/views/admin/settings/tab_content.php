@@ -63,9 +63,15 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputEmail3" class="col-sm-2 control-label">Giới thiệu:</label>
+                <label for="inputEmail3" class="col-sm-2 control-label">Link liên kết 1:</label>
                 <div class="col-sm-10">
                     <textarea id="about" class="form-control" cols="100" rows="6" name="about"><?php if(isset($settings['about'])) echo $settings['about']; ?></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Link liên kết 2:</label>
+                <div class="col-sm-10">
+                    <textarea id="product_text" class="form-control" cols="100" rows="6" name="product_text"><?php if(isset($settings['product_text'])) echo $settings['product_text']; ?></textarea>
                 </div>
             </div>
             <div class="form-group">

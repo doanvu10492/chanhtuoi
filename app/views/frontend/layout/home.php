@@ -19,18 +19,23 @@
 <section id="highlight-cate-coupon" class="cate-products-home">
     <div class="container">
         <div class="row">
-            <div class="tab-categories">
-                    <div class="cate-child list-inline">
-                        <div class="left">
-                            <a href="">Mã khuyến mãi</a>
+            <div class="col-sm-10">
+                <div class="tab-categories">
+                        <div class="cate-child list-inline">
+                            <div class="left">
+                                <a href="">Mã giảm giá</a>
+                            </div>
                         </div>
-                    </div>
-                <a href="#" class="pull-right view-more">Xem thêm <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                    <a href="#" class="pull-right view-more">Xem thêm <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                </div>
+                <div class="list-categories-coupons">
+                <?php $this->load->view('frontend/block/cate_coupons', ['categories' => $cateCoupons]); ?>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="list-categories-coupons">
-            <?php $this->load->view('frontend/block/cate_coupons', ['categories' => $cateCoupons]); ?>
+            <div class="col-sm-2">
+                <div class="highlight-coupons">
+                <?php $this->load->view('frontend/block/highlight_coupons', ['coupons' => $highlightCoupons]); ?>
+                </div>
             </div>
         </div>
     </div>
@@ -65,35 +70,37 @@
             <div class="tab-categories">
                 <div class="cate-child list-inline">
                     <div class="left">
-                        <a href="">Khuyến mãi hot</a>
+                        <a href="">Khuyến mãi đề xuất</a>
                     </div>
-                    <?php foreach ($cateOfHotProducts['cates'] as $cate) { ?>
-                       <a href="<?= $cate['link'] ?>" class="btn btn-default btn-sm"><?= $cate['name'] ?></a>
-                    <?php } ?>
                 </div>
                 <a href="#" class="pull-right view-more">Xem thêm <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
             </div>
         </div>
         <div class="row">
             <div class="product-cate list-products">
-                <?php $this->load->view('frontend/block/products', ['products' => $cateOfHotProducts['products']]); ?>
+                <?php $this->load->view('frontend/block/products', ['products' => $recommendedPromotion]); ?>
             </div>
         </div>
     </div>
 </section>
 
-<section id="latest-posts" class="cate-latest-posts">
+<section id="latest-posts" class="cate-latest-posts cate-products-home">
     <div class="container">
         <div class="row">
             <div class="tab-categories">
+                <div class="cate-child list-inline">
+                    <div class="left">
+                        <a href="">Kinh nghiệm</a>
+                    </div>
                     <?php foreach ($highlightPostCategories['cates'] as $cate) { ?>
-                         <li><a href="<?= $cate['link'] ?>"><?= $cate['name'] ?></a></li>
+                        <a href="<?= $cate['link'] ?>" class="btn btn-default btn-sm"><?= $cate['name'] ?></a>
                     <?php } ?>
-                </ul>
+                </div>
             </div>
         </div>
-        <div class="post-cate list-posts">
-            <div class="row">
+        <div class="row">
+            <div class="post-cate list-posts">
+
                 <?php $this->load->view('frontend/block/posts', ['posts' => $highlightPostCategories['posts']]) ?>
             </div>
         </div>

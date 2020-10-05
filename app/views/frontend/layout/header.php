@@ -65,14 +65,10 @@
 							<div class="header-search">
 								<?php $this->load->view('frontend/block/search'); ?>
 							</div>
-							<div class="right-banner">
-								<span class="email"><a href="mail:<?= $this->config->item('email') ?>">Email: <?= $this->config->item('email') ?></a></span>
-								 <span class="line"> </span> 
-								<span class="phone"> Điện thoại: <a href="tel:<?= $this->config->item('hotline') ?>"><?= $this->config->item('hotline') ?></a></span>
-								<?php $this->load->view('frontend/block/social_network') ?>
-								
+							<div class="account-header">
 								<?php if ( ! $this->session->userdata('CI_login')) { ?> 
-				               		<span class="user-btn" style="margin-left: 5px; margin-right: 5px; "><a href="./login" style="font-size: 13px"><i class="fa fa-user" aria-hidden="true" style="margin-right: 5px;"></i> <b>Đăng nhập</b></a></span>
+				               		<span class="user-btn pull-right"><a href="#" style="font-size: 13px" class="btn btn-default"><b>Đăng nhập</b></a></span>
+				               		<span class="user-btn pull-right"><a href="#" style="font-size: 13px" class="btn btn-default"><b>Đăng ký</b></a></span>
 				                <?php } else { ?>
 				                	<span class="user-btn" style="margin-right: 5px; margin-right: 5px; ">
 				                    <a href="./dang-xuat.html" style="font-size: 13px"> <i class="fa fa-sign-out"></i></span><b>Đăng xuất</b></a>

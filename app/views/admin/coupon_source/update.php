@@ -53,12 +53,24 @@
                     <input type="text" name="ordering" class="form-control" value="<?php echo (isset($page->ordering)) ? ($page->ordering) : (set_value('ordering')); ?>">
                 </div>
             </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Banner đầu trang:</label>
+                <div class="col-sm-10">
+                     <textarea id="head_content" class="form-textarea form-control" rows="6" name="head_content"><?= isset($page->head_content) ? $page->head_content : set_value('head_content'); ?></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Nội dung ngắn:</label>
+                <div class="col-sm-10">
+                     <textarea id="brief" class="form-textarea form-control" rows="6" name="brief"><?= isset($page->brief) ? $page->brief : set_value('brief'); ?></textarea>
+                </div>
+            </div>
 	        <div class="form-group">
-		        <label for="inputEmail3" class="col-sm-2 control-label">Nội dung ngắn:</label>
-		        <div class="col-sm-10">
-		             <textarea id="brief" class="form-textarea form-control" rows="6" name="brief"><?php echo (isset($page->brief)) ? ($page->brief) : (set_value('brief')); ?></textarea>
-		        </div>
-		    </div>
+                <label for="inputEmail3" class="col-sm-2 control-label">Nội dung:</label>
+                <div class="col-sm-10">
+                     <textarea id="description" class="form-textarea form-control" rows="6" name="description"><?= isset($page->description) ? $page->description : set_value('description'); ?></textarea>
+                </div>
+            </div>
     	</div>
 	</div>
 </div>
@@ -82,8 +94,8 @@
 </div>
 </div>
 <script type="text/javascript"  language="javascript">
-	CKEDITOR.replace('description');
-	CKEDITOR.replace('description_en');
+    CKEDITOR.replace('head_content');
+    CKEDITOR.replace('description');
 </script> 
 
 

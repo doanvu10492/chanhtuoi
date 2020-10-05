@@ -34,7 +34,7 @@
 
     <?php if ($other_posts) { ?>
       <div id="related-posts">
-        <h2>Các bài viết liên quan: </h2>
+        <!-- <h2>Các bài viết liên quan: </h2> -->
         <ul class="related-posts list-block">
           <?php foreach ($other_posts as $post) { ?>
           <li><a href="<?= $post['link'] ?>"><?= $post['name'] ?> <img src="./assets/img/layout/new.gif"></a></li>

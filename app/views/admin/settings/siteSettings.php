@@ -23,6 +23,7 @@
 	        <li class=""><a href="#smtp" data-toggle="tab" aria-expanded="false">Smtp</a></li>
 	        <li class="" style="display: none"><a href="#popuptab" data-toggle="tab" aria-expanded="false">Popup và mã khuyến mãi</a></li>
 	        <li><a href="#seoweb" data-toggle="tab" aria-expanded="false">Seo</a></li>
+	        <li><a href="#outlink" data-toggle="tab" aria-expanded="false">Thông tin link liên kết</a></li>
         </ul>
         <form action="<?php echo admin_url('siteSettings'); ?>" method="post" enctype="multipart/form-data" class="form-horizontal">
             <div class="tab-content">
@@ -41,6 +42,9 @@
         		<div class="tab-pane" id="seoweb">
            			<?php $this->load->view('admin/settings/tab_seoweb') ?>
            		</div>
+           		<div class="tab-pane" id="outlink">
+           			<?php $this->load->view('admin/settings/tab_outlink') ?>
+           		</div>
            	</div>
             <div class="form-group" style="margin-bottom: 20px">
                 <label for="textfield" class="col-sm-2 control-label">&nbsp;</label>		
@@ -55,7 +59,10 @@
 <script type="text/javascript"  language="javascript">
 	CKEDITOR.replace('footer');
 	CKEDITOR.replace('about');
+	CKEDITOR.replace('info_outlink');
+  CKEDITOR.replace('header_outlink');
 	CKEDITOR.replace('product_text');
 	CKEDITOR.replace('footer_en');
 	CKEDITOR.replace('popup');
+  
 </script> 

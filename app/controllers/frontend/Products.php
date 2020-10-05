@@ -118,8 +118,65 @@ class Products extends Public_Controller
             ["{$this->tableCategory}.alias" => $urlSegmentOne],
             $this->tableCategory 
         );
-		
-		if ( ! $category ) { 
+
+        if ( ! $category['id_parent']) {
+            $this->categoryCoupons($category);
+        } else if ($category['type'] === TYPE_SOURCE) { 
+            $this->listCoupons($category);
+        } else {
+
+    		if ( ! $category ) { 
+                $metaSeo = [
+                    'title' => 'Không tìm thấy nội dung',
+                    'keyword' => '',
+                    'description' => '',
+                ];
+
+                $this->outputData['current_page'] = 'notfound';
+                $this->render_page('frontend/errors/notfound');
+                
+                return;
+            }
+
+    		$this->outputData['idRoot'] = $this->findParentRoot($category['id_parent']);
+
+            $stringCateIds = $this->category_products_model->getCateChild($category['id']);
+            $arrCateIds = $stringCateIds ? explode(',', $stringCateIds) : [];
+
+            $this->_total = count($this->getCollection($condition, $arrCateIds));
+            $this->getLimit();
+
+            $this->outputData['pagination'] = $this->getPagination();
+            $this->outputData['list_products'] = $this->getCollection($condition, $arrCateIds);
+            $this->outputData['breadcrumb'] = __breadcrumb(
+                $this->listCateParent($arrCateIds)
+            );
+    		$this->outputData['tags_products'] = $this->tags_model->getListTagsProducts();
+            $this->outputData['category'] = $category;
+            $this->outputData['id_parent'] =  $category['id_parent'] ? $category['id_parent'] : $category['id'];
+            $this->outputData['current_page'] = $this->currentPage;
+
+            $this->metaSeo($category);            
+            $this->loadTheme('list');
+        }
+	}
+
+    protected function listCoupons($category)
+    {
+        $condition['type'] = TYPE_COUPON;
+        $getRequest = $this->input->get();
+
+        foreach ($getRequest as $key => $value) {
+            if ($value && in_array($key, $this->searchKeys)) {
+                $condition[$key] = $value;
+            }
+
+            if ($value && in_array($key, ['price'])) {
+                $this->orderBy = $key . ' ' . $value;
+            }
+        }
+
+        if ( ! $category ) { 
             $metaSeo = [
                 'title' => 'Không tìm thấy nội dung',
                 'keyword' => '',
@@ -131,29 +188,73 @@ class Products extends Public_Controller
             
             return;
         }
+        
 
-		$this->outputData['idRoot'] = $this->findParentRoot($category['id_parent']);
+        $categoryCoupons = $this->products_model->listCategoryCoupons(['id_cate_coupon' => $category['id']]);
+        $this->outputData['categoryCoupons'] = $categoryCoupons;
 
-        $stringCateIds = $this->category_products_model->getCateChild($category['id']);
-        $arrCateIds = $stringCateIds ? explode(',', $stringCateIds) : [];
+        $arrCateIds = [];
+        $arrCateIds[] = $category['id']; 
+
+        foreach ($categoryCoupons as $cate) {
+            $arrCateIds[] = $cate['id'];
+        }
+
+        $this->outputData['idRoot'] = $this->findParentRoot($category['id_parent']);
 
         $this->_total = count($this->getCollection($condition, $arrCateIds));
         $this->getLimit();
 
         $this->outputData['pagination'] = $this->getPagination();
-        $this->outputData['list_products'] = $this->getCollection($condition, $arrCateIds);
+        $this->outputData['coupons'] = $this->getCollection($condition, $arrCateIds);
         $this->outputData['breadcrumb'] = __breadcrumb(
             $this->listCateParent($arrCateIds)
         );
-		$this->outputData['tags_products'] = $this->tags_model->getListTagsProducts();
+        $this->outputData['tags_products'] = $this->tags_model->getListTagsProducts();
         $this->outputData['category'] = $category;
         $this->outputData['id_parent'] =  $category['id_parent'] ? $category['id_parent'] : $category['id'];
         $this->outputData['current_page'] = $this->currentPage;
+        $this->outputData['getRequest'] = $getRequest;
 
         $this->metaSeo($category);
-        
-        $this->loadTheme('list');
-	}
+        $this->loadTheme('category_coupons');
+    }
+
+
+    protected function categoryCoupons($category)
+    {
+        $condition['type'] = TYPE_SOURCE;
+        $condition['id_parent'] = $category['id'];
+        $getRequest = $this->input->get();
+
+        if ( ! $category ) { 
+            $metaSeo = [
+                'title' => 'Không tìm thấy nội dung',
+                'keyword' => '',
+                'description' => '',
+            ];
+
+            $this->outputData['current_page'] = 'notfound';
+            $this->render_page('frontend/errors/notfound');
+            
+            return;
+        } 
+        $this->_total = count($this->getCategoryCollection($condition));
+        $this->getLimit();
+
+        $this->outputData['pagination'] = $this->getPagination();
+        $this->outputData['categoryCoupons'] = $this->getCategoryCollection($condition);
+        $this->orderBy = null;
+        $this->outputData['breadcrumb'] = __breadcrumb(
+            $this->listCateParent( [$category['id']])
+        );
+        $this->outputData['category'] = $category;
+        $this->outputData['current_page'] = $this->currentPage;
+        $this->outputData['getRequest'] = $getRequest;
+
+        $this->metaSeo($category);
+        $this->render_page('frontend/products/category');
+    }
 
     /*
     * View product detail
@@ -310,5 +411,25 @@ class Products extends Public_Controller
         );
 
         return $collection;
+    }
+
+
+    protected function getCategoryCollection($condition = array(), $stringCateIds = '')
+    {
+        $collection = $this->category_products_model->listCategoryProducts(
+            $condition
+        );
+
+        return $collection;
+    }
+
+    public function outlink()
+    {
+        $this->outputData = [
+            'pageTitle' => 'Danh sách sản phẩm',
+            'link' => base64_decode($_GET['link'])
+        ];
+
+        $this->load->view('frontend/products/outlink', $this->outputData);
     }
 }

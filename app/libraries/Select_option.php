@@ -48,7 +48,7 @@ class Select_option
 	public function dropdown_pages($params = array(), $id_parent = 0, $string = NULL, $id_active = NULL)
 	{
 
-		$this->get($params, $id_parent);
+		$this->getSelect($params, $id_parent);
 		$option = ($id_parent == 0) ? ('<option>--Chọn bài viết cha--</option>') : ('');
         $string .= ($string != NULL) ? ($string) : ('---');
 
@@ -58,7 +58,7 @@ class Select_option
 
 			    $selected = (isset($id_active) && $id_active == $val['id']) ? ('SELECTED') : ('');
 				
-			    $option .= "<option  " . $selected ." value='".$val["id_cate"] . "'>|";
+			    $option .= "<option  " . $selected ." value='".$val["id"] . "'>|";
 			    $option .= $string . $val['name'];
 			    $option .= "</option>";
 

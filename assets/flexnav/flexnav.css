@@ -206,7 +206,7 @@ nav.menu-main li a {
 }
 nav.menu-main ul ul li a {
     color: #333;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: normal;
     text-transform: none;
 }
@@ -311,7 +311,7 @@ ul.flexnav > li:last-child > a:after {
     .flexnav li ul li a {
     border-bottom: none;
     line-height: 1.4;
-    padding: 5px 10px;
+    padding: 10px 10px;
     font-size: 14px;
     color: #333;
     text-transform: none;

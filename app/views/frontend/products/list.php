@@ -46,12 +46,12 @@
             <div class="col-xs-12">
                 <div class="filter-products">
                     <ul class="list-inline">
-                        <li><label>Sắp xếp theo :</label></li>
-                        <li><a href="tim-kiem?order_price=" class="btn btn-default">Mới nhất</a></li>
-                        <li><a href="tim-kiem?price=desc" class="btn btn-default">Giá giảm dần</a></li>
-                        <li><a href="tim-kiem?price=asc" class="btn btn-default">Giá tăng dần</a></li>
-                        <li><a href="tim-kiem?isSale=1" class="btn btn-default">Khuyến mãi</a></li>
-                         <li><a href="tim-kiem?isHighlight=1" class="btn btn-default">Bán chạy</a></li>
+                        <li><label>Sắp xếp:</label></li>
+                        <li><a href="tim-kiem?order_price=" class="btn btn-default <?= isset($getRequest['order_price']) ? 'active' : ''; ?>">Mới nhất</a></li>
+                        <li><a href="tim-kiem?price=desc" class="btn btn-default <?= isset($getRequest['price']) && $getRequest['price'] === 'desc' ? 'active' : ''; ?>">Giá giảm dần</a></li>
+                        <li><a href="tim-kiem?price=asc" class="btn btn-default <?= isset($getRequest['price']) && $getRequest['price'] === 'asc' ? 'active' : ''; ?>">Giá tăng dần</a></li>
+                        <li><a href="tim-kiem?isSale=1" class="btn btn-default <?= isset($getRequest['isSale']) ? 'active' : ''; ?>">Khuyến mãi</a></li>
+                         <li><a href="tim-kiem?isHighlight=1" class="btn btn-default <?= isset($getRequest['isHighlight']) ? 'active' : ''; ?>">Bán chạy</a></li>
                     </ul>
                 </div>
             </div>

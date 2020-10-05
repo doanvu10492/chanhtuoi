@@ -50,6 +50,8 @@ class Settings_model extends My_Model
 				'meta_description',
 				'footer',
 				'about',
+				'header_outlink',
+				'info_outlink',
 				'google_script',
 				'fanpage',
 				'popup',

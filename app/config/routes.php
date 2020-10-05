@@ -21,17 +21,11 @@ $route['forget-pass'] = 'frontend/users/update_infor';
 
 
 //contact
-
 $route['getStoreBranch'] = "frontend/contact/getStoreBranch";
 $route['lien-he'] = "frontend/contact/index";
 $route['cua-hang'] = "frontend/contact/store";
-$route['receive_messages'] = "frontend/contact/add_email";
+$route['dang-ky-nhan-khuyen-mai'] = "frontend/contact/addEmail";
 $route['gui-so-dien-thoai'] = "frontend/contact/send_phone";
-$route['register-learn'] = "frontend/contact/registerLearn";
-$route['dang-ky-hoc'] = "frontend/student/registerLearn";
-$route['tra-cuu-ket-qua'] = "frontend/student/searchStudent";
-$route['tra-cuu-dang-ky'] = "frontend/student/searchStudentRegister";
-$route['xem-lich-khai-giang'] = "frontend/student/viewOpeningSchedule";
 
 $route['checkCustomerOrder'] = "frontend/cart/checkCustomerOrder";
 $route['thanh-toan-don-hang'] = "frontend/cart/cart_payment";
@@ -341,7 +335,7 @@ $route['album/(:any)|album/(:any)/(:num)'] = "frontend/album/category/$1";
 $route['thu-vien-anh|(thu-vien-anh|photo)/(:num)'] = "frontend/album/index/$1";
 
 
-
+$route['redirect-out-link'] = 'frontend/products/outlink';
 $route['collection-2018'] = "frontend/products/list_category/$1";
 $route['(:any)-d(:num)'] = "frontend/products/view/$1";
 $route['tim-kiem|tim-kiem/(:num)'] = "frontend/products/index";
